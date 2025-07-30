@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>YourChatbotApp – Unlock Chatbot Potential</title>
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #5746f6;
+      --primary-dark: #3527a0;
+      --gray-bg: #f6f7fb;
+      --text-main: #232435;
+    }
+    body {
+      background: var(--gray-bg);
+      color: var(--text-main);
+      font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+    }
+    .navbar {
+      background: #fff;
+      border-bottom: 1px solid #ececec;
+    }
+    .navbar-brand svg {
+      height: 32px;
+      margin-right: 8px;
+    }
+    .hero {
+      padding: 5rem 0 4rem 0;
+      background: linear-gradient(90deg, var(--primary) 60%, var(--primary-dark) 100%);
+      color: #fff;
+      border-radius: 0 0 36px 36px;
+    }
+    .hero h1 {
+      font-weight: 800;
+      font-size: 2.8rem;
+      margin-bottom: 1rem;
+    }
+    .hero p {
+      font-size: 1.25rem;
+      font-weight: 400;
+    }
+    
+    /* Hero Stats */
+    .hero-stats {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #fff;
+    }
+    .stat-label {
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.8);
+      margin-top: 0.5rem;
+    }
+    
+    .btn-gradient {
+      background: linear-gradient(90deg, #7c62f9, #a386e0);
+      border: none;
+      color: #fff;
+      font-weight: 600;
+      font-size: 1.1rem;
+      padding: 0.75rem 2.5rem;
+      border-radius: 32px;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 16px rgba(114, 98, 244, 0.3);
+    }
+    .btn-gradient:hover {
+      box-shadow: 0 8px 32px rgba(114, 98, 244, 0.5);
+      color: #fff;
+      transform: translateY(-2px);
+    }
+    .btn-outline-light {
+      border-color: #fff;
+      color: #fff;
+    }
+    .btn-outline-light:hover {
+      background-color: rgba(255, 255, 255, 0.15);
+      color: #fff;
+      border-color: #fff;
+    }
+    
+    /* Enhanced Social Proof Section */
+    .social-proof {
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      border-bottom: 1px solid #e2e8f0;
+      padding: 1rem 0;
+    }
+
+    .social-proof-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .trust-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #4a5568;
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+
+    .trust-badge::before {
+      content: "🏆";
+      font-size: 1.1rem;
+    }
+
+    .rating-container {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 25px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      border: 1px solid rgba(87, 70, 246, 0.1);
+    }
+
+    .stars {
+      color: #f59e0b;
+      font-size: 1.1rem;
+      letter-spacing: 2px;
+    }
+
+    .rating-text {
+      color: #374151;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .g2-logo {
+      background: linear-gradient(135deg, #ff6b35, #f7931e);
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      margin-left: 0.5rem;
+    }
+    
+    .features {
+      margin-top: -3rem;
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      z-index: 2;
+      position: relative;
+      flex-wrap: wrap;
+    }
+    .feature-card {
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 2px 24px rgba(50, 42, 82, 0.1);
+      padding: 2rem 2rem 1.5rem;
+      max-width: 320px;
+      flex: 1 1 260px;
+      text-align: left;
+      margin-bottom: 2rem;
+      transition: all 0.3s ease;
+      animation: fadeInUp 0.6s ease-out forwards;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    .feature-card:hover {
+      box-shadow: 0 8px 40px rgba(114, 98, 244, 0.15);
+      transform: translateY(-8px);
+    }
+    .feature-card:nth-child(1) { animation-delay: 0.1s; }
+    .feature-card:nth-child(2) { animation-delay: 0.2s; }
+    .feature-card:nth-child(3) { animation-delay: 0.3s; }
+    .feature-card:nth-child(4) { animation-delay: 0.4s; }
+    
+    .feature-card h5 {
+      font-weight: 700;
+      margin-top: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--primary);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+    .feature-icon svg {
+      width: 24px;
+      height: 24px;
+      fill: white;
+    }
+    
+    /* Enhanced Screenshot Preview */
+    .screenshot-preview {
+      display: block;
+      border-radius: 16px;
+      margin: 2rem auto 1rem auto;
+      max-width: 700px;
+      width: 100%;
+      height: 400px;
+      background: #fff;
+      border: 1px solid #e0e7ff;
+      position: relative;
+      padding: 20px;
+      overflow: hidden;
+    }
+    
+    .chat-interface {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      padding-top: 40px;
+    }
+    
+    .chat-header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: var(--primary);
+      color: white;
+      padding: 10px 20px;
+      font-weight: 600;
+      border-radius: 16px 16px 0 0;
+    }
+    
+    .chat-message {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    
+    .bot-message {
+      justify-content: flex-start;
+    }
+    
+    .user-message {
+      justify-content: flex-end;
+    }
+    
+    .message-bubble {
+      max-width: 70%;
+      padding: 12px 16px;
+      border-radius: 18px;
+      font-size: 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .bot-bubble {
+      background: #f0f0f0;
+      color: #333;
+    }
+    
+    .user-bubble {
+      background: var(--primary);
+      color: white;
+      margin-left: auto;
+    }
+    
+    .testimonial-section {
+      background: #fff;
+      border-radius: 18px;
+      text-align: center;
+      padding: 3rem 1rem 2rem 1rem;
+      margin: 3rem auto;
+      max-width: 800px;
+      box-shadow: 0 4px 24px rgba(114, 98, 244, 0.2);
+    }
+    .testimonial-section p {
+      font-size: 1.25rem;
+      max-width: 600px;
+      margin: 0 auto 1.2rem auto;
+      color: #24224e;
+      font-style: italic;
+    }
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      font-weight: 600;
+      color: #5746f6;
+    }
+    .testimonial-author .avatar {
+      border-radius: 50%;
+      height: 32px;
+      width: 32px;
+      background: linear-gradient(45deg, #5746f6, #a386e0);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+    }
+    .partner-logos {
+      margin-top: 1rem;
+    }
+    .partner-logo {
+      display: inline-block;
+      margin: 0 0.8rem;
+      height: 32px;
+      width: 80px;
+      background: #e0e7ff;
+      border-radius: 6px;
+      position: relative;
+    }
+    .partner-logo::after {
+      content: attr(data-name);
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 10px;
+      color: #5746f6;
+      font-weight: 600;
+    }
+    
+    /* Integrations Section */
+    .integrations-section {
+      background: #f8f9ff;
+      padding: 4rem 0;
+    }
+    .integration-logo {
+      height: 40px;
+      width: 80px;
+      background: #e0e7ff;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: var(--primary);
+      font-weight: 600;
+      margin: 0 auto;
+    }
+    
+    /* FAQ Section */
+    .faq-section {
+      padding: 4rem 0;
+    }
+    .accordion-button:not(.collapsed) {
+      background-color: #f8f9ff;
+      color: var(--primary);
+    }
+    .accordion-button:focus {
+      box-shadow: 0 0 0 0.25rem rgba(87, 70, 246, 0.25);
+    }
+    
+    /* Enhanced Pricing Section */
+    .pricing-section {
+      padding: 5rem 0;
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 30%, #f8fafc 100%);
+      position: relative;
+    }
+
+    .pricing-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at 30% 20%, rgba(87, 70, 246, 0.05) 0%, transparent 50%),
+                  radial-gradient(circle at 70% 80%, rgba(87, 70, 246, 0.05) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .pricing-container {
+      position: relative;
+      z-index: 2;
+    }
+
+    .pricing-card {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      border-radius: 24px;
+      padding: 2.5rem;
+      box-shadow: 0 8px 32px rgba(87, 70, 246, 0.1);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .pricing-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, transparent, var(--primary), transparent);
+      border-radius: 24px 24px 0 0;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .pricing-card:hover {
+      transform: translateY(-16px);
+      box-shadow: 0 20px 60px rgba(87, 70, 246, 0.2);
+      border-color: rgba(87, 70, 246, 0.3);
+    }
+
+    .pricing-card:hover::before {
+      opacity: 1;
+    }
+
+    .pricing-card.popular {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
+      border: 2px solid var(--primary);
+      transform: scale(1.08);
+      box-shadow: 0 16px 48px rgba(87, 70, 246, 0.25);
+    }
+
+    .pricing-card.popular::before {
+      opacity: 1;
+      background: linear-gradient(90deg, var(--primary), #a386e0, var(--primary));
+    }
+
+    .pricing-card.popular:hover {
+      transform: scale(1.08) translateY(-16px);
+    }
+
+    .popular-badge {
+      position: absolute;
+      top: -16px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, var(--primary), #a386e0);
+      color: white;
+      padding: 8px 24px;
+      border-radius: 25px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      box-shadow: 0 8px 20px rgba(87, 70, 246, 0.4);
+      letter-spacing: 0.5px;
+    }
+
+    .pricing-header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      position: relative;
+    }
+
+    .pricing-header h3 {
+      font-weight: 700;
+      font-size: 1.75rem;
+      color: var(--text-main);
+      margin-bottom: 0.5rem;
+    }
+
+    .pricing-subtitle {
+      color: #64748b;
+      font-size: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .price {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      margin-bottom: 1rem;
+      position: relative;
+    }
+
+    .currency {
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: var(--primary);
+      margin-right: 4px;
+    }
+
+    .amount {
+      font-size: 4rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary), #a386e0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+    }
+
+    .period {
+      font-size: 1.1rem;
+      color: #64748b;
+      font-weight: 500;
+      margin-left: 4px;
+    }
+
+    .pricing-features {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 2.5rem 0;
+      flex-grow: 1;
+    }
+
+    .pricing-features li {
+      padding: 1rem 0;
+      color: #374151;
+      font-weight: 500;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+    }
+
+    .pricing-features li:last-child {
+      border-bottom: none;
+    }
+
+    .pricing-features li::before {
+      content: "✓";
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 1.2rem;
+      margin-right: 1rem;
+      background: rgba(87, 70, 246, 0.1);
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .pricing-button {
+      width: 100%;
+      padding: 1.25rem 2rem;
+      border-radius: 16px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+    }
+
+    .pricing-card:not(.popular) .pricing-button {
+      background: rgba(87, 70, 246, 0.1);
+      color: var(--primary);
+      border: 2px solid var(--primary);
+    }
+
+    .pricing-card:not(.popular) .pricing-button:hover {
+      background: var(--primary);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(87, 70, 246, 0.3);
+    }
+
+    .pricing-card.popular .pricing-button {
+      background: linear-gradient(135deg, var(--primary), #a386e0);
+      color: white;
+      box-shadow: 0 8px 20px rgba(87, 70, 246, 0.4);
+    }
+
+    .pricing-card.popular .pricing-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(87, 70, 246, 0.5);
+    }
+
+    .pricing-footer {
+      text-align: center;
+      margin-top: 4rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .pricing-footer p {
+      color: #64748b;
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .pricing-footer .guarantee {
+      background: white;
+      padding: 1.5rem 2rem;
+      border-radius: 16px;
+      box-shadow: 0 4px 16px rgba(87, 70, 246, 0.1);
+      display: inline-block;
+      margin-top: 1rem;
+    }
+
+    .pricing-footer .guarantee::before {
+      content: "🔒";
+      margin-right: 0.5rem;
+    }
+    
+    .footer-cta {
+      background: linear-gradient(90deg, var(--primary-dark) 40%, var(--primary) 100%);
+      border-radius: 18px 18px 0 0;
+      margin-top: 3rem;
+      padding: 2.5rem 0 2rem 0;
+      color: #fff;
+      text-align: center;
+    }
+    footer small a {
+      color: #fff;
+      text-decoration: underline;
+    }
+    footer small a:hover {
+      color: #ddd;
+      text-decoration: none;
+    }
+    
+    /* Animations */
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .social-proof-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+      }
+      
+      .rating-container {
+        justify-content: center;
+      }
+      
+      .features {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .pricing-card.popular {
+        transform: none;
+        margin-top: 1rem;
+      }
+      
+      .pricing-card.popular:hover {
+        transform: translateY(-16px);
+      }
+      
+      .hero h1 {
+        font-size: 2.2rem;
+      }
+      
+      .hero p {
+        font-size: 1.1rem;
+      }
+      
+      .feature-card {
+        margin-bottom: 1rem;
+      }
+      
+      .stat-number {
+        font-size: 1.5rem;
+      }
+      
+      .integration-logo {
+        margin-bottom: 1rem;
+      }
+      
+      .amount {
+        font-size: 3rem;
+      }
+      
+      .pricing-header h3 {
+        font-size: 1.5rem;
+      }
+    }
+    
+    @media (max-width: 576px) {
+      .hero-stats .col-4 {
+        margin-bottom: 1rem;
+      }
+      
+      .rating {
+        justify-content: center;
+        margin-top: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light shadow-sm px-4">
+    <a class="navbar-brand d-flex align-items-center" href="#">
+      <!-- <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="32" height="32" rx="8" fill="#5746f6"/>
+        <path d="M8 12h16v2H8v-2zm0 4h16v2H8v-2zm0 4h12v2H8v-2z" fill="white"/>
+      </svg> -->
+      YourChatbotApp
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <ul class="navbar-nav align-items-center">
+        <li class="nav-item">
+          <a class="nav-link" href="#features">Features</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#pricing">Pricing</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#faq">FAQ</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#contact">Contact</a>
+        </li>
+        <li class="nav-item ms-3">
+          <a href="login.html" class="btn btn-outline-primary">Login</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Enhanced Social Proof Bar -->
+  <section class="social-proof">
+    <div class="container">
+      <div class="social-proof-content">
+        <div class="trust-badge">
+          Trusted by 500+ businesses worldwide
+        </div>
+        <div class="rating-container">
+          <div class="stars">★★★★★</div>
+          <div class="rating-text">4.9/5</div>
+          <div class="g2-logo">G2</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hero text-center">
+    <div class="container">
+      <h1>Build Smart Chatbots—Fast</h1>
+      <p>
+        Deploy AI-driven customer support chatbots for web or WhatsApp in minutes.<br />
+        <span style="font-size:1.1rem; font-weight:500;">
+          No coding. Customizable. Works seamlessly with your tools.
+        </span>
+      </p>
+      <a href="#" class="btn btn-gradient mt-4 mb-2">🚀 Start Building - It's Free</a>
+      <a href="#" class="btn btn-outline-light ms-3 mt-4 mb-2">📺 See 2-Min Demo</a>
+      
+      <!-- Hero Stats -->
+      <div class="hero-stats">
+        <div class="row text-center">
+          <div class="col-4">
+            <div class="stat-number">10K+</div>
+            <div class="stat-label">Bots Created</div>
+          </div>
+          <div class="col-4">
+            <div class="stat-number">99.9%</div>
+            <div class="stat-label">Uptime</div>
+          </div>
+          <div class="col-4">
+            <div class="stat-number">2 hrs</div>
+            <div class="stat-label">Avg Setup</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="container features" id="features" tabindex="-1">
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+          <circle cx="9" cy="7" r="4"></circle>
+          <path d="m22 21-3-3m1-4a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z"></path>
+        </svg>
+      </div>
+      <h5>Personal & Organization Mode</h5>
+      <p>
+        Register solo or set up an organization workspace. Onboard your team, delegate chat flows by department, and control permissions for sensitive queries.
+      </p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+          <path d="m2 17 10 5 10-5"></path>
+          <path d="m2 12 10 5 10-5"></path>
+        </svg>
+      </div>
+      <h5>No-Code & AI-Hybrid Designer</h5>
+      <p>
+        Visually build conversations with block-based flows, or leverage advanced AI to handle complex interactions. Mix AI and rules anytime to fit your use case.
+      </p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="2" y1="12" x2="22" y2="12"></line>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+        </svg>
+      </div>
+      <h5>Multi-Channel, Instant Deploy</h5>
+      <p>
+        Deploy on web, WhatsApp, Messenger, or API integrations. Preview, test, and roll out in one click—get scripts or API endpoints instantly.
+      </p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+          <circle cx="12" cy="16" r="1"></circle>
+          <path d="m7 11V7a5 5 0 0 1 10 0v4"></path>
+        </svg>
+      </div>
+      <h5>Granular Team Permissions</h5>
+      <p>
+        Assign roles to create, edit, view, or deploy bots per user. Ideal for teams handling multiple brands or bots securely and efficiently.
+      </p>
+    </div>
+  </div>
+
+  <div class="position-relative container">
+    <div class="screenshot-preview">
+      <div class="chat-header">Customer Support Bot</div>
+      <div class="chat-interface">
+        <div class="chat-message bot-message">
+          <div class="message-bubble bot-bubble">
+            Hi! How can I help you today? 😊
+          </div>
+        </div>
+        <div class="chat-message user-message">
+          <div class="message-bubble user-bubble">
+            I need help with my order
+          </div>
+        </div>
+        <div class="chat-message bot-message">
+          <div class="message-bubble bot-bubble">
+            I'd be happy to help! Can you provide your order number?
+          </div>
+        </div>
+        <div class="chat-message user-message">
+          <div class="message-bubble user-bubble">
+            #ORD-12345
+          </div>
+        </div>
+        <div class="chat-message bot-message">
+          <div class="message-bubble bot-bubble">
+            Found it! Your order is being prepared and will ship tomorrow. You'll receive tracking info via email.
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="mb-1 text-muted text-center">See your bot take shape as you build. No code needed—customize flows visually or with advanced settings.</p>
+  </div>
+
+  <!-- Integrations Section -->
+  <section class="integrations-section">
+    <div class="container text-center">
+      <h3 class="fw-bold mb-4">Integrates with your favorite tools</h3>
+      <div class="row justify-content-center g-4">
+        <div class="col-6 col-md-2">
+          <div class="integration-logo">Slack</div>
+        </div>
+        <div class="col-6 col-md-2">
+          <div class="integration-logo">Zapier</div>
+        </div>
+        <div class="col-6 col-md-2">
+          <div class="integration-logo">Shopify</div>
+        </div>
+        <div class="col-6 col-md-2">
+          <div class="integration-logo">HubSpot</div>
+        </div>
+        <div class="col-6 col-md-2">
+          <div class="integration-logo">WhatsApp</div>
+        </div>
+        <div class="col-6 col-md-2">
+          <div class="integration-logo">Messenger</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="testimonial-section">
+    <p>
+      "We built a WhatsApp bot for our team in 2 hours. Customer queries dropped 25%—leaving us more time for real issues."
+    </p>
+    <div class="testimonial-author">
+      <div class="avatar">A</div>
+      <span>Aarya N., Head of CX at RetailCo</span>
+    </div>
+    <div class="partner-logos">
+      <div class="partner-logo" data-name="RetailCo"></div>
+      <div class="partner-logo" data-name="LogiTech"></div>
+      <div class="partner-logo" data-name="FinServe"></div>
+      <span class="fst-italic text-muted mx-2">+4 more</span>
+    </div>
+    <p class="mt-3"><small>See more reviews on G2 and Capterra</small></p>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="faq-section container" id="faq">
+    <div class="text-center mb-5">
+      <h2 class="fw-bold">Frequently Asked Questions</h2>
+      <p class="text-muted">Everything you need to know about our chatbot platform</p>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="accordion" id="faqAccordion">
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                How quickly can I build my first chatbot?
+              </button>
+            </h2>
+            <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+              <div class="accordion-body">
+                Most users create their first functional chatbot within 30 minutes using our visual flow builder. Complex bots with AI integration typically take 2-4 hours to complete.
+              </div>
+            </div>
+          </div>
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                Do I need coding experience to use YourChatbotApp?
+              </button>
+            </h2>
+            <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+              <div class="accordion-body">
+                No coding experience required! Our drag-and-drop interface makes it easy for anyone to build professional chatbots. Advanced users can still access code-level customizations if needed.
+              </div>
+            </div>
+          </div>
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                Can I integrate with my existing tools?
+              </button>
+            </h2>
+            <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+              <div class="accordion-body">
+                Yes! We integrate with 50+ popular tools including Slack, HubSpot, Shopify, Zapier, and more. You can also use our REST API for custom integrations.
+              </div>
+            </div>
+          </div>
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                What's included in the free trial?
+              </button>
+            </h2>
+            <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+              <div class="accordion-body">
+                The 7-day free trial includes access to all Professional plan features: unlimited chatbots, 1,000 conversations, all integrations, and priority support. No credit card required.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pricing-section container" id="pricing">
+    <div class="text-center mb-5">
+      <h2 class="fw-bold mb-3">Simple, Transparent Pricing</h2>
+      <p class="text-muted fs-5">Choose the plan that fits your business needs</p>
+    </div>
+    
+    <div class="row justify-content-center g-4 pricing-container">
+      <div class="col-lg-4 col-md-6">
+        <div class="pricing-card">
+          <div class="pricing-header">
+            <h3>Starter</h3>
+            <p class="pricing-subtitle">Perfect for small businesses</p>
+            <div class="price">
+              <span class="currency">$</span>
+              <span class="amount">19</span>
+              <span class="period">/month</span>
+            </div>
+          </div>
+          <ul class="pricing-features">
+            <li>1 Chatbot</li>
+            <li>1,000 conversations/month</li>
+            <li>Web & WhatsApp integration</li>
+            <li>Basic analytics</li>
+            <li>Email support</li>
+          </ul>
+          <button class="pricing-button">Start Free Trial</button>
+        </div>
+      </div>
+      
+      <div class="col-lg-4 col-md-6">
+        <div class="pricing-card popular">
+          <div class="popular-badge">Most Popular</div>
+          <div class="pricing-header">
+            <h3>Professional</h3>
+            <p class="pricing-subtitle">Great for growing teams</p>
+            <div class="price">
+              <span class="currency">$</span>
+              <span class="amount">49</span>
+              <span class="period">/month</span>
+            </div>
+          </div>
+          <ul class="pricing-features">
+            <li>5 Chatbots</li>
+            <li>5,000 conversations/month</li>
+            <li>All channels + API access</li>
+            <li>Advanced analytics</li>
+            <li>Team collaboration</li>
+            <li>Priority support</li>
+          </ul>
+          <button class="pricing-button">Start Free Trial</button>
+        </div>
+      </div>
+      
+      <div class="col-lg-4 col-md-6">
+        <div class="pricing-card">
+          <div class="pricing-header">
+            <h3>Enterprise</h3>
+            <p class="pricing-subtitle">For large organizations</p>
+            <div class="price">
+              <span class="currency">$</span>
+              <span class="amount">99</span>
+              <span class="period">/month</span>
+            </div>
+          </div>
+          <ul class="pricing-features">
+            <li>Unlimited chatbots</li>
+            <li>25,000 conversations/month</li>
+            <li>White-label options</li>
+            <li>Custom integrations</li>
+            <li>Advanced permissions</li>
+            <li>Dedicated support</li>
+          </ul>
+          <button class="pricing-button">Contact Sales</button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="pricing-footer">
+      <p><strong>All plans include a 7-day free trial. No credit card required.</strong></p>
+      <p>Need more conversations? <a href="#" class="text-primary">Custom pricing available</a></p>
+      <div class="guarantee">
+        <strong>30-day money-back guarantee</strong>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer-cta" id="contact">
+    <h2 class="fw-bold">Try YourChatbotApp Free for 7 Days</h2>
+    <p class="mt-3 mb-4">Join thousands of businesses already using our platform</p>
+    <a href="#" class="btn btn-gradient btn-lg mt-3">Create Your Free Bot</a>
+    <div class="mt-4">
+      <small>
+        © <span id="copyright-year">2025</span> YourChatbotApp. &nbsp;
+        <a href="#">Privacy Policy</a> | 
+        <a href="#">Terms of Service</a> | 
+        <a href="mailto:support@yourchatbotapp.com">Contact</a>
+      </small>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.getElementById("copyright-year").textContent = new Date().getFullYear();
+    
+    // Add smooth scrolling for navigation links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -13,7 +13,40 @@
             display: flex;
             gap: 20px;
         }
+        .platform-card.locked {
+    position: relative;
+}
 
+.platform-card.locked:hover {
+    border-color: #f97316 !important;
+    background-color: #fff7ed !important;
+}
+
+.upgrade-prompt {
+    background: linear-gradient(90deg, #f97316, #ea580c);
+    color: white;
+    padding: 12px;
+    border-radius: 8px;
+    margin: 16px 0;
+    text-align: center;
+}
+
+.enterprise-only {
+    display: none;
+}
+
+.billing-section {
+    margin-top: 20px;
+}
+
+@keyframes pulse-orange {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(249, 115, 22, 0); }
+}
+
+.upgrade-pulse {
+    animation: pulse-orange 2s infinite;
+}
         .nav-tab {
             padding: 8px 16px;
             background: none;
@@ -791,91 +824,351 @@
             <div class="p-6">
                 <h1 class="text-2xl font-bold text-gray-800">ChatBot Studio</h1>
             </div>
-            <nav class="mt-6">
-                <a href="#dashboard" class="block px-6 py-3 text-gray-600 hover:bg-blue-50 hover:text-blue-600 border-r-3 border-blue-600">
-                    <i class="fas fa-tachometer-alt mr-3"></i>Dashboard
-                </a>
-                <a href="#builder" class="block px-6 py-3 text-gray-600 hover:bg-blue-50 hover:text-blue-600">
-                    <i class="fas fa-robot mr-3"></i>Bot Builder
-                </a>
-                <a href="#analytics" class="block px-6 py-3 text-gray-600 hover:bg-blue-50 hover:text-blue-600">
-                    <i class="fas fa-chart-line mr-3"></i>Analytics & Logs
-                </a>
-                <a href="#billing" class="block px-6 py-3 text-gray-600 hover:bg-blue-50 hover:text-blue-600">
-                    <i class="fas fa-credit-card mr-3"></i>Billing
-                </a>
-                <a href="#settings" class="block px-6 py-3 text-gray-600 hover:bg-blue-50 hover:text-blue-600">
-                    <i class="fas fa-cog mr-3"></i>Settings
-                </a>
-            </nav>
+         <nav class="mt-6">
+    <a href="#dashboard" class="block px-6 py-3 text-gray-600 hover:bg-blue-50 hover:text-blue-600 border-r-3 border-blue-600">
+        <i class="fas fa-tachometer-alt mr-3"></i>Dashboard
+    </a>
+    <a href="#builder" class="block px-6 py-3 text-gray-600 hover:bg-blue-50 hover:text-blue-600">
+        <i class="fas fa-robot mr-3"></i>Bot Builder
+    </a>
+    <a href="#analytics" class="block px-6 py-3 text-gray-600 hover:bg-blue-50 hover:text-blue-600">
+        <i class="fas fa-chart-line mr-3"></i>Analytics & Logs
+    </a>
+    <a href="#billing" class="block px-6 py-3 text-gray-600 hover:bg-blue-50 hover:text-blue-600">
+        <i class="fas fa-credit-card mr-3"></i>Billing
+    </a>
+    <!-- Teams & Users - Hidden by default, shown for Enterprise -->
+    <a href="#teams" id="teamsNavLink" class="block px-6 py-3 text-gray-600 hover:bg-blue-50 hover:text-blue-600" style="display: none;">
+        <i class="fas fa-users mr-3"></i>Teams & Users
+    </a>
+    <!-- Upgrade Plan Option -->
+
+    <a href="#settings" class="block px-6 py-3 text-gray-600 hover:bg-blue-50 hover:text-blue-600">
+        <i class="fas fa-cog mr-3"></i>Settings
+    </a>
+</nav>
+
+<!-- Simple Upgrade Popup Modal -->
+<div id="upgradeModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full mx-4 max-h-[80vh] overflow-y-auto">
+        <div class="p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">Choose Your Plan</h2>
+                <button onclick="closeUpgradeModal()" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- Your 3 pricing cards here -->
+            </div>
+        </div>
+    </div>
+</div>
+
         </div>
 
         <!-- Main Content -->
         <div class="flex-1 p-8">
             <!-- Dashboard Tab -->
-            <div id="dashboard" class="tab-content active">
-                <div class="mb-8">
-                    <h2 class="text-3xl font-bold text-gray-800 mb-2">Dashboard Overview</h2>
-                    <p class="text-gray-600">Welcome back, Anurag! Here's what's happening with your chatbots today.</p>
-                </div>
+           <div id="dashboard" class="tab-content active">
+    <!-- Header Section -->
+    <div class="mb-8">
+        <div class="flex justify-between items-center">
+            <div>
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">Dashboard Overview</h2>
+                <p class="text-gray-600">Welcome back, Here's what's happening with your chatbots today.</p>
+            </div>
+            <!-- Plan Status & Upgrade Trigger -->
+            <div class="flex items-center space-x-3">
+                <span id="currentPlanBadge" class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">Free Plan</span>
+                <button id="upgradeButton" onclick="showUpgradeModal()" class="px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all">
+                    <i class="fas fa-crown mr-2"></i>Upgrade
+                </button>
+            </div>
+        </div>
+    </div>
 
-                <!-- Stats Cards -->
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                    <div class="bg-white p-6 rounded-lg shadow">
-                        <div class="text-3xl font-bold text-blue-600">3</div>
-                        <div class="text-gray-600">Total Chatbots</div>
+    <!-- Enterprise Onboarding Flow (Hidden initially) -->
+    <div id="enterpriseOnboarding" class="mb-8 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-6 border border-blue-200" style="display: none;">
+        <div class="flex items-center justify-between mb-4">
+            <div>
+                <h3 class="text-xl font-bold text-gray-800 flex items-center">
+                    <i class="fas fa-rocket text-purple-600 mr-2"></i>
+                    Welcome to Enterprise Mode! 🎉
+                </h3>
+                <p class="text-gray-600">Complete these steps to unlock full team collaboration</p>
+            </div>
+            <button id="dismissOnboarding" class="text-gray-400 hover:text-gray-600" onclick="dismissOnboarding()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="grid md:grid-cols-3 gap-4" id="onboardingSteps">
+            <!-- Step 1: Create Team -->
+            <div class="bg-white rounded-lg p-4 border-l-4 border-blue-500" id="step1">
+                <div class="flex items-center mb-2">
+                    <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                        <span class="text-blue-600 font-bold text-sm">1</span>
                     </div>
-                    <div class="bg-white p-6 rounded-lg shadow">
-                        <div class="text-3xl font-bold text-green-600">2</div>
-                        <div class="text-gray-600">Active Bots</div>
-                    </div>
-                    <div class="bg-white p-6 rounded-lg shadow">
-                        <div class="text-3xl font-bold text-purple-600">2,847</div>
-                        <div class="text-gray-600">Total Messages</div>
-                    </div>
-                    <div class="bg-white p-6 rounded-lg shadow">
-                        <div class="text-3xl font-bold text-orange-600">156</div>
-                        <div class="text-gray-600">Today's Interactions</div>
-                    </div>
+                    <h4 class="font-semibold">Create Your First Team</h4>
+                    <i id="step1Check" class="fas fa-check text-green-500 ml-auto" style="display: none;"></i>
                 </div>
-
-                <!-- Your Chatbots -->
-                <div class="bg-white rounded-lg shadow p-6">
-                    <h3 class="text-xl font-semibold mb-4">Your Chatbots</h3>
-                    <div class="space-y-4">
-                        <div class="border rounded-lg p-4 flex justify-between items-center">
-                            <div>
-                                <h4 class="font-semibold">Customer Support Bot</h4>
-                                <p class="text-sm text-gray-600">Type: Web • Created 2 days ago • Last active 5 minutes ago</p>
-                            </div>
-                            <div class="flex items-center space-x-3">
-                                <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">Active</span>
-                                <button class="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700">Configure</button>
-                            </div>
-                        </div>
-                        <div class="border rounded-lg p-4 flex justify-between items-center">
-                            <div>
-                                <h4 class="font-semibold">Sales Assistant</h4>
-                                <p class="text-sm text-gray-600">Type: WhatsApp • Created 1 week ago • Last active 2 hours ago</p>
-                            </div>
-                            <div class="flex items-center space-x-3">
-                                <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">Active</span>
-                                <button class="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700">Configure</button>
-                            </div>
-                        </div>
-                        <div class="border rounded-lg p-4 flex justify-between items-center">
-                            <div>
-                                <h4 class="font-semibold">FAQ Bot</h4>
-                                <p class="text-sm text-gray-600">Type: Messenger • Created 3 weeks ago • Last active yesterday</p>
-                            </div>
-                            <div class="flex items-center space-x-3">
-                                <span class="px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-sm">Inactive</span>
-                                <button class="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700">Configure</button>
-                            </div>
-                        </div>
+                <p class="text-sm text-gray-600 mb-3">Organize your projects and collaborate with team members</p>
+                <button onclick="createFirstTeam()" class="text-blue-600 text-sm font-medium hover:text-blue-700">
+                    <i class="fas fa-plus mr-1"></i>Create Team →
+                </button>
+            </div>
+            
+            <!-- Step 2: Invite Users -->
+            <div class="bg-white rounded-lg p-4 border-l-4 border-green-500" id="step2">
+                <div class="flex items-center mb-2">
+                    <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-3">
+                        <span class="text-green-600 font-bold text-sm">2</span>
                     </div>
+                    <h4 class="font-semibold">Invite Team Members</h4>
+                    <i id="step2Check" class="fas fa-check text-green-500 ml-auto" style="display: none;"></i>
+                </div>
+                <p class="text-sm text-gray-600 mb-3">Add users and assign roles for collaborative development</p>
+                <button onclick="inviteFirstUser()" class="text-green-600 text-sm font-medium hover:text-green-700">
+                    <i class="fas fa-envelope mr-1"></i>Invite Users →
+                </button>
+            </div>
+            
+            <!-- Step 3: Create Team Chatbot -->
+            <div class="bg-white rounded-lg p-4 border-l-4 border-purple-500" id="step3">
+                <div class="flex items-center mb-2">
+                    <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center mr-3">
+                        <span class="text-purple-600 font-bold text-sm">3</span>
+                    </div>
+                    <h4 class="font-semibold">Create Team Chatbot</h4>
+                    <i id="step3Check" class="fas fa-check text-green-500 ml-auto" style="display: none;"></i>
+                </div>
+                <p class="text-sm text-gray-600 mb-3">Build your first collaborative chatbot project</p>
+                <button onclick="createTeamBot()" class="text-purple-600 text-sm font-medium hover:text-purple-700">
+                    <i class="fas fa-robot mr-1"></i>Create Bot →
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Free Plan Upgrade Triggers (Shown only in Free plan) -->
+    <div id="freeUpgradeBanner" class="mb-8 bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-lg p-4">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center">
+                <i class="fas fa-exclamation-triangle text-yellow-600 mr-3"></i>
+                <div>
+                    <h4 class="font-medium text-gray-800">Unlock Team Collaboration</h4>
+                    <p class="text-sm text-gray-600">Need to collaborate with your team? Upgrade to Enterprise for unlimited features!</p>
                 </div>
             </div>
+            <button onclick="showUpgradeModal()" class="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 whitespace-nowrap">
+                Upgrade Now
+            </button>
+        </div>
+    </div>
+
+    <!-- Enterprise Team Management Section (Hidden initially) -->
+    <div id="enterpriseTeamSection" class="mb-8" style="display: none;">
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <h3 class="text-xl font-semibold flex items-center">
+                        <i class="fas fa-users text-blue-600 mr-2"></i>
+                        Team Management
+                        <span class="ml-2 px-2 py-1 bg-purple-100 text-purple-800 rounded-full text-xs font-medium">Enterprise</span>
+                    </h3>
+                    <p class="text-gray-600">Manage teams, users, and collaborative projects</p>
+                </div>
+                <div class="flex space-x-3">
+                    <button onclick="createTeam()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                        <i class="fas fa-plus mr-2"></i>Create Team
+                    </button>
+                    <button onclick="inviteUser()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                        <i class="fas fa-envelope mr-2"></i>Invite User
+                    </button>
+                </div>
+            </div>
+
+            <!-- Teams Grid -->
+            <div class="grid md:grid-cols-3 gap-4 mb-6" id="teamsGrid">
+                <!-- Teams will be populated here -->
+            </div>
+
+            <!-- User Management Panel -->
+            <div class="border-t pt-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h4 class="font-semibold flex items-center">
+                        <i class="fas fa-user-friends text-gray-600 mr-2"></i>
+                        User Management Panel
+                    </h4>
+                    <select id="roleFilter" class="px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                        <option value="all">All Roles</option>
+                        <option value="admin">Admin</option>
+                        <option value="editor">Editor</option>
+                        <option value="viewer">Viewer</option>
+                    </select>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="min-w-full" id="userManagementTable">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">User</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Role</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Teams</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Last Active</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr>
+                                <td class="px-4 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-medium">A</div>
+                                        <div class="ml-3">
+                                            <div class="font-medium text-gray-900">Sam (You)</div>
+                                            <div class="text-sm text-gray-500">sam@example.com</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-4 whitespace-nowrap">
+                                    <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Admin</span>
+                                </td>
+                                <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-900">All Teams</td>
+                                <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">Online now</td>
+                                <td class="px-4 py-4 whitespace-nowrap text-sm font-medium">
+                                    <div class="flex space-x-2">
+                                        <button class="text-blue-600 hover:text-blue-900">Edit Role</button>
+                                        <button class="text-green-600 hover:text-green-900">Manage Teams</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enhanced Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white p-6 rounded-lg shadow relative">
+            <div class="text-3xl font-bold text-blue-600" id="totalChatbots">3</div>
+            <div class="text-gray-600">Total Chatbots</div>
+            <!-- Free Plan Limit Warning -->
+            <div id="chatbotLimitWarning" class="text-xs text-red-500 mt-1">
+                <i class="fas fa-exclamation-circle mr-1"></i>Limit: 1 chatbot
+            </div>
+            <!-- Enterprise Unlimited Badge -->
+            <div id="unlimitedBadge" class="text-xs text-green-600 mt-1" style="display: none;">
+                <i class="fas fa-infinity mr-1"></i>Unlimited
+            </div>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow">
+            <div class="text-3xl font-bold text-green-600">2</div>
+            <div class="text-gray-600">Active Bots</div>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow">
+            <div class="text-3xl font-bold text-purple-600">2,847</div>
+            <div class="text-gray-600">Total Messages</div>
+            <!-- Enterprise Team Analytics -->
+            <div id="teamAnalytics" class="text-xs text-gray-500 mt-1" style="display: none;">
+                <i class="fas fa-users mr-1"></i>Across 2 teams
+            </div>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow">
+            <div class="text-3xl font-bold text-orange-600">156</div>
+            <div class="text-gray-600">Today's Interactions</div>
+        </div>
+    </div>
+
+    <!-- Enhanced Chatbots Section -->
+    <div class="bg-white rounded-lg shadow p-6">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-semibold">Your Chatbots</h3>
+            <!-- Enterprise Create Options -->
+            <div id="enterpriseCreateOptions" style="display: none;">
+                <div class="flex space-x-2">
+                    <button onclick="createPersonalBot()" class="px-3 py-1 bg-gray-600 text-white rounded text-sm hover:bg-gray-700">
+                        <i class="fas fa-user mr-1"></i>Personal Bot
+                    </button>
+                    <button onclick="createTeamBot()" class="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700">
+                        <i class="fas fa-users mr-1"></i>Team Bot
+                    </button>
+                </div>
+            </div>
+            <!-- Free Plan Create Limitation -->
+            <div id="freeCreateLimit">
+                <button onclick="showChatbotLimitModal()" class="px-3 py-1 bg-gray-300 text-gray-600 rounded text-sm cursor-not-allowed">
+                    <i class="fas fa-lock mr-1"></i>Create Bot (Upgrade Required)
+                </button>
+            </div>
+        </div>
+        
+        <div class="space-y-4">
+            <div class="border rounded-lg p-4 flex justify-between items-center">
+                <div>
+                    <div class="flex items-center space-x-2">
+                        <h4 class="font-semibold">Customer Support Bot</h4>
+                        <!-- Team Collaboration Tags -->
+                        <span id="bot1TeamTag" class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs" style="display: none;">
+                            <i class="fas fa-users mr-1"></i>Support Team
+                        </span>
+                    </div>
+                    <p class="text-sm text-gray-600">Type: Web • Created 2 days ago • Last active 5 minutes ago</p>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">Active</span>
+                    <button class="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700">Configure</button>
+                    <!-- Enterprise Collaboration Button -->
+                    <button id="bot1Collaborate" onclick="manageBotCollaboration(1)" class="px-3 py-1 bg-purple-600 text-white rounded text-sm hover:bg-purple-700" style="display: none;">
+                        <i class="fas fa-users mr-1"></i>Collaborate
+                    </button>
+                </div>
+            </div>
+            
+            <div class="border rounded-lg p-4 flex justify-between items-center">
+                <div>
+                    <div class="flex items-center space-x-2">
+                        <h4 class="font-semibold">Sales Assistant</h4>
+                        <span id="bot2TeamTag" class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs" style="display: none;">
+                            <i class="fas fa-users mr-1"></i>Marketing Team
+                        </span>
+                    </div>
+                    <p class="text-sm text-gray-600">Type: WhatsApp • Created 1 week ago • Last active 2 hours ago</p>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">Active</span>
+                    <button class="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700">Configure</button>
+                    <button id="bot2Collaborate" onclick="manageBotCollaboration(2)" class="px-3 py-1 bg-purple-600 text-white rounded text-sm hover:bg-purple-700" style="display: none;">
+                        <i class="fas fa-users mr-1"></i>Collaborate
+                    </button>
+                </div>
+            </div>
+            
+            <div class="border rounded-lg p-4 flex justify-between items-center">
+                <div>
+                    <div class="flex items-center space-x-2">
+                        <h4 class="font-semibold">FAQ Bot</h4>
+                        <span id="bot3PersonalTag" class="px-2 py-1 bg-gray-100 text-gray-800 rounded-full text-xs" style="display: none;">
+                            <i class="fas fa-user mr-1"></i>Personal
+                        </span>
+                    </div>
+                    <p class="text-sm text-gray-600">Type: Messenger • Created 3 weeks ago • Last active yesterday</p>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <span class="px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-sm">Inactive</span>
+                    <button class="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700">Configure</button>
+                    <button id="bot3Collaborate" onclick="manageBotCollaboration(3)" class="px-3 py-1 bg-purple-600 text-white rounded text-sm hover:bg-purple-700" style="display: none;">
+                        <i class="fas fa-users mr-1"></i>Collaborate
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
             <!-- Bot Builder Tab -->
             <div id="builder" class="tab-content">
@@ -968,27 +1261,117 @@
                                 </div>
 
                                 <!-- Platform Selection -->
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-3">Choose Platform</label>
-                                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                                        <div class="border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors">
-                                            <i class="fas fa-globe text-3xl text-blue-600 mb-3"></i>
-                                            <div class="text-sm font-medium">Web</div>
-                                        </div>
-                                        <div class="border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors">
-                                            <i class="fab fa-whatsapp text-3xl text-green-600 mb-3"></i>
-                                            <div class="text-sm font-medium">WhatsApp</div>
-                                        </div>
-                                        <div class="border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors">
-                                            <i class="fab fa-facebook-messenger text-3xl text-blue-600 mb-3"></i>
-                                            <div class="text-sm font-medium">Messenger</div>
-                                        </div>
-                                        <div class="border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors">
-                                            <i class="fas fa-code text-3xl text-purple-600 mb-3"></i>
-                                            <div class="text-sm font-medium">API</div>
-                                        </div>
-                                    </div>
-                                </div>
+                              <div>
+    <label class="block text-sm font-medium text-gray-700 mb-3">Choose Platform</label>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <!-- Web Platform - Always Available -->
+        <div class="platform-card border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors" 
+             data-platform="web" onclick="selectPlatform('web')">
+            <i class="fas fa-globe text-3xl text-blue-600 mb-3"></i>
+            <div class="text-sm font-medium">Web</div>
+        </div>
+        
+        <!-- WhatsApp Platform - Locked for Free Users -->
+        <div class="platform-card locked border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer relative opacity-60" 
+             data-platform="whatsapp" onclick="showUpgradeModal('WhatsApp')">
+            <div class="absolute -top-2 -right-2 bg-orange-500 text-white text-xs px-2 py-1 rounded-full">
+                ENTERPRISE
+            </div>
+            <div class="absolute inset-0 flex items-center justify-center bg-gray-900 bg-opacity-20 rounded-lg">
+                <i class="fas fa-lock text-gray-600 text-2xl"></i>
+            </div>
+            <i class="fab fa-whatsapp text-3xl text-green-600 mb-3"></i>
+            <div class="text-sm font-medium">WhatsApp</div>
+        </div>
+        
+        <!-- Messenger Platform - Locked for Free Users -->
+        <div class="platform-card locked border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer relative opacity-60" 
+             data-platform="messenger" onclick="showUpgradeModal('Messenger')">
+            <div class="absolute -top-2 -right-2 bg-orange-500 text-white text-xs px-2 py-1 rounded-full">
+                ENTERPRISE
+            </div>
+            <div class="absolute inset-0 flex items-center justify-center bg-gray-900 bg-opacity-20 rounded-lg">
+                <i class="fas fa-lock text-gray-600 text-2xl"></i>
+            </div>
+            <i class="fab fa-facebook-messenger text-3xl text-blue-600 mb-3"></i>
+            <div class="text-sm font-medium">Messenger</div>
+        </div>
+        
+        <!-- API Platform - Available based on plan -->
+        <div class="platform-card border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors" 
+             data-platform="api" onclick="selectPlatform('api')">
+            <i class="fas fa-code text-3xl text-purple-600 mb-3"></i>
+            <div class="text-sm font-medium">API</div>
+        </div>
+    </div>
+</div>
+
+<!-- Upgrade Modal -->
+<div id="upgradeModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-lg p-8 max-w-2xl mx-4 relative">
+        <button onclick="closeUpgradeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+            <i class="fas fa-times text-xl"></i>
+        </button>
+        
+        <div class="text-center mb-6">
+            <div class="mx-auto w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mb-4">
+                <i class="fas fa-crown text-orange-500 text-2xl"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-900 mb-2">Upgrade to Enterprise</h3>
+            <p class="text-gray-600" id="upgradeDescription">Unlock advanced platform integrations and team collaboration features</p>
+        </div>
+
+        <!-- Plan Comparison -->
+        <div class="grid md:grid-cols-2 gap-6 mb-8">
+            <!-- Free Plan -->
+            <div class="border rounded-lg p-6">
+                <h4 class="font-semibold text-lg mb-4 text-center">Free Plan</h4>
+                <div class="text-center mb-4">
+                    <span class="text-3xl font-bold">€0</span>
+                    <span class="text-gray-600">/month</span>
+                </div>
+                <ul class="space-y-2 text-sm">
+                    <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> 1 Web chatbot</li>
+                    <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Basic analytics</li>
+                    <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Personal workspace</li>
+                    <li class="flex items-center text-gray-400"><i class="fas fa-times text-gray-400 mr-2"></i> WhatsApp integration</li>
+                    <li class="flex items-center text-gray-400"><i class="fas fa-times text-gray-400 mr-2"></i> Messenger integration</li>
+                    <li class="flex items-center text-gray-400"><i class="fas fa-times text-gray-400 mr-2"></i> Team collaboration</li>
+                </ul>
+            </div>
+
+            <!-- Enterprise Plan -->
+            <div class="border-2 border-orange-500 rounded-lg p-6 relative">
+                <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-orange-500 text-white px-4 py-1 rounded-full text-sm font-medium">
+                    RECOMMENDED
+                </div>
+                <h4 class="font-semibold text-lg mb-4 text-center">Enterprise Plan</h4>
+                <div class="text-center mb-4">
+                    <span class="text-3xl font-bold">€400</span>
+                    <span class="text-gray-600">/month</span>
+                </div>
+                <ul class="space-y-2 text-sm">
+                    <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Unlimited chatbots</li>
+                    <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> All platform integrations</li>
+                    <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Team management</li>
+                    <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Advanced analytics</li>
+                    <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Priority support</li>
+                    <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Role-based access</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="flex gap-4 justify-center">
+            <button onclick="closeUpgradeModal()" class="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                Maybe Later
+            </button>
+            <button onclick="initiateUpgrade()" class="px-6 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600">
+                Upgrade Now
+            </button>
+        </div>
+    </div>
+</div>
+
 
                                 <!-- Create Button -->
                                 <div class="flex justify-center pt-6">
@@ -1090,50 +1473,9 @@
                             <div x-show="selectedType !== ''" class="border-t pt-6">
                                 <!-- Tab Navigation -->
                                <!-- Tab Navigation -->
-<div class="border-b mb-6">
-    <nav class="flex space-x-8">
-        <button @click="currentTab = 'basic'" 
-            :class="currentTab === 'basic' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500'"
-            class="py-2 px-1 border-b-2 font-medium text-sm"  x-show="selectedType === 'ai-powered'">
-            Basic Setup
-        </button>
-        
-        <button @click="currentTab = 'intents'" 
-            :class="currentTab === 'intents' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500'"
-            class="py-2 px-1 border-b-2 font-medium text-sm"
-            x-show="selectedType === 'rule-based' ">
-            Intents/Rules
-        </button>
-         <button @click="currentTab = 'hybrid'" 
-            :class="currentTab === 'hybrid' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500'"
-            class="py-2 px-1 border-b-2 font-medium text-sm"
-            x-show="selectedType === 'hybrid'">
-            Intents/Hybrid
-        </button>
-        
-        <button @click="currentTab = 'ai-config'" 
-            :class="currentTab === 'ai-config' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500'"
-            class="py-2 px-1 border-b-2 font-medium text-sm"
-            x-show="selectedType === 'ai-powered'">
-            AI Configuration
-        </button>
-        
-        <!-- UPDATED: Conditionally show persona tab based on checkbox -->
-        <button @click="currentTab = 'persona'" 
-            :class="currentTab === 'persona' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500'"
-            class="py-2 px-1 border-b-2 font-medium text-sm relative"
-            x-show="enablePersonaDesign">
-            Bot Persona & Design
-            <!-- Optional: Add indicator that it's an optional feature -->
-            <span class="absolute -top-1 -right-1 bg-green-500 text-white text-xs rounded-full w-2 h-2"></span>
-        </button>
-        
-        <button @click="currentTab = 'preview'" 
-            :class="currentTab === 'preview' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500'"
-            class="py-2 px-1 border-b-2 font-medium text-sm">
-            <i class="fas fa-eye mr-2"></i>Preview
-        </button>
-    </nav>
+
+
+
 </div>
 
 
@@ -4136,7 +4478,7 @@ X-Bot-ID: <span x-text="botId || 'cb_' + Math.random().toString(36).substr(2, 9)
                         <span class="icon">👤</span>
                         Full Name
                     </label>
-                    <input type="text" name="fullName" class="form-input" value="Anurag" placeholder="Enter your full name">
+                    <input type="text" name="fullName" class="form-input" value="Sam" placeholder="Enter your full name">
                 </div>
 
                 <!-- Email Address -->
@@ -4145,7 +4487,7 @@ X-Bot-ID: <span x-text="botId || 'cb_' + Math.random().toString(36).substr(2, 9)
                         <span class="icon">📧</span>
                         Email Address
                     </label>
-                    <input type="email" name="email" id="emailInput" class="form-input" value="anurag@example.com" placeholder="Enter your email">
+                    <input type="email" name="email" id="emailInput" class="form-input" value="sam@example.com" placeholder="Enter your email">
                 </div>
 
                 <!-- Phone Number -->
@@ -4489,6 +4831,876 @@ X-Bot-ID: <span x-text="botId || 'cb_' + Math.random().toString(36).substr(2, 9)
             }
         }
     </script>
+<script>
+// Global Variables
+let currentPlan = 'free';
+let onboardingStep = 0;
+let selectedPlan = null;
+let teams = []; // Store created teams
+let teamMembers = []; // Store team members
+
+// Step 1: Show Upgrade Modal
+function showUpgradeModal() {
+    const modal = createUpgradeModal();
+    document.body.appendChild(modal);
+}
+
+function createUpgradeModal() {
+    const modal = document.createElement('div');
+    modal.id = 'upgradeModal';
+    modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+    modal.innerHTML = `
+        <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full mx-4 max-h-[80vh] overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">Choose Your Plan</h2>
+                    <button onclick="closeUpgradeModal()" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- Free Plan -->
+                    <div class="border rounded-lg p-6 text-center bg-gray-50">
+                        <h3 class="text-xl font-bold mb-4">Free Plan</h3>
+                        <div class="text-3xl font-bold text-gray-600 mb-2">$0</div>
+                        <div class="text-gray-600 mb-4">per month</div>
+                        <div class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium mb-4">Current Plan</div>
+                        <ul class="text-left space-y-2 mb-6">
+                            <li>✓ 1 Chatbot</li>
+                            <li>✓ 100 conversations/month</li>
+                            <li>✓ Basic templates</li>
+                            <li>✗ No team features</li>
+                            <li>✗ No role management</li>
+                            <li>✗ Limited analytics</li>
+                        </ul>
+                    </div>
+
+                    <!-- Enterprise Plan -->
+                    <div class="border-2 border-purple-500 rounded-lg p-6 text-center bg-gradient-to-br from-purple-50 to-blue-50">
+                        <div class="bg-purple-500 text-white px-3 py-1 rounded-full text-sm font-medium mb-2 inline-block">Recommended</div>
+                        <h3 class="text-xl font-bold mb-4">Enterprise</h3>
+                        <div class="text-3xl font-bold text-purple-600 mb-2">$199</div>
+                        <div class="text-gray-600 mb-4">per month</div>
+                        <ul class="text-left space-y-2 mb-6">
+                            <li>✓ <strong>Unlimited chatbots</strong></li>
+                            <li>✓ <strong>Unlimited conversations</strong></li>
+                            <li>✓ <strong>Full team management</strong></li>
+                            <li>✓ <strong>Role assignment (Admin/Editor/Viewer)</strong></li>
+                            <li>✓ <strong>Team-level analytics</strong></li>
+                            <li>✓ <strong>Priority support</strong></li>
+                            <li>✓ <strong>Advanced collaboration tools</strong></li>
+                            <li>✓ <strong>White-label options</strong></li>
+                        </ul>
+                        <button onclick="proceedToPayment('enterprise', 199)" class="w-full py-3 px-4 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-semibold">
+                            Upgrade to Enterprise - $199/month
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-6 text-gray-600">
+                    <p><i class="fas fa-shield-alt mr-1"></i><strong>30-day money-back guarantee • Cancel anytime</strong></p>
+                </div>
+            </div>
+        </div>
+    `;
+    return modal;
+}
+
+// Step 2: Handle Payment Process
+function proceedToPayment(planType, price) {
+    // Store selected plan
+    selectedPlan = {
+        type: planType,
+        price: price,
+        currency: 'USD'
+    };
+    
+    closeUpgradeModal();
+    showLoadingMessage('Preparing secure payment...');
+    
+    // Navigate to payment
+    setTimeout(() => {
+        showPaymentModal();
+    }, 1500);
+}
+
+function showPaymentModal() {
+    hideLoadingMessage();
+    
+    const paymentModal = document.createElement('div');
+    paymentModal.id = 'paymentModal';
+    paymentModal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+    paymentModal.innerHTML = `
+        <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">Complete Payment</h2>
+                    <button onclick="closePaymentModal()" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <!-- Order Summary -->
+                <div class="bg-gray-50 rounded-lg p-4 mb-6">
+                    <h3 class="font-semibold mb-2">Order Summary</h3>
+                    <div class="flex justify-between items-center">
+                        <span>${selectedPlan.type.charAt(0).toUpperCase() + selectedPlan.type.slice(1)} Plan</span>
+                        <span class="font-bold">$${selectedPlan.price}/month</span>
+                    </div>
+                </div>
+                
+                <!-- Payment Form -->
+                <form id="paymentForm" onsubmit="processPayment(event)">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Card Number</label>
+                            <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" required>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Expiry Date</label>
+                                <input type="text" id="expiryDate" placeholder="MM/YY" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" required>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">CVV</label>
+                                <input type="text" id="cvv" placeholder="123" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" required>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Cardholder Name</label>
+                            <input type="text" id="cardholderName" placeholder="John Doe" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" required>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="w-full mt-6 py-3 px-4 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-semibold">
+                        <i class="fas fa-lock mr-2"></i>Pay $${selectedPlan.price} Securely
+                    </button>
+                </form>
+                
+                <div class="text-center mt-4 text-xs text-gray-500">
+                    <i class="fas fa-shield-alt mr-1"></i>Your payment is secured with 256-bit SSL encryption
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(paymentModal);
+}
+
+function processPayment(event) {
+    event.preventDefault();
+    
+    const formData = {
+        cardNumber: document.getElementById('cardNumber').value,
+        expiryDate: document.getElementById('expiryDate').value,
+        cvv: document.getElementById('cvv').value,
+        cardholderName: document.getElementById('cardholderName').value,
+        plan: selectedPlan
+    };
+    
+    // Show payment processing
+    showPaymentProcessing();
+    
+    // Simulate payment API call
+    setTimeout(() => {
+        handlePaymentSuccess();
+    }, 3000);
+}
+
+function showPaymentProcessing() {
+    const form = document.getElementById('paymentForm');
+    form.innerHTML = `
+        <div class="text-center py-8">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
+            <p class="text-gray-700 font-medium">Processing your payment...</p>
+            <p class="text-sm text-gray-500">Please don't close this window</p>
+        </div>
+    `;
+}
+
+function handlePaymentSuccess() {
+    closePaymentModal();
+    
+    // Show success message
+    showSuccessNotification('🎉 Payment successful! Upgrading your account...');
+    
+    // Upgrade the user's plan
+    setTimeout(() => {
+        upgradeToEnterprise();
+    }, 2000);
+}
+
+function handlePaymentError(errorMessage) {
+    showErrorNotification(`Payment failed: ${errorMessage}`);
+}
+
+// Step 3: Main Upgrade Function
+function upgradeToEnterprise() {
+    currentPlan = 'enterprise';
+    
+    // Show success notification
+    showSuccessNotification('🎉 Welcome to Enterprise! Your dashboard is being updated...');
+    
+    // Step 4: Transform Dashboard
+    setTimeout(() => {
+        transformDashboardToEnterprise();
+    }, 1000);
+}
+
+// Step 4: Dashboard Transformation
+function transformDashboardToEnterprise() {
+    // Update plan badge
+    updatePlanBadge();
+    
+    // Hide free plan elements
+    hideFreeElements();
+    
+    // Show enterprise elements
+    showEnterpriseElements();
+    
+    // Update stats
+    updateStatsForEnterprise();
+    
+    // Add team tags to chatbots
+    addTeamTagsToChatbots();
+    
+    // Show onboarding flow
+    showOnboardingFlow();
+    
+    // Assign admin role
+    assignAdminRole();
+    
+    showSuccessNotification('Dashboard updated! You now have full Enterprise features.');
+}
+
+// Update plan badge
+function updatePlanBadge() {
+    const planBadge = document.getElementById('currentPlanBadge');
+    planBadge.textContent = 'Enterprise';
+    planBadge.className = 'px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-medium';
+    
+    // Hide upgrade button
+    document.getElementById('upgradeButton').style.display = 'none';
+}
+
+// Hide free plan elements
+function hideFreeElements() {
+    const elementsToHide = [
+        'freeUpgradeBanner',
+        'chatbotLimitWarning', 
+        'freeCreateLimit'
+    ];
+    
+    elementsToHide.forEach(id => {
+        const element = document.getElementById(id);
+        if (element) element.style.display = 'none';
+    });
+}
+
+// Show enterprise elements
+function showEnterpriseElements() {
+    const elementsToShow = [
+        'enterpriseTeamSection',
+        'enterpriseCreateOptions',
+        'unlimitedBadge',
+        'teamAnalytics'
+    ];
+    
+    elementsToShow.forEach(id => {
+        const element = document.getElementById(id);
+        if (element) element.style.display = 'block';
+    });
+    
+    // Show collaboration buttons on chatbots
+    for (let i = 1; i <= 3; i++) {
+        const collabBtn = document.getElementById(`bot${i}Collaborate`);
+        if (collabBtn) collabBtn.style.display = 'inline-block';
+    }
+}
+
+// Update stats for enterprise
+function updateStatsForEnterprise() {
+    const totalChatbots = document.getElementById('totalChatbots');
+    totalChatbots.textContent = '∞';
+    totalChatbots.className = 'text-3xl font-bold text-purple-600';
+}
+
+// Add team tags to chatbots
+function addTeamTagsToChatbots() {
+    document.getElementById('bot1TeamTag').style.display = 'inline-block';
+    document.getElementById('bot2TeamTag').style.display = 'inline-block';
+    document.getElementById('bot3PersonalTag').style.display = 'inline-block';
+}
+
+// Show onboarding flow
+function showOnboardingFlow() {
+    document.getElementById('enterpriseOnboarding').style.display = 'block';
+    populateTeamsGrid();
+}
+
+// Assign admin role
+function assignAdminRole() {
+    console.log('User assigned Admin role with full access');
+}
+
+// NEW: Create Team Modal Function
+function createTeam() {
+    const createTeamModal = document.createElement('div');
+    createTeamModal.id = 'createTeamModal';
+    createTeamModal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+    createTeamModal.innerHTML = `
+        <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">Create New Team</h2>
+                    <button onclick="closeCreateTeamModal()" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <form id="createTeamForm" onsubmit="handleCreateTeam(event)">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Team Name</label>
+                            <input type="text" id="teamName" placeholder="e.g., Marketing Team, Support Team" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                            <textarea id="teamDescription" placeholder="Brief description of the team's purpose" 
+                                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 h-20 resize-none"></textarea>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Team Color</label>
+                            <div class="flex space-x-2">
+                                <button type="button" onclick="selectTeamColor('blue')" class="w-8 h-8 bg-blue-500 rounded-full focus:ring-2 focus:ring-blue-300" id="color-blue"></button>
+                                <button type="button" onclick="selectTeamColor('green')" class="w-8 h-8 bg-green-500 rounded-full focus:ring-2 focus:ring-green-300" id="color-green"></button>
+                                <button type="button" onclick="selectTeamColor('purple')" class="w-8 h-8 bg-purple-500 rounded-full focus:ring-2 focus:ring-purple-300" id="color-purple"></button>
+                                <button type="button" onclick="selectTeamColor('red')" class="w-8 h-8 bg-red-500 rounded-full focus:ring-2 focus:ring-red-300" id="color-red"></button>
+                                <button type="button" onclick="selectTeamColor('yellow')" class="w-8 h-8 bg-yellow-500 rounded-full focus:ring-2 focus:ring-yellow-300" id="color-yellow"></button>
+                                <button type="button" onclick="selectTeamColor('indigo')" class="w-8 h-8 bg-indigo-500 rounded-full focus:ring-2 focus:ring-indigo-300" id="color-indigo"></button>
+                            </div>
+                            <input type="hidden" id="selectedTeamColor" value="blue">
+                        </div>
+                    </div>
+                    
+                    <div class="flex space-x-3 mt-6">
+                        <button type="button" onclick="closeCreateTeamModal()" class="flex-1 py-2 px-4 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
+                            Cancel
+                        </button>
+                        <button type="submit" class="flex-1 py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                            <i class="fas fa-users mr-2"></i>Create Team
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(createTeamModal);
+    
+    // Auto-focus on team name input
+    setTimeout(() => {
+        document.getElementById('teamName').focus();
+    }, 100);
+}
+
+let selectedColor = 'blue';
+
+function selectTeamColor(color) {
+    // Remove previous selection
+    document.querySelectorAll('[id^="color-"]').forEach(btn => {
+        btn.classList.remove('ring-2', 'ring-offset-2');
+    });
+    
+    // Add selection to clicked color
+    document.getElementById(`color-${color}`).classList.add('ring-2', 'ring-offset-2');
+    document.getElementById('selectedTeamColor').value = color;
+    selectedColor = color;
+}
+
+function handleCreateTeam(event) {
+    event.preventDefault();
+    
+    const teamName = document.getElementById('teamName').value;
+    const teamDescription = document.getElementById('teamDescription').value;
+    const teamColor = document.getElementById('selectedTeamColor').value;
+    
+    // Create team object
+    const newTeam = {
+        id: Date.now(),
+        name: teamName,
+        description: teamDescription,
+        color: teamColor,
+        members: [
+            {
+                id: 1,
+                name: 'sam',
+                email: 'sam@example.com',
+                role: 'Admin',
+                avatar: 'A'
+            }
+        ],
+        chatbots: 0,
+        createdAt: new Date()
+    };
+    
+    // Add to teams array
+    teams.push(newTeam);
+    
+    closeCreateTeamModal();
+    showSuccessNotification(`Team "${teamName}" created successfully!`);
+    
+    // Refresh teams grid
+    populateTeamsGrid();
+}
+
+function closeCreateTeamModal() {
+    const modal = document.getElementById('createTeamModal');
+    if (modal) modal.remove();
+}
+
+// NEW: Invite User Modal Function
+function inviteUser() {
+    const inviteUserModal = document.createElement('div');
+    inviteUserModal.id = 'inviteUserModal';
+    inviteUserModal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+    inviteUserModal.innerHTML = `
+        <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">Invite Team Member</h2>
+                    <button onclick="closeInviteUserModal()" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <form id="inviteUserForm" onsubmit="handleInviteUser(event)">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                            <input type="email" id="inviteEmail" placeholder="user@example.com" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" required>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                            <input type="text" id="inviteName" placeholder="John Doe" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" required>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Role</label>
+                            <select id="inviteRole" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                                <option value="viewer">Viewer - Can view chatbots and analytics</option>
+                                <option value="editor">Editor - Can create and edit chatbots</option>
+                                <option value="admin">Admin - Full access to team management</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Assign to Team</label>
+                            <select id="inviteTeam" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                                <option value="">Select a team (optional)</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Personal Message (Optional)</label>
+                            <textarea id="inviteMessage" placeholder="Welcome to our team! We're excited to have you on board." 
+                                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 h-20 resize-none"></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="flex space-x-3 mt-6">
+                        <button type="button" onclick="closeInviteUserModal()" class="flex-1 py-2 px-4 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
+                            Cancel
+                        </button>
+                        <button type="submit" class="flex-1 py-2 px-4 bg-green-600 text-white rounded-lg hover:bg-green-700">
+                            <i class="fas fa-envelope mr-2"></i>Send Invitation
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(inviteUserModal);
+    
+    // Populate teams dropdown
+    const teamSelect = document.getElementById('inviteTeam');
+    teams.forEach(team => {
+        const option = document.createElement('option');
+        option.value = team.id;
+        option.textContent = team.name;
+        teamSelect.appendChild(option);
+    });
+    
+    // Auto-focus on email input
+    setTimeout(() => {
+        document.getElementById('inviteEmail').focus();
+    }, 100);
+}
+
+function handleInviteUser(event) {
+    event.preventDefault();
+    
+    const email = document.getElementById('inviteEmail').value;
+    const name = document.getElementById('inviteName').value;
+    const role = document.getElementById('inviteRole').value;
+    const teamId = document.getElementById('inviteTeam').value;
+    const message = document.getElementById('inviteMessage').value;
+    
+    // Create invitation object
+    const invitation = {
+        id: Date.now(),
+        email: email,
+        name: name,
+        role: role,
+        teamId: teamId,
+        message: message,
+        status: 'pending',
+        sentAt: new Date()
+    };
+    
+    // Add to team members array (simulate pending invitation)
+    teamMembers.push({
+        id: invitation.id,
+        name: name,
+        email: email,
+        role: role,
+        status: 'pending',
+        avatar: name.charAt(0).toUpperCase()
+    });
+    
+    closeInviteUserModal();
+    
+    // Show loading message
+    showLoadingMessage('Sending invitation...');
+    
+    // Simulate sending invitation
+    setTimeout(() => {
+        hideLoadingMessage();
+        showSuccessNotification(`🎉 Invitation sent to ${name} (${email})!`);
+        
+        // Update user management table
+        updateUserManagementTable();
+    }, 2000);
+}
+
+function closeInviteUserModal() {
+    const modal = document.getElementById('inviteUserModal');
+    if (modal) modal.remove();
+}
+
+// Update user management table
+function updateUserManagementTable() {
+    const tableBody = document.querySelector('#userManagementTable tbody');
+    if (!tableBody) return;
+    
+    
+    const existingRows = tableBody.querySelectorAll('tr');
+    for (let i = 1; i < existingRows.length; i++) {
+        existingRows[i].remove();
+    }
+    
+    // Add pending invitations
+    teamMembers.forEach(member => {
+        if (member.status === 'pending') {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="px-4 py-4 whitespace-nowrap">
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 bg-gray-400 rounded-full flex items-center justify-center text-white font-medium">${member.avatar}</div>
+                        <div class="ml-3">
+                            <div class="font-medium text-gray-900">${member.name}</div>
+                            <div class="text-sm text-gray-500">${member.email}</div>
+                        </div>
+                    </div>
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap">
+                    <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">${member.role} (Pending)</span>
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-900">Not assigned</td>
+                <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">Invitation sent</td>
+                <td class="px-4 py-4 whitespace-nowrap text-sm font-medium">
+                    <div class="flex space-x-2">
+                        <button onclick="resendInvitation(${member.id})" class="text-blue-600 hover:text-blue-900">Resend</button>
+                        <button onclick="cancelInvitation(${member.id})" class="text-red-600 hover:text-red-900">Cancel</button>
+                    </div>
+                </td>
+            `;
+            tableBody.appendChild(row);
+        }
+    });
+}
+
+function resendInvitation(memberId) {
+    const member = teamMembers.find(m => m.id === memberId);
+    if (member) {
+        showSuccessNotification(`Invitation resent to ${member.name}!`);
+    }
+}
+
+function cancelInvitation(memberId) {
+    const memberIndex = teamMembers.findIndex(m => m.id === memberId);
+    if (memberIndex > -1) {
+        const member = teamMembers[memberIndex];
+        teamMembers.splice(memberIndex, 1);
+        showSuccessNotification(`Invitation to ${member.name} cancelled`);
+        updateUserManagementTable();
+    }
+}
+
+// Onboarding Functions
+function createFirstTeam() {
+    markStepComplete(1);
+    createTeam(); // Open create team modal
+}
+
+function inviteFirstUser() {
+    markStepComplete(2);
+    inviteUser(); // Open invite user modal
+}
+
+function createTeamBot() {
+    markStepComplete(3);
+    showSuccessNotification('Team chatbot created successfully!');
+    checkOnboardingComplete();
+}
+
+function markStepComplete(stepNumber) {
+    const checkIcon = document.getElementById(`step${stepNumber}Check`);
+    const stepDiv = document.getElementById(`step${stepNumber}`);
+    
+    if (checkIcon) checkIcon.style.display = 'inline-block';
+    if (stepDiv) stepDiv.classList.add('opacity-75');
+    
+    onboardingStep = Math.max(onboardingStep, stepNumber);
+}
+
+function checkOnboardingComplete() {
+    if (onboardingStep >= 3) {
+        setTimeout(() => {
+            document.getElementById('enterpriseOnboarding').style.display = 'none';
+            showSuccessNotification('🎉 Onboarding complete! You\'re ready to collaborate with your team.');
+        }, 2000);
+    }
+}
+
+function dismissOnboarding() {
+    document.getElementById('enterpriseOnboarding').style.display = 'none';
+}
+
+// Enhanced Populate teams grid
+function populateTeamsGrid() {
+    const teamsGrid = document.getElementById('teamsGrid');
+    let teamsHTML = '';
+    
+    // Add existing teams
+    teams.forEach(team => {
+        const colorClasses = {
+            blue: 'bg-blue-500',
+            green: 'bg-green-500',
+            purple: 'bg-purple-500',
+            red: 'bg-red-500',
+            yellow: 'bg-yellow-500',
+            indigo: 'bg-indigo-500'
+        };
+        
+        teamsHTML += `
+            <div class="bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+                <div class="flex justify-between items-start mb-3">
+                    <div>
+                        <h4 class="font-semibold">${team.name}</h4>
+                        <p class="text-sm text-gray-600">${team.members.length} members • ${team.chatbots} chatbots</p>
+                    </div>
+                    <div class="dropdown relative">
+                        <button class="text-gray-400 hover:text-gray-600 p-1">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-2">
+                    ${team.members.map(member => `
+                        <div class="w-8 h-8 ${colorClasses[team.color]} rounded-full flex items-center justify-center text-white text-sm font-medium">${member.avatar}</div>
+                    `).join('')}
+                    <button onclick="inviteUser()" class="w-8 h-8 border-2 border-dashed border-gray-300 rounded-full flex items-center justify-center text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-plus text-xs"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+    });
+    
+    // Add default teams if no custom teams exist
+    if (teams.length === 0) {
+        teamsHTML += `
+            <div class="bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+                <div class="flex justify-between items-start mb-3">
+                    <div>
+                        <h4 class="font-semibold">Marketing Team</h4>
+                        <p class="text-sm text-gray-600">3 members • 2 chatbots</p>
+                    </div>
+                    <div class="dropdown relative">
+                        <button class="text-gray-400 hover:text-gray-600 p-1">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm font-medium">J</div>
+                    <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white text-sm font-medium">S</div>
+                    <div class="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white text-sm font-medium">M</div>
+                    <button onclick="inviteUser()" class="w-8 h-8 border-2 border-dashed border-gray-300 rounded-full flex items-center justify-center text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-plus text-xs"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+                <div class="flex justify-between items-start mb-3">
+                    <div>
+                        <h4 class="font-semibold">Support Team</h4>
+                        <p class="text-sm text-gray-600">2 members • 1 chatbot</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center text-white text-sm font-medium">A</div>
+                    <div class="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center text-white text-sm font-medium">K</div>
+                    <button onclick="inviteUser()" class="w-8 h-8 border-2 border-dashed border-gray-300 rounded-full flex items-center justify-center text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-plus text-xs"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+    
+    // Add create new team card
+    teamsHTML += `
+        <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 flex flex-col items-center justify-center text-center hover:border-purple-400 hover:bg-purple-50 transition-colors cursor-pointer" onclick="createTeam()">
+            <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mb-2">
+                <i class="fas fa-plus text-gray-400"></i>
+            </div>
+            <p class="text-gray-600 font-medium">Create New Team</p>
+            <p class="text-xs text-gray-500">Organize projects and users</p>
+        </div>
+    `;
+    
+    teamsGrid.innerHTML = teamsHTML;
+}
+
+// Utility Functions
+function closeUpgradeModal() {
+    const modal = document.getElementById('upgradeModal');
+    if (modal) modal.remove();
+}
+
+function closePaymentModal() {
+    const modal = document.getElementById('paymentModal');
+    if (modal) modal.remove();
+}
+
+function showLoadingMessage(message) {
+    const loader = document.createElement('div');
+    loader.id = 'paymentLoader';
+    loader.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+    loader.innerHTML = `
+        <div class="bg-white rounded-lg p-6 text-center">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
+            <p class="text-gray-700">${message}</p>
+        </div>
+    `;
+    document.body.appendChild(loader);
+}
+
+function hideLoadingMessage() {
+    const loader = document.getElementById('paymentLoader');
+    if (loader) loader.remove();
+}
+
+function showSuccessNotification(message) {
+    const notification = document.createElement('div');
+    notification.className = 'fixed top-4 right-4 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg z-50 max-w-md';
+    notification.innerHTML = `
+        <div class="flex items-center">
+            <i class="fas fa-check-circle mr-2"></i>
+            ${message}
+        </div>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.remove();
+    }, 4000);
+}
+
+function showErrorNotification(message) {
+    const notification = document.createElement('div');
+    notification.className = 'fixed top-4 right-4 bg-red-600 text-white px-6 py-3 rounded-lg shadow-lg z-50 max-w-md';
+    notification.innerHTML = `
+        <div class="flex items-center">
+            <i class="fas fa-exclamation-circle mr-2"></i>
+            ${message}
+        </div>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.remove();
+    }, 5000);
+}
+
+// Additional Enterprise Functions
+function manageBotCollaboration(botId) {
+    showSuccessNotification(`Managing collaboration for Bot ${botId}`);
+}
+
+function showChatbotLimitModal() {
+    showUpgradeModal();
+}
+
+function createPersonalBot() {
+    showSuccessNotification('Creating personal bot...');
+}
+
+// Input formatting for payment form
+document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('input', function(e) {
+        if (e.target.id === 'cardNumber') {
+            let value = e.target.value.replace(/\s/g, '').replace(/[^0-9]/gi, '');
+            let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
+            if (formattedValue.length <= 19) {
+                e.target.value = formattedValue;
+            }
+        }
+        
+        if (e.target.id === 'expiryDate') {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length >= 2) {
+                value = value.substring(0, 2) + '/' + value.substring(2, 4);
+            }
+            e.target.value = value;
+        }
+        
+        if (e.target.id === 'cvv') {
+            e.target.value = e.target.value.replace(/[^0-9]/g, '').substring(0, 4);
+        }
+    });
+});
+</script>
+
 
 </body>
 </html>

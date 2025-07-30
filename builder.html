@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bot Builder - ChatBot Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .feature-card {
+            background: linear-gradient(145deg, #ffffff, #f0f0f0);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 20px 20px 60px #d9d9d9, -20px -20px 60px #ffffff;
+        }
+        
+        .nav-item {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .nav-item:hover::before {
+            left: 100%;
+        }
+
+        .step-active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .step-completed {
+            background-color: #10b981;
+            color: white;
+        }
+        
+        .step-inactive {
+            background-color: #f3f4f6;
+            color: #6b7280;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-4">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-robot text-3xl text-blue-600"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-gray-800">ChatBot Pro</h1>
+                        <p class="text-sm text-gray-600">AI-Powered Solutions</p>
+                    </div>
+                </div>
+                
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="index.html" class="nav-item text-gray-700 hover:bg-blue-100 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">Dashboard</a>
+                        <a href="#" class="nav-item bg-blue-600 text-white px-3 py-2 rounded-md text-sm font-medium">Bot Builder</a>
+                        <a href="#" class="nav-item text-gray-700 hover:bg-blue-100 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">Analytics</a>
+                        <a href="#" class="nav-item text-gray-700 hover:bg-blue-100 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">Settings</a>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <button class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200">
+                        <i class="fas fa-save mr-2"></i>Save
+                    </button>
+                    <button class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200">
+                        <i class="fas fa-rocket mr-2"></i>Deploy
+                    </button>
+                    <div class="relative">
+                        <button class="flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                            <img class="h-8 w-8 rounded-full" src="https://via.placeholder.com/32x32/4F46E5/FFFFFF?text=A" alt="Profile">
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        <!-- Progress Steps -->
+        <div class="mb-8">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="step-completed w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div class="w-20 h-1 bg-green-500"></div>
+                    <div class="step-active w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium">2</div>
+                    <div class="w-20 h-1 bg-gray-300"></div>
+                    <div class="step-inactive w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium">3</div>
+                    <div class="w-20 h-1 bg-gray-300"></div>
+                    <div class="step-inactive w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium">4</div>
+                </div>
+                <p class="text-sm text-gray-600">Step 2 of 4: Configure Bot</p>
+            </div>
+            <div class="flex justify-between mt-2 text-sm text-gray-600">
+                <span>Basic Info</span>
+                <span>Configure</span>
+                <span>Design</span>
+                <span>Deploy</span>
+            </div>
+        </div>
+
+        <!-- Bot Creation Form -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Configuration Panel -->
+            <div class="lg:col-span-2 space-y-6">
+                <!-- Basic Information -->
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h3 class="text-xl font-bold text-gray-900 mb-6">Basic Information</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Bot Name</label>
+                            <input type="text" placeholder="Enter bot name" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <p class="text-sm text-gray-500 mt-1">Start by giving your chatbot a name and description.</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                            <textarea placeholder="Describe what your bot does" rows="3" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
+                        </div>
+                        <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                            <div class="flex items-center">
+                                <i class="fas fa-check-circle text-green-600 mr-2"></i>
+                                <p class="text-green-800 text-sm">Your bot "Customer Support AI" has been created.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bot Configuration -->
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h3 class="text-xl font-bold text-gray-900 mb-6">Bot Configuration</h3>
+                    <p class="text-gray-600 mb-6">Configure your chatbot by clicking the configure button below to set up its behavior and responses.</p>
+                    
+                    <div class="space-y-6">
+                        <!-- Bot Type Selection -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-4">Bot Type</label>
+                            <div class="space-y-3">
+                                <label class="flex items-center p-4 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
+                                    <input type="radio" name="bot-type" value="ai" class="w-4 h-4 text-blue-600" checked>
+                                    <div class="ml-3">
+                                        <div class="flex items-center">
+                                            <i class="fas fa-brain text-blue-600 mr-2"></i>
+                                            <span class="font-medium text-gray-900">AI-Powered Bot</span>
+                                        </div>
+                                        <p class="text-sm text-gray-500">Uses advanced AI models to understand and respond to user queries naturally.</p>
+                                    </div>
+                                </label>
+                                
+                                <label class="flex items-center p-4 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
+                                    <input type="radio" name="bot-type" value="rule" class="w-4 h-4 text-blue-600">
+                                    <div class="ml-3">
+                                        <div class="flex items-center">
+                                            <i class="fas fa-code-branch text-green-600 mr-2"></i>
+                                            <span class="font-medium text-gray-900">Rule-Based Bot</span>
+                                        </div>
+                                        <p class="text-sm text-gray-500">Uses predefined rules and decision trees to handle user interactions.</p>
+                                    </div>
+                                </label>
+                                
+                                <label class="flex items-center p-4 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
+                                    <input type="radio" name="bot-type" value="hybrid" class="w-4 h-4 text-blue-600">
+                                    <div class="ml-3">
+                                        <div class="flex items-center">
+                                            <i class="fas fa-cogs text-purple-600 mr-2"></i>
+                                            <span class="font-medium text-gray-900">Hybrid Bot</span>
+                                        </div>
+                                        <p class="text-sm text-gray-500">Combines rule-based logic with AI intelligence for optimal performance.</p>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- AI Model Configuration -->
+                        <div class="border-t pt-6">
+                            <h4 class="font-medium text-gray-900 mb-4">
+                                <i class="fas fa-sliders-h text-blue-600 mr-2"></i>
+                                AI Model Settings
+                            </h4>
+                            <p class="text-gray-600 text-sm mb-4">Fine-tune your AI model's behavior and response characteristics.</p>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Response Temperature</label>
+                                    <input type="range" min="0" max="100" value="70" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                                    <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                        <span>Conservative</span>
+                                        <span>Creative</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Max Response Length</label>
+                                    <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                        <option>Short (50 words)</option>
+                                        <option selected>Medium (150 words)</option>
+                                        <option>Long (300 words)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Design & Persona -->
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h3 class="text-xl font-bold text-gray-900 mb-6">Design & Persona</h3>
+                    <p class="text-gray-600 mb-6">Choose a persona preset with its default design, or create a custom look.</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                        <div class="border-2 border-blue-500 rounded-lg p-4 cursor-pointer bg-blue-50">
+                            <div class="text-center">
+                                <i class="fas fa-user-tie text-3xl text-blue-600 mb-2"></i>
+                                <h4 class="font-medium text-gray-900">Professional</h4>
+                                <p class="text-sm text-gray-600">Formal and business-oriented</p>
+                            </div>
+                        </div>
+                        <div class="border-2 border-gray-300 rounded-lg p-4 cursor-pointer hover:border-blue-300">
+                            <div class="text-center">
+                                <i class="fas fa-smile text-3xl text-green-600 mb-2"></i>
+                                <h4 class="font-medium text-gray-900">Friendly</h4>
+                                <p class="text-sm text-gray-600">Casual and approachable</p>
+                            </div>
+                        </div>
+                        <div class="border-2 border-gray-300 rounded-lg p-4 cursor-pointer hover:border-blue-300">
+                            <div class="text-center">
+                                <i class="fas fa-palette text-3xl text-purple-600 mb-2"></i>
+                                <h4 class="font-medium text-gray-900">Custom</h4>
+                                <p class="text-sm text-gray-600">Full customization with advanced options</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <h5 class="font-medium text-gray-900 mb-3">Color Scheme</h5>
+                        <div class="flex space-x-3">
+                            <div class="w-8 h-8 bg-blue-600 rounded-full cursor-pointer border-2 border-blue-800"></div>
+                            <div class="w-8 h-8 bg-green-600 rounded-full cursor-pointer border-2 border-transparent hover:border-gray-400"></div>
+                            <div class="w-8 h-8 bg-purple-600 rounded-full cursor-pointer border-2 border-transparent hover:border-gray-400"></div>
+                            <div class="w-8 h-8 bg-red-600 rounded-full cursor-pointer border-2 border-transparent hover:border-gray-400"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Deployment Options -->
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h3 class="text-xl font-bold text-gray-900 mb-6">Deployment Options</h3>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between p-4 border border-gray-300 rounded-lg">
+                            <div class="flex items-center">
+                                <i class="fas fa-code text-blue-600 text-xl mr-3"></i>
+                                <div>
+                                    <h4 class="font-medium text-gray-900">Get Integration Code</h4>
+                                    <p class="text-sm text-gray-600">Get your bot integration code</p>
+                                </div>
+                            </div>
+                            <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200">
+                                Get Code
+                            </button>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="p-4 border border-gray-300 rounded-lg">
+                                <h5 class="font-medium text-gray-900 mb-2">
+                                    <i class="fas fa-palette text-purple-600 mr-2"></i>
+                                    With Custom Design
+                                </h5>
+                                <p class="text-sm text-gray-600 mb-3">Your bot includes custom styling and persona design.</p>
+                                <button class="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-lg text-sm font-medium transition-colors duration-200">
+                                    Export Enhanced
+                                </button>
+                            </div>
+                            
+                            <div class="p-4 border border-gray-300 rounded-lg">
+                                <h5 class="font-medium text-gray-900 mb-2">
+                                    <i class="fas fa-download text-gray-600 mr-2"></i>
+                                    Standard Deployment
+                                </h5>
+                                <p class="text-sm text-gray-600 mb-3">Standard bot deployment without custom design.</p>
+                                <button class="w-full bg-gray-600 hover:bg-gray-700 text-white py-2 rounded-lg text-sm font-medium transition-colors duration-200">
+                                    Export Basic
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                            <p class="text-yellow-800 text-sm">
+                                <i class="fas fa-info-circle mr-2"></i>
+                                Enable persona design to get enhanced scripts with custom styling options.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Preview Panel -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-xl shadow-lg p-6 sticky top-24">
+                    <h3 class="text-xl font-bold text-gray-900 mb-6">Live Preview</h3>
+                    
+                    <!-- Bot Preview Window -->
+                    <div class="bg-gray-50 rounded-lg p-4 mb-4">
+                        <div class="bg-white rounded-lg shadow-sm border">
+                            <!-- Chat Header -->
+                            <div class="bg-blue-600 text-white p-3 rounded-t-lg">
+                                <div class="flex items-center">
+                                    <div class="w-8 h-8 bg-white bg-opacity-20 rounded-full flex items-center justify-center mr-3">
+                                        <i class="fas fa-robot text-sm"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-medium">Customer Support AI</h4>
+                                        <p class="text-xs opacity-90">
+                                            <span class="inline-block w-2 h-2 bg-green-400 rounded-full mr-1"></span>
+                                            Online now
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Chat Messages -->
+                            <div class="p-4 h-64 overflow-y-auto space-y-3">
+                                <div class="flex items-start">
+                                    <div class="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center mr-2 flex-shrink-0">
+                                        <i class="fas fa-robot text-xs text-white"></i>
+                                    </div>
+                                    <div class="bg-gray-100 rounded-lg p-2 max-w-xs">
+                                        <p class="text-sm">Hello! How can I help you today?</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-start justify-end">
+                                    <div class="bg-blue-600 text-white rounded-lg p-2 max-w-xs">
+                                        <p class="text-sm">I need help with my account</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-start">
+                                    <div class="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center mr-2 flex-shrink-0">
+                                        <i class="fas fa-robot text-xs text-white"></i>
+                                    </div>
+                                    <div class="bg-gray-100 rounded-lg p-2 max-w-xs">
+                                        <p class="text-sm">I'd be happy to help you with your account. What specific issue are you experiencing?</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Chat Input -->
+                            <div class="border-t p-3">
+                                <div class="flex items-center space-x-2">
+                                    <input type="text" placeholder="Type your message..." class="flex-1 px-3 py-2 border border-gray-300 rounded-full text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    <button class="bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 transition-colors duration-200">
+                                        <i class="fas fa-paper-plane text-sm"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center">
+                        <p class="text-sm text-gray-600 mb-3">Test your bot configuration in real-time and deploy when ready.</p>
+                        <div class="flex items-center justify-center text-green-600 text-sm">
+                            <span class="inline-block w-2 h-2 bg-green-600 rounded-full mr-2 pulse-animation"></span>
+                            Online now
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Final Steps -->
+                <div class="bg-white rounded-xl shadow-lg p-6 mt-6">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4">Ready to Deploy?</h3>
+                    <p class="text-sm text-gray-600 mb-4">Your bot is configured and ready for deployment. You can save your progress or deploy now.</p>
+                    
+                    <div class="space-y-3">
+                        <button class="w-full bg-gray-600 hover:bg-gray-700 text-white py-3 rounded-lg font-medium transition-colors duration-200">
+                            <i class="fas fa-save mr-2"></i>Save Progress
+                        </button>
+                        <button class="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-medium transition-colors duration-200">
+                            <i class="fas fa-rocket mr-2"></i>Deploy Bot
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
