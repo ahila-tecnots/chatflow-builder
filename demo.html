@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visual Workflow Builder</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            background: #f5f7fa;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* Left Sidebar */
+        .sidebar {
+            width: 320px;
+            background: white;
+            border-right: 1px solid #e5e7eb;
+            overflow-y: auto;
+            z-index: 10;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .sidebar-header h2 {
+            font-size: 18px;
+            color: #374151;
+            margin-bottom: 10px;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .node-category {
+            margin-bottom: 20px;
+        }
+
+        .category-header {
+            padding: 15px 20px 10px;
+            font-weight: 600;
+            color: #6b7280;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .node-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            cursor: grab;
+            border-bottom: 1px solid #f3f4f6;
+            transition: background-color 0.2s;
+        }
+
+        .node-item:hover {
+            background: #f9fafb;
+        }
+
+        .node-item:active {
+            cursor: grabbing;
+        }
+
+        .node-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            color: white;
+            font-size: 14px;
+        }
+
+        .node-icon.messages { background: #3b82f6; }
+        .node-icon.questions { background: #8b5cf6; }
+        .node-icon.conditions { background: #10b981; }
+
+        .node-text {
+            font-size: 14px;
+            color: #374151;
+        }
+
+        /* Main Canvas */
+        .canvas-container {
+            flex: 1;
+            position: relative;
+            background: #4f5565;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+            overflow: hidden;
+        }
+
+        .canvas {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            cursor: grab;
+        }
+
+        .canvas.grabbing {
+            cursor: grabbing;
+        }
+
+        /* Workflow Nodes */
+        .workflow-node {
+            position: absolute;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            min-width: 200px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .workflow-node:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+
+        .workflow-node.selected {
+            border: 2px solid #3b82f6;
+        }
+
+        .node-header {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            border-bottom: 1px solid #e5e7eb;
+            background: #f9fafb;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .node-type-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+        }
+
+        .node-title {
+            font-weight: 600;
+            color: #374151;
+            font-size: 14px;
+            flex: 1;
+        }
+
+        .node-menu {
+            color: #6b7280;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+        }
+
+        .node-menu:hover {
+            background: #e5e7eb;
+        }
+
+        .node-content {
+            padding: 16px;
+        }
+
+        .node-description {
+            color: #6b7280;
+            font-size: 12px;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .node-input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .node-button {
+            background: #ec4899;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            margin: 4px 0;
+            width: 100%;
+        }
+
+        .node-button.secondary {
+            background: #e5e7eb;
+            color: #374151;
+        }
+
+        /* Connection Points */
+        .connection-point {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: #10b981;
+            border: 3px solid white;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 5;
+        }
+
+        .connection-point.input {
+            left: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .connection-point.output {
+            right: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .connection-point:hover {
+            background: #059669;
+            transform: translateY(-50%) scale(1.2);
+        }
+
+        /* SVG Connections */
+        .connections-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .connection-line {
+            stroke: #10b981;
+            stroke-width: 2;
+            fill: none;
+        }
+
+        /* Right Panel */
+        .right-panel {
+            width: 350px;
+            background: white;
+            border-left: 1px solid #e5e7eb;
+            display: none;
+            flex-direction: column;
+        }
+
+        .right-panel.active {
+            display: flex;
+        }
+
+        .panel-header {
+            padding: 20px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .panel-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+
+        .panel-subtitle {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .panel-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .form-textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .toggle-button {
+            flex: 1;
+            padding: 8px 16px;
+            border: 1px solid #d1d5db;
+            background: white;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .toggle-button.active {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+
+        /* Toolbar */
+        .toolbar {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+        }
+
+        .toolbar-btn {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .toolbar-btn:hover {
+            background: #f9fafb;
+        }
+
+        /* Zoom controls */
+        .zoom-control {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: white;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            padding: 5px;
+        }
+
+        .zoom-btn {
+            width: 30px;
+            height: 30px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .zoom-btn:hover {
+            background: #f3f4f6;
+        }
+
+        .zoom-level {
+            font-size: 12px;
+            color: #6b7280;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        /* Starting Point Node */
+        .workflow-node.start-node {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .workflow-node.start-node .node-header {
+            background: rgba(255,255,255,0.1);
+            border-bottom-color: rgba(255,255,255,0.2);
+        }
+
+        .workflow-node.start-node .node-title {
+            color: white;
+        }
+
+        .workflow-node.start-node .node-description {
+            color: rgba(255,255,255,0.8);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Left Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>Building Blocks</h2>
+                <input type="text" class="search-box" placeholder="Search by name" id="searchBox">
+            </div>
+            
+            <div class="node-category">
+                <div class="category-header">Messages</div>
+                <div class="node-item" draggable="true" data-type="buttons">
+                    <div class="node-icon messages">🔘</div>
+                    <div class="node-text">Buttons</div>
+                </div>
+                <div class="node-item" draggable="true" data-type="message">
+                    <div class="node-icon messages">💬</div>
+                    <div class="node-text">Messages</div>
+                </div>
+                <div class="node-item" draggable="true" data-type="goodbye">
+                    <div class="node-icon messages">👋</div>
+                    <div class="node-text">Goodbye message</div>
+                </div>
+            </div>
+
+            <div class="node-category">
+                <div class="category-header">Questions</div>
+                <div class="node-item" draggable="true" data-type="ask-name">
+                    <div class="node-icon questions">👤</div>
+                    <div class="node-text">Ask for a name</div>
+                </div>
+                <div class="node-item" draggable="true" data-type="ask-question">
+                    <div class="node-icon questions">❓</div>
+                    <div class="node-text">Ask a question</div>
+                </div>
+                <div class="node-item" draggable="true" data-type="ask-email">
+                    <div class="node-icon questions">✉️</div>
+                    <div class="node-text">Ask for an email</div>
+                </div>
+                <div class="node-item" draggable="true" data-type="ask-number">
+                    <div class="node-icon questions">🔢</div>
+                    <div class="node-text">Ask for a number</div>
+                </div>
+                <div class="node-item" draggable="true" data-type="ask-phone">
+                    <div class="node-icon questions">📱</div>
+                    <div class="node-text">Ask for a phone</div>
+                </div>
+                <div class="node-item" draggable="true" data-type="ask-date">
+                    <div class="node-icon questions">📅</div>
+                    <div class="node-text">Ask for a date</div>
+                </div>
+                <div class="node-item" draggable="true" data-type="ask-file">
+                    <div class="node-icon questions">📁</div>
+                    <div class="node-text">Ask for a file</div>
+                </div>
+                <div class="node-item" draggable="true" data-type="ask-address">
+                    <div class="node-icon questions">📍</div>
+                    <div class="node-text">Ask for an address</div>
+                </div>
+            </div>
+
+            <div class="node-category">
+                <div class="category-header">Conditions</div>
+                <div class="node-item" draggable="true" data-type="set-field">
+                    <div class="node-icon conditions">🔧</div>
+                    <div class="node-text">Set a field</div>
+                </div>
+                <div class="node-item" draggable="true" data-type="keyword-jump">
+                    <div class="node-icon conditions">🎯</div>
+                    <div class="node-text">Keyword jump</div>
+                </div>
+                <div class="node-item" draggable="true" data-type="global-keywords">
+                    <div class="node-icon conditions">🌍</div>
+                    <div class="node-text">Global keywords</div>
+                </div>
+                <div class="node-item" draggable="true" data-type="formulas">
+                    <div class="node-icon conditions">⚡</div>
+                    <div class="node-text">Formulas</div>
+                </div>
+                <div class="node-item" draggable="true" data-type="jump-to">
+                    <div class="node-icon conditions">🔗</div>
+                    <div class="node-text">Jump to</div>
+                </div>
+                <div class="node-item" draggable="true" data-type="condition">
+                    <div class="node-icon conditions">❓</div>
+                    <div class="node-text">Conditions</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Canvas -->
+        <div class="canvas-container">
+            <div class="canvas" id="canvas">
+                <svg class="connections-svg" id="connectionsSvg">
+                    <defs>
+                        <marker id="arrowhead" markerWidth="10" markerHeight="7" 
+                         refX="0" refY="3.5" orient="auto">
+                            <polygon points="0 0, 10 3.5, 0 7" fill="#10b981" />
+                        </marker>
+                    </defs>
+                </svg>
+                
+                <!-- Starting Point Node -->
+                <div class="workflow-node start-node" id="start-node" style="left: 100px; top: 100px;">
+                    <div class="node-header">
+                        <div class="node-type-icon" style="background: rgba(255,255,255,0.2);">🏁</div>
+                        <div class="node-title">Starting point</div>
+                        <div class="node-menu">⋯</div>
+                    </div>
+                    <div class="node-content">
+                        <div class="node-description">Where your bot begins</div>
+                    </div>
+                    <div class="connection-point output" data-node="start-node" data-type="output"></div>
+                </div>
+            </div>
+
+            <!-- Toolbar -->
+            <div class="toolbar">
+                <div class="zoom-control">
+                    <button class="zoom-btn" id="zoomOut">−</button>
+                    <div class="zoom-level" id="zoomLevel">100%</div>
+                    <button class="zoom-btn" id="zoomIn">+</button>
+                </div>
+                <div class="toolbar-btn" id="fitToScreen" title="Fit to screen">⊡</div>
+                <div class="toolbar-btn" id="resetView" title="Reset view">↻</div>
+            </div>
+        </div>
+
+        <!-- Right Panel -->
+        <div class="right-panel" id="rightPanel">
+            <div class="panel-header">
+                <div class="panel-title" id="panelTitle">Node Configuration</div>
+                <div class="panel-subtitle" id="panelSubtitle">Configure your node settings</div>
+            </div>
+            <div class="panel-content" id="panelContent">
+                <!-- Dynamic content based on selected node -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class WorkflowBuilder {
+            constructor() {
+                this.canvas = document.getElementById('canvas');
+                this.connectionsSvg = document.getElementById('connectionsSvg');
+                this.rightPanel = document.getElementById('rightPanel');
+                this.nodes = new Map();
+                this.connections = [];
+                this.selectedNode = null;
+                this.dragOffset = { x: 0, y: 0 };
+                this.isDragging = false;
+                this.isConnecting = false;
+                this.connectionStart = null;
+                this.tempConnection = null;
+                this.nodeCounter = 0;
+                this.zoomLevel = 1;
+                this.panOffset = { x: 0, y: 0 };
+
+                this.init();
+            }
+
+            init() {
+                this.setupDragAndDrop();
+                this.setupNodeInteractions();
+                this.setupCanvasInteractions();
+                this.setupToolbar();
+                this.setupSearch();
+                
+                // Add starting node to nodes map
+                this.nodes.set('start-node', {
+                    id: 'start-node',
+                    type: 'start',
+                    element: document.getElementById('start-node'),
+                    data: { title: 'Starting point', description: 'Where your bot begins' }
+                });
+            }
+
+            setupDragAndDrop() {
+                const nodeItems = document.querySelectorAll('.node-item');
+                
+                nodeItems.forEach(item => {
+                    item.addEventListener('dragstart', (e) => {
+                        e.dataTransfer.setData('text/plain', item.dataset.type);
+                    });
+                });
+
+                this.canvas.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                });
+
+                this.canvas.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    const nodeType = e.dataTransfer.getData('text/plain');
+                    const rect = this.canvas.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    this.createNode(nodeType, x, y);
+                });
+            }
+
+            createNode(type, x, y) {
+                const nodeId = `node-${++this.nodeCounter}`;
+                const nodeConfig = this.getNodeConfig(type);
+                
+                const nodeElement = document.createElement('div');
+                nodeElement.className = 'workflow-node';
+                nodeElement.id = nodeId;
+                nodeElement.style.left = `${x - 100}px`;
+                nodeElement.style.top = `${y - 50}px`;
+                
+                nodeElement.innerHTML = `
+                    <div class="node-header">
+                        <div class="node-type-icon ${nodeConfig.category}">${nodeConfig.icon}</div>
+                        <div class="node-title">${nodeConfig.title}</div>
+                        <div class="node-menu">⋯</div>
+                    </div>
+                    <div class="node-content">
+                        <div class="node-description">${nodeConfig.description}</div>
+                        ${nodeConfig.content || ''}
+                    </div>
+                    <div class="connection-point input" data-node="${nodeId}" data-type="input"></div>
+                    <div class="connection-point output" data-node="${nodeId}" data-type="output"></div>
+                `;
+
+                this.canvas.appendChild(nodeElement);
+                
+                this.nodes.set(nodeId, {
+                    id: nodeId,
+                    type: type,
+                    element: nodeElement,
+                    data: { ...nodeConfig }
+                });
+
+                this.setupNodeEvents(nodeElement);
+                this.selectNode(nodeId);
+            }
+
+            getNodeConfig(type) {
+                const configs = {
+                    'buttons': {
+                        title: 'Buttons',
+                        description: 'Display buttons for user interaction',
+                        icon: '🔘',
+                        category: 'messages',
+                        content: `
+                            <input class="node-input" placeholder="Text body" value="Text body">
+                            <button class="node-button">Button</button>
+                            <button class="node-button secondary">Any of the above</button>
+                        `
+                    },
+                    'message': {
+                        title: 'Messages',
+                        description: 'Send a message to the user',
+                        icon: '💬',
+                        category: 'messages',
+                        content: '<input class="node-input" placeholder="Click to edit..." value="">'
+                    },
+                    'goodbye': {
+                        title: 'Goodbye message',
+                        description: 'A farewell message',
+                        icon: '👋',
+                        category: 'messages',
+                        content: '<input class="node-input" placeholder="Thank you message..." value="">'
+                    },
+                    'ask-name': {
+                        title: 'Ask for a name',
+                        description: 'What\'s your name?',
+                        icon: '👤',
+                        category: 'questions',
+                        content: '<input class="node-input" placeholder="What\'s your name?" value="What\'s your name?">'
+                    },
+                    'ask-phone': {
+                        title: 'Ask for a phone',
+                        description: 'What\'s your number?',
+                        icon: '📱',
+                        category: 'questions',
+                        content: '<input class="node-input" placeholder="What\'s your number?" value="What\'s your number?">'
+                    },
+                    'ask-email': {
+                        title: 'Ask for an email',
+                        description: 'What\'s your email?',
+                        icon: '✉️',
+                        category: 'questions',
+                        content: '<input class="node-input" placeholder="What\'s your email?" value="What\'s your email?">'
+                    },
+                    'condition': {
+                        title: 'Conditions',
+                        description: 'IF @ EQUALS',
+                        icon: '❓',
+                        category: 'conditions',
+                        content: '<div style="background: #3b82f6; color: white; padding: 8px 12px; border-radius: 4px; font-size: 12px;">IF @ EQUALS</div>'
+                    }
+                };
+
+                return configs[type] || {
+                    title: type,
+                    description: 'Custom node',
+                    icon: '⚪',
+                    category: 'messages'
+                };
+            }
+
+            setupNodeEvents(nodeElement) {
+                // Node selection
+                nodeElement.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    this.selectNode(nodeElement.id);
+                });
+
+                // Node dragging
+                let isDraggingNode = false;
+                let dragStartPos = { x: 0, y: 0 };
+
+                nodeElement.addEventListener('mousedown', (e) => {
+                    if (e.target.classList.contains('connection-point')) return;
+                    
+                    isDraggingNode = true;
+                    const rect = nodeElement.getBoundingClientRect();
+                    const canvasRect = this.canvas.getBoundingClientRect();
+                    dragStartPos = {
+                        x: e.clientX - (rect.left - canvasRect.left),
+                        y: e.clientY - (rect.top - canvasRect.top)
+                    };
+                    
+                    document.addEventListener('mousemove', moveNode);
+                    document.addEventListener('mouseup', stopDragging);
+                });
+
+                const moveNode = (e) => {
+                    if (!isDraggingNode) return;
+                    
+                    const canvasRect = this.canvas.getBoundingClientRect();
+                    const x = e.clientX - canvasRect.left - dragStartPos.x;
+                    const y = e.clientY - canvasRect.top - dragStartPos.y;
+                    
+                    nodeElement.style.left = `${x}px`;
+                    nodeElement.style.top = `${y}px`;
+                    
+                    this.updateConnections();
+                };
+
+                const stopDragging = () => {
+                    isDraggingNode = false;
+                    document.removeEventListener('mousemove', moveNode);
+                    document.removeEventListener('mouseup', stopDragging);
+                };
+
+                // Connection points
+                const connectionPoints = nodeElement.querySelectorAll('.connection-point');
+                connectionPoints.forEach(point => {
+                    point.addEventListener('mousedown', (e) => {
+                        e.stopPropagation();
+                        this.startConnection(point);
+                    });
+                });
+            }
+
+            setupNodeInteractions() {
+                // Handle existing start node
+                const startNode = document.getElementById('start-node');
+                if (startNode) {
+                    this.setupNodeEvents(startNode);
+                }
+            }
+
+            setupCanvasInteractions() {
+                // Canvas click to deselect
+                this.canvas.addEventListener('click', (e) => {
+                    if (e.target === this.canvas) {
+                        this.deselectAll();
+                    }
+                });
+
+                // Canvas panning
+                let isPanning = false;
+                let panStart = { x: 0, y: 0 };
+
+                this.canvas.addEventListener('mousedown', (e) => {
+                    if (e.target === this.canvas) {
+                        isPanning = true;
+                        panStart = { x: e.clientX, y: e.clientY };
+                        this.canvas.classList.add('grabbing');
+                    }
+                });
+
+                document.addEventListener('mousemove', (e) => {
+                    if (isPanning) {
+                        const deltaX = e.clientX - panStart.x;
+                        const deltaY = e.clientY - panStart.y;
+                        
+                        // Update pan offset (for future zoom operations)
+                        this.panOffset.x += deltaX;
+                        this.panOffset.y += deltaY;
+                        
+                        panStart = { x: e.clientX, y: e.clientY };
+                    }
+                });
+
+                document.addEventListener('mouseup', () => {
+                    isPanning = false;
+                    this.canvas.classList.remove('grabbing');
+                });
+            }
+
+            startConnection(connectionPoint) {
+                this.isConnecting = true;
+                this.connectionStart = connectionPoint;
+                
+                const handleMouseMove = (e) => {
+                    if (!this.isConnecting) return;
+                    
+                    const canvasRect = this.canvas.getBoundingClientRect();
+                    const endX = e.clientX - canvasRect.left;
+                    const endY = e.clientY - canvasRect.top;
+                    
+                    const startPos = this.getConnectionPointPosition(this.connectionStart);
+                    
+                    // Remove existing temp connection
+                    if (this.tempConnection) {
+                        this.tempConnection.remove();
+                    }
+                    
+                    // Create temporary connection line
+                    this.tempConnection = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    this.tempConnection.setAttribute('class', 'connection-line');
+                    this.tempConnection.setAttribute('d', this.createConnectionPath(startPos.x, startPos.y, endX, endY));
+                    this.tempConnection.setAttribute('marker-end', 'url(#arrowhead)');
+                    this.connectionsSvg.appendChild(this.tempConnection);
+                };
+
+                const handleMouseUp = (e) => {
+                    if (this.tempConnection) {
+                        this.tempConnection.remove();
+                        this.tempConnection = null;
+                    }
+                    
+                    const target = e.target;
+                    if (target.classList.contains('connection-point') && target !== this.connectionStart) {
+                        this.createConnection(this.connectionStart, target);
+                    }
+                    
+                    this.isConnecting = false;
+                    this.connectionStart = null;
+                    
+                    document.removeEventListener('mousemove', handleMouseMove);
+                    document.removeEventListener('mouseup', handleMouseUp);
+                };
+
+                document.addEventListener('mousemove', handleMouseMove);
+                document.addEventListener('mouseup', handleMouseUp);
+            }
+
+            createConnection(startPoint, endPoint) {
+                const startNodeId = startPoint.dataset.node;
+                const endNodeId = endPoint.dataset.node;
+                
+                // Prevent self-connections and duplicate connections
+                if (startNodeId === endNodeId) return;
+                
+                const existingConnection = this.connections.find(conn => 
+                    conn.start.node === startNodeId && conn.end.node === endNodeId
+                );
+                if (existingConnection) return;
+
+                const connection = {
+                    id: `conn-${Date.now()}`,
+                    start: { node: startNodeId, point: startPoint },
+                    end: { node: endNodeId, point: endPoint },
+                    element: null
+                };
+
+                this.connections.push(connection);
+                this.renderConnection(connection);
+            }
+
+            renderConnection(connection) {
+                const startPos = this.getConnectionPointPosition(connection.start.point);
+                const endPos = this.getConnectionPointPosition(connection.end.point);
+
+                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                path.setAttribute('class', 'connection-line');
+                path.setAttribute('d', this.createConnectionPath(startPos.x, startPos.y, endPos.x, endPos.y));
+                path.setAttribute('marker-end', 'url(#arrowhead)');
+                path.setAttribute('data-connection-id', connection.id);
+
+                this.connectionsSvg.appendChild(path);
+                connection.element = path;
+            }
+
+            createConnectionPath(x1, y1, x2, y2) {
+                const dx = x2 - x1;
+                const controlPointOffset = Math.abs(dx) * 0.5;
+                
+                const cp1x = x1 + controlPointOffset;
+                const cp1y = y1;
+                const cp2x = x2 - controlPointOffset;
+                const cp2y = y2;
+
+                return `M ${x1} ${y1} C ${cp1x} ${cp1y} ${cp2x} ${cp2y} ${x2} ${y2}`;
+            }
+
+            getConnectionPointPosition(point) {
+                const pointRect = point.getBoundingClientRect();
+                const canvasRect = this.canvas.getBoundingClientRect();
+                
+                return {
+                    x: pointRect.left + pointRect.width / 2 - canvasRect.left,
+                    y: pointRect.top + pointRect.height / 2 - canvasRect.top
+                };
+            }
+
+            updateConnections() {
+                this.connections.forEach(connection => {
+                    if (connection.element) {
+                        const startPos = this.getConnectionPointPosition(connection.start.point);
+                        const endPos = this.getConnectionPointPosition(connection.end.point);
+                        
+                        connection.element.setAttribute('d', 
+                            this.createConnectionPath(startPos.x, startPos.y, endPos.x, endPos.y)
+                        );
+                    }
+                });
+            }
+
+            selectNode(nodeId) {
+                this.deselectAll();
+                
+                const node = this.nodes.get(nodeId);
+                if (!node) return;
+
+                node.element.classList.add('selected');
+                this.selectedNode = nodeId;
+                this.showNodePanel(node);
+            }
+
+            deselectAll() {
+                this.nodes.forEach(node => {
+                    node.element.classList.remove('selected');
+                });
+                this.selectedNode = null;
+                this.hideNodePanel();
+            }
+
+            showNodePanel(node) {
+                this.rightPanel.classList.add('active');
+                
+                const title = document.getElementById('panelTitle');
+                const subtitle = document.getElementById('panelSubtitle');
+                const content = document.getElementById('panelContent');
+
+                title.textContent = node.data.title;
+                subtitle.textContent = node.data.description;
+
+                // Generate panel content based on node type
+                content.innerHTML = this.generatePanelContent(node);
+                
+                // Setup panel event listeners
+                this.setupPanelEvents(node);
+            }
+
+            generatePanelContent(node) {
+                const baseContent = `
+                    <div class="form-group">
+                        <label class="form-label">Node Title</label>
+                        <input type="text" class="form-input" id="nodeTitle" value="${node.data.title}">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <input type="text" class="form-input" id="nodeDescription" value="${node.data.description}">
+                    </div>
+                `;
+
+                let specificContent = '';
+
+                switch (node.type) {
+                    case 'buttons':
+                        specificContent = `
+                            <div class="form-group">
+                                <label class="form-label">Message Text</label>
+                                <textarea class="form-textarea" id="messageText" placeholder="Enter your message...">Text body</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Buttons</label>
+                                <div id="buttonsContainer">
+                                    <div class="button-editor" style="margin-bottom: 10px;">
+                                        <input type="text" class="form-input" value="Button" placeholder="Button text">
+                                        <button type="button" style="margin-top: 5px; padding: 5px 10px; background: #ef4444; color: white; border: none; border-radius: 4px; font-size: 12px;">Remove</button>
+                                    </div>
+                                </div>
+                                <button type="button" id="addButton" style="padding: 8px 16px; background: #10b981; color: white; border: none; border-radius: 6px; font-size: 14px; cursor: pointer;">+ Add Button</button>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Button Alignment</label>
+                                <div class="button-group">
+                                    <button type="button" class="toggle-button active" data-value="horizontal">HORIZONTAL</button>
+                                    <button type="button" class="toggle-button" data-value="vertical">VERTICAL</button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Randomize Order</label>
+                                <div class="button-group">
+                                    <button type="button" class="toggle-button active" data-value="no">NO</button>
+                                    <button type="button" class="toggle-button" data-value="yes">YES</button>
+                                </div>
+                            </div>
+                        `;
+                        break;
+                    
+                    case 'message':
+                    case 'goodbye':
+                        specificContent = `
+                            <div class="form-group">
+                                <label class="form-label">Message Content</label>
+                                <textarea class="form-textarea" id="messageContent" placeholder="Enter your message...">${node.data.content || ''}</textarea>
+                            </div>
+                        `;
+                        break;
+                    
+                    case 'condition':
+                        specificContent = `
+                            <div class="form-group">
+                                <label class="form-label">Condition Type</label>
+                                <select class="form-input" id="conditionType">
+                                    <option value="equals">IF @ EQUALS</option>
+                                    <option value="contains">IF @ CONTAINS</option>
+                                    <option value="greater">IF @ GREATER THAN</option>
+                                    <option value="less">IF @ LESS THAN</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Variable</label>
+                                <input type="text" class="form-input" id="conditionVariable" placeholder="@variable">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Value</label>
+                                <input type="text" class="form-input" id="conditionValue" placeholder="comparison value">
+                            </div>
+                        `;
+                        break;
+                    
+                    default:
+                        if (node.type.startsWith('ask-')) {
+                            specificContent = `
+                                <div class="form-group">
+                                    <label class="form-label">Question Text</label>
+                                    <textarea class="form-textarea" id="questionText" placeholder="Enter your question...">${node.data.content || node.data.description}</textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Variable Name</label>
+                                    <input type="text" class="form-input" id="variableName" placeholder="@variable_name" value="@${node.type.replace('ask-', '')}">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Validation</label>
+                                    <div class="button-group">
+                                        <button type="button" class="toggle-button active" data-value="required">Required</button>
+                                        <button type="button" class="toggle-button" data-value="optional">Optional</button>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                        break;
+                }
+
+                return baseContent + specificContent;
+            }
+
+            setupPanelEvents(node) {
+                // Title and description updates
+                const titleInput = document.getElementById('nodeTitle');
+                const descInput = document.getElementById('nodeDescription');
+
+                if (titleInput) {
+                    titleInput.addEventListener('input', (e) => {
+                        node.data.title = e.target.value;
+                        const titleElement = node.element.querySelector('.node-title');
+                        if (titleElement) titleElement.textContent = e.target.value;
+                    });
+                }
+
+                if (descInput) {
+                    descInput.addEventListener('input', (e) => {
+                        node.data.description = e.target.value;
+                        const descElement = node.element.querySelector('.node-description');
+                        if (descElement) descElement.textContent = e.target.value;
+                    });
+                }
+
+                // Button-specific events
+                if (node.type === 'buttons') {
+                    const addButtonBtn = document.getElementById('addButton');
+                    if (addButtonBtn) {
+                        addButtonBtn.addEventListener('click', () => {
+                            this.addButtonToEditor();
+                        });
+                    }
+                }
+
+                // Toggle button events
+                const toggleButtons = document.querySelectorAll('.toggle-button');
+                toggleButtons.forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const group = e.target.parentElement;
+                        group.querySelectorAll('.toggle-button').forEach(b => b.classList.remove('active'));
+                        e.target.classList.add('active');
+                    });
+                });
+            }
+
+            addButtonToEditor() {
+                const container = document.getElementById('buttonsContainer');
+                if (container) {
+                    const buttonEditor = document.createElement('div');
+                    buttonEditor.className = 'button-editor';
+                    buttonEditor.style.marginBottom = '10px';
+                    buttonEditor.innerHTML = `
+                        <input type="text" class="form-input" placeholder="Button text">
+                        <button type="button" style="margin-top: 5px; padding: 5px 10px; background: #ef4444; color: white; border: none; border-radius: 4px; font-size: 12px;">Remove</button>
+                    `;
+                    
+                    const removeBtn = buttonEditor.querySelector('button');
+                    removeBtn.addEventListener('click', () => {
+                        buttonEditor.remove();
+                    });
+                    
+                    container.appendChild(buttonEditor);
+                }
+            }
+
+            hideNodePanel() {
+                this.rightPanel.classList.remove('active');
+            }
+
+            setupToolbar() {
+                const zoomIn = document.getElementById('zoomIn');
+                const zoomOut = document.getElementById('zoomOut');
+                const zoomLevel = document.getElementById('zoomLevel');
+                const fitToScreen = document.getElementById('fitToScreen');
+                const resetView = document.getElementById('resetView');
+
+                zoomIn.addEventListener('click', () => {
+                    this.zoomLevel = Math.min(this.zoomLevel * 1.2, 3);
+                    this.updateZoom();
+                });
+
+                zoomOut.addEventListener('click', () => {
+                    this.zoomLevel = Math.max(this.zoomLevel / 1.2, 0.1);
+                    this.updateZoom();
+                });
+
+                fitToScreen.addEventListener('click', () => {
+                    this.fitNodesToScreen();
+                });
+
+                resetView.addEventListener('click', () => {
+                    this.zoomLevel = 1;
+                    this.panOffset = { x: 0, y: 0 };
+                    this.updateZoom();
+                });
+            }
+
+            updateZoom() {
+                const zoomLevel = document.getElementById('zoomLevel');
+                zoomLevel.textContent = `${Math.round(this.zoomLevel * 100)}%`;
+                
+                this.canvas.style.transform = `scale(${this.zoomLevel}) translate(${this.panOffset.x}px, ${this.panOffset.y}px)`;
+                this.updateConnections();
+            }
+
+            fitNodesToScreen() {
+                // Simple implementation - could be enhanced
+                this.zoomLevel = 0.8;
+                this.panOffset = { x: 0, y: 0 };
+                this.updateZoom();
+            }
+
+            setupSearch() {
+                const searchBox = document.getElementById('searchBox');
+                const nodeItems = document.querySelectorAll('.node-item');
+
+                searchBox.addEventListener('input', (e) => {
+                    const searchTerm = e.target.value.toLowerCase();
+                    
+                    nodeItems.forEach(item => {
+                        const text = item.querySelector('.node-text').textContent.toLowerCase();
+                        const category = item.closest('.node-category');
+                        
+                        if (text.includes(searchTerm)) {
+                            item.style.display = 'flex';
+                            category.style.display = 'block';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+
+                    // Hide empty categories
+                    document.querySelectorAll('.node-category').forEach(category => {
+                        const visibleItems = category.querySelectorAll('.node-item[style*="flex"]');
+                        if (visibleItems.length === 0 && searchTerm) {
+                            category.style.display = 'none';
+                        } else if (!searchTerm) {
+                            category.style.display = 'block';
+                        }
+                    });
+                });
+            }
+        }
+
+        // Initialize the workflow builder when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new WorkflowBuilder();
+        });
+    </script>
+</body>
+</html>
