@@ -35,9 +35,6 @@
     display: none;
 }
 
-.billing-section {
-    margin-top: 20px;
-}
 
 @keyframes pulse-orange {
     0%, 100% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.7); }
@@ -1088,22 +1085,48 @@
         <div class="flex justify-between items-center mb-4">
             <h3 class="text-xl font-semibold">Your Chatbots</h3>
             <!-- Enterprise Create Options -->
-            <div id="enterpriseCreateOptions" style="display: none;">
-                <div class="flex space-x-2">
-                    <button onclick="createPersonalBot()" class="px-3 py-1 bg-gray-600 text-white rounded text-sm hover:bg-gray-700">
-                        <i class="fas fa-user mr-1"></i>Personal Bot
-                    </button>
-                    <button onclick="createTeamBot()" class="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700">
-                        <i class="fas fa-users mr-1"></i>Team Bot
-                    </button>
-                </div>
-            </div>
+         <!-- Enhanced Enterprise Create Options -->
+<div id="enterpriseCreateOptions" style="display: none;">
+    <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
+        <!-- Personal Bot Button -->
+        <button onclick="createPersonalBot()" 
+                class="flex items-center justify-center px-4 py-2 bg-gray-600 text-white rounded-lg text-sm hover:bg-gray-700 transition-colors">
+            <i class="fas fa-user mr-2"></i>
+            <span>Create Personal Bot</span>
+        </button>
+        
+        <!-- Team Bot Button -->
+        <button onclick="createTeamBot()" 
+                class="flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 transition-colors">
+            <i class="fas fa-users mr-2"></i>
+            <span>Create Team Bot</span>
+        </button>
+    </div>
+    
+    <!-- Quick Info -->
+    <div class="mt-3 text-xs text-gray-500">
+        <i class="fas fa-info-circle mr-1"></i>
+        Personal bots are private, Team bots can be shared and collaborated on
+    </div>
+</div>
+
             <!-- Free Plan Create Limitation -->
-            <div id="freeCreateLimit">
-                <button onclick="showChatbotLimitModal()" class="px-3 py-1 bg-gray-300 text-gray-600 rounded text-sm cursor-not-allowed">
-                    <i class="fas fa-lock mr-1"></i>Create Bot (Upgrade Required)
-                </button>
-            </div>
+       <!-- Enhanced Free Plan Create Limitation -->
+<div id="freeCreateLimit">
+    <button onclick="showUpgradeModal('chatbot creation')" 
+            class="flex items-center justify-center px-4 py-2 bg-gray-300 text-gray-600 rounded-lg text-sm cursor-not-allowed hover:bg-gray-400 transition-colors">
+        <i class="fas fa-lock mr-2"></i>
+        <span>Create Bot</span>
+        <span class="ml-2 text-xs bg-orange-500 text-white px-2 py-1 rounded-full">Upgrade Required</span>
+    </button>
+    
+    <!-- Upgrade hint -->
+    <div class="mt-2 text-xs text-gray-500 text-center">
+        <i class="fas fa-crown text-orange-500 mr-1"></i>
+        Upgrade to Enterprise for unlimited bot creation
+    </div>
+</div>
+
         </div>
         
         <div class="space-y-4">
@@ -3838,7 +3861,7 @@ X-Bot-ID: <span x-text="botId || 'cb_' + Math.random().toString(36).substr(2, 9)
             <!-- Enhanced Analytics & Logs Tab -->
 <!-- Enhanced Analytics & Logs Tab -->
 <!-- Enhanced Analytics & Logs Tab -->
-<div id="analytics" class="tab-content">
+<div id="analytics" class="tab-content w-full mt-4">
     <div class="mb-8">
         <h2 class="text-3xl font-bold text-gray-800 mb-2">Analytics & Logs</h2>
         <p class="text-gray-600">Monitor performance, analyze conversations, and improve your bots with detailed reports.</p>
@@ -4320,7 +4343,7 @@ X-Bot-ID: <span x-text="botId || 'cb_' + Math.random().toString(36).substr(2, 9)
 
             <!-- Billing Tab -->
               <!-- Billing Tab -->
-            <div id="billing" class="tab-content">
+            <div id="billing" class="tab-content w-full mt-4">
                 <div class="mb-8">
                     <h2 class="text-3xl font-bold text-gray-800 mb-2">Billing & Usage</h2>
                     <p class="text-gray-600">Monitor your usage and manage billing information.</p>
@@ -4447,7 +4470,7 @@ X-Bot-ID: <span x-text="botId || 'cb_' + Math.random().toString(36).substr(2, 9)
             </div>
              
              
-             <div id="settings" class="tab-content">
+             <div id="settings" class="tab-content w-full">
     <section id="account" class="content-section">
         <div class="page-header">
             <div class="icon">⚙️</div>
@@ -5475,10 +5498,19 @@ function inviteFirstUser() {
 }
 
 function createTeamBot() {
-    markStepComplete(3);
-    showSuccessNotification('Team chatbot created successfully!');
-    checkOnboardingComplete();
+    // Navigate to bot builder tab
+    showTab('builder');
+    
+    // Set the bot creation type
+    window.botCreationType = 'team';
+    
+    // Update UI for team bot creation
+    updateCreateBotUI('team');
+    
+    // Enable platform access based on current plan
+    updatePlatformAccess();
 }
+
 
 function markStepComplete(stepNumber) {
     const checkIcon = document.getElementById(`step${stepNumber}Check`);
@@ -5674,9 +5706,151 @@ function showChatbotLimitModal() {
 }
 
 function createPersonalBot() {
-    showSuccessNotification('Creating personal bot...');
+    // Navigate to bot builder tab
+    showTab('builder');
+    
+    // Set the bot creation type
+    window.botCreationType = 'personal';
+    
+    // Update UI for personal bot creation
+    updateCreateBotUI('personal');
+    
+    // Enable platform access based on current plan
+    updatePlatformAccess();
+}
+// Function to show specific tab
+function showTab(tabName) {
+    // Hide all tab contents
+    document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.remove('active');
+    });
+    
+    // Remove active class from all nav links
+    document.querySelectorAll('nav a[href^="#"]').forEach(link => {
+        link.classList.remove('border-r-3', 'border-blue-600', 'text-blue-600');
+        link.classList.add('text-gray-600');
+    });
+    
+    // Show target tab
+    const targetTab = document.getElementById(tabName);
+    if (targetTab) {
+        targetTab.classList.add('active');
+    }
+    
+    // Update nav link styling
+    const targetLink = document.querySelector(`nav a[href="#${tabName}"]`);
+    if (targetLink) {
+        targetLink.classList.remove('text-gray-600');
+        targetLink.classList.add('border-r-3', 'border-blue-600', 'text-blue-600');
+    }
 }
 
+// Function to update Create Bot UI based on type
+function updateCreateBotUI(type) {
+    const pageTitle = document.querySelector('#builder h2');
+    const pageDescription = document.querySelector('#builder p');
+    
+    if (type === 'team') {
+        if (pageTitle) pageTitle.textContent = 'Create New Team Chatbot';
+        if (pageDescription) pageDescription.textContent = 'Create a collaborative chatbot for your team projects and shared workflows.';
+    } else if (type === 'personal') {
+        if (pageTitle) pageTitle.textContent = 'Create New Personal Chatbot';
+        if (pageDescription) pageDescription.textContent = 'Create your personal chatbot for individual projects and workflows.';
+    }
+}
+
+// Function to update platform access based on current plan
+function updatePlatformAccess() {
+    const whatsappCard = document.querySelector('[data-platform="whatsapp"]');
+    const messengerCard = document.querySelector('[data-platform="messenger"]');
+    
+    if (currentPlan === 'enterprise') {
+        // Enable WhatsApp and Messenger for Enterprise plan
+        if (whatsappCard) {
+            enablePlatformCard(whatsappCard, 'whatsapp');
+        }
+        if (messengerCard) {
+            enablePlatformCard(messengerCard, 'messenger');
+        }
+    } else {
+        // Keep WhatsApp and Messenger locked for non-Enterprise plans
+        if (whatsappCard) {
+            disablePlatformCard(whatsappCard, 'WhatsApp');
+        }
+        if (messengerCard) {
+            disablePlatformCard(messengerCard, 'Messenger');
+        }
+    }
+}
+
+// Function to enable platform card
+function enablePlatformCard(card, platform) {
+    // Remove locked state
+    card.classList.remove('locked', 'opacity-60');
+    card.onclick = () => selectPlatform(platform);
+    
+    // Remove lock overlay
+    const lockOverlay = card.querySelector('.absolute.inset-0');
+    if (lockOverlay) {
+        lockOverlay.remove();
+    }
+    
+    // Remove enterprise badge
+    const enterpriseBadge = card.querySelector('.absolute.-top-2.-right-2');
+    if (enterpriseBadge) {
+        enterpriseBadge.remove();
+    }
+    
+    // Update hover effects
+    card.classList.add('hover:border-blue-500', 'hover:bg-blue-50', 'transition-colors');
+}
+
+// Function to disable platform card  
+function disablePlatformCard(card, platformName) {
+    // Add locked state
+    card.classList.add('locked', 'opacity-60');
+    card.onclick = () => showUpgradeModal(platformName);
+    
+    // Add lock overlay if not exists
+    if (!card.querySelector('.absolute.inset-0')) {
+        const lockOverlay = document.createElement('div');
+        lockOverlay.className = 'absolute inset-0 flex items-center justify-center bg-gray-900 bg-opacity-20 rounded-lg';
+        lockOverlay.innerHTML = '<i class="fas fa-lock text-gray-600 text-2xl"></i>';
+        card.appendChild(lockOverlay);
+    }
+    
+    // Add enterprise badge if not exists
+    if (!card.querySelector('.absolute.-top-2.-right-2')) {
+        const enterpriseBadge = document.createElement('div');
+        enterpriseBadge.className = 'absolute -top-2 -right-2 bg-orange-500 text-white text-xs px-2 py-1 rounded-full';
+        enterpriseBadge.textContent = 'ENTERPRISE';
+        card.appendChild(enterpriseBadge);
+    }
+    
+    // Remove hover effects
+    card.classList.remove('hover:border-blue-500', 'hover:bg-blue-50');
+}
+
+// Function to handle platform selection
+function selectPlatform(platform) {
+    // Remove selection from all platform cards
+    document.querySelectorAll('.platform-card').forEach(card => {
+        card.classList.remove('border-blue-500', 'bg-blue-50');
+        card.classList.add('border-gray-200');
+    });
+    
+    // Add selection to clicked platform
+    const selectedCard = document.querySelector(`[data-platform="${platform}"]`);
+    if (selectedCard && !selectedCard.classList.contains('locked')) {
+        selectedCard.classList.remove('border-gray-200');
+        selectedCard.classList.add('border-blue-500', 'bg-blue-50');
+        
+        // Store selected platform
+        window.selectedPlatform = platform;
+        
+        showSuccessNotification(`${platform.charAt(0).toUpperCase() + platform.slice(1)} platform selected!`);
+    }
+}
 // Input formatting for payment form
 document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('input', function(e) {
