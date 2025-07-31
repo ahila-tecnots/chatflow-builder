@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise Chatbot Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <h1 class="text-2xl font-bold text-gray-900">Enterprise Dashboard</h1>
+                <div class="flex items-center space-x-4">
+                    <span class="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-medium">
+                        Enterprise Plan
+                    </span>
+                    <div class="text-sm text-gray-600">Welcome back, Anurag</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- Dashboard View -->
+        <div id="dashboardView">
+            <div class="mb-8">
+                <h2 class="text-xl font-semibold text-gray-900 mb-4">Here's what's happening with your chatbots today</h2>
+                
+                <!-- Create New Chatbot Section -->
+                <div class="bg-white rounded-lg shadow p-6 mb-6">
+                    <h3 class="text-lg font-semibold mb-4">Create New Chatbot</h3>
+                    <button onclick="showCreateOptions()" class="bg-green-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-700 transition-colors">
+                        + Create New Chatbot
+                    </button>
+                    
+                    <!-- Enterprise Create Options -->
+                    <div id="enterpriseCreateOptions" style="display: none;" class="mt-4">
+                        <div class="flex space-x-2">
+                            <button onclick="createPersonalBot()" class="px-3 py-1 bg-gray-600 text-white rounded text-sm hover:bg-gray-700">
+                                <i class="fas fa-user mr-1"></i>Personal Bot
+                            </button>
+                            <button onclick="createTeamBot()" class="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700">
+                                <i class="fas fa-users mr-1"></i>Team Bot
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Existing Bots Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                <!-- Personal Bots -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="font-semibold">Customer Support Bot</h3>
+                        <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">online</span>
+                    </div>
+                    <div class="space-y-2 text-sm text-gray-600">
+                        <p>Type: <span class="font-medium">Web</span></p>
+                        <p>Created: 2 days ago</p>
+                        <p>Last active: 5 minutes ago</p>
+                        <p>Owner: <span class="font-medium">Personal</span></p>
+                    </div>
+                    <button class="mt-4 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                        Configure
+                    </button>
+                </div>
+
+                <!-- Team Bots -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="font-semibold">Sales Assistant</h3>
+                        <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">online</span>
+                    </div>
+                    <div class="space-y-2 text-sm text-gray-600">
+                        <p>Type: <span class="font-medium">WhatsApp</span></p>
+                        <p>Created: 1 week ago</p>
+                        <p>Last active: 2 hours ago</p>
+                        <p>Team: <span class="font-medium">Marketing Team</span></p>
+                    </div>
+                    <button class="mt-4 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                        Configure
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Create Bot Session View -->
+        <div id="createBotView" style="display: none;">
+            <div class="mb-6">
+                <button onclick="goBackToDashboard()" class="text-blue-600 hover:text-blue-800 mb-4">
+                    <i class="fas fa-arrow-left mr-2"></i>Back to Dashboard
+                </button>
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">Create New Chatbot</h2>
+                <p class="text-gray-600" id="botTypeIndicator"></p>
+            </div>
+
+            <div class="bg-white rounded-lg shadow p-6">
+                <!-- Bot Basic Info -->
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Bot Name</label>
+                    <input type="text" id="botName" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter bot name">
+                </div>
+
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                    <textarea id="botDescription" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows="3" placeholder="Describe your bot's purpose"></textarea>
+                </div>
+
+                <!-- Team Selection (only for Team Bots) -->
+                <div id="teamSelection" style="display: none;" class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Assign to Team</label>
+                    <select id="teamSelect" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <option value="">Select a team</option>
+                        <option value="1">Development Team</option>
+                        <option value="2">Marketing Team</option>
+                        <option value="3">Customer Support</option>
+                    </select>
+                </div>
+
+                <!-- User Assignment (only for Team Bots) -->
+                <div id="userAssignment" style="display: none;" class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-3">Assign Users & Permissions</label>
+                    <div class="space-y-2 max-h-40 overflow-y-auto border rounded-lg p-3">
+                        <div class="flex items-center justify-between p-2 border rounded">
+                            <div class="flex items-center">
+                                <input type="checkbox" id="user1" class="mr-2">
+                                <label for="user1">Anurag Kumar</label>
+                            </div>
+                            <select class="text-sm border rounded px-2 py-1">
+                                <option value="view">View Only</option>
+                                <option value="edit">Edit</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                        </div>
+                        <div class="flex items-center justify-between p-2 border rounded">
+                            <div class="flex items-center">
+                                <input type="checkbox" id="user2" class="mr-2">
+                                <label for="user2">Sarah Wilson</label>
+                            </div>
+                            <select class="text-sm border rounded px-2 py-1">
+                                <option value="view">View Only</option>
+                                <option value="edit">Edit</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Platform Selection -->
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-3">Choose Platform</label>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <!-- Web Platform - Always Available -->
+                        <div class="platform-card border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors" 
+                             data-platform="web" onclick="selectPlatform('web')">
+                            <i class="fas fa-globe text-3xl text-blue-600 mb-3"></i>
+                            <div class="text-sm font-medium">Web</div>
+                        </div>
+                        
+                        <!-- WhatsApp Platform - Unlocked for Enterprise Personal Bots, Locked for Team Bots -->
+                        <div id="whatsappPlatform" class="platform-card border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors" 
+                             data-platform="whatsapp" onclick="selectPlatform('whatsapp')">
+                            <div class="absolute -top-2 -right-2 bg-purple-500 text-white text-xs px-2 py-1 rounded-full">
+                                ENTERPRISE
+                            </div>
+                            <i class="fab fa-whatsapp text-3xl text-green-600 mb-3"></i>
+                            <div class="text-sm font-medium">WhatsApp</div>
+                        </div>
+                        
+                        <!-- Messenger Platform - Unlocked for Enterprise Personal Bots, Locked for Team Bots -->
+                        <div id="messengerPlatform" class="platform-card border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors" 
+                             data-platform="messenger" onclick="selectPlatform('messenger')">
+                            <div class="absolute -top-2 -right-2 bg-purple-500 text-white text-xs px-2 py-1 rounded-full">
+                                ENTERPRISE
+                            </div>
+                            <i class="fab fa-facebook-messenger text-3xl text-blue-600 mb-3"></i>
+                            <div class="text-sm font-medium">Messenger</div>
+                        </div>
+                        
+                        <!-- API Platform - Available based on plan -->
+                        <div class="platform-card border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors" 
+                             data-platform="api" onclick="selectPlatform('api')">
+                            <i class="fas fa-code text-3xl text-purple-600 mb-3"></i>
+                            <div class="text-sm font-medium">API</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Selected Platform Display -->
+                <div id="selectedPlatform" style="display: none;" class="mb-6">
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                        <h4 class="font-medium text-blue-800 mb-2">Selected Platform:</h4>
+                        <p id="platformName" class="text-blue-600"></p>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex justify-end space-x-3">
+                    <button onclick="goBackToDashboard()" class="px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50">
+                        Cancel
+                    </button>
+                    <button onclick="createBot()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                        Create Bot
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Global variables
+        let currentBotType = '';
+        let selectedPlatformType = '';
+        let isEnterprisePlan = true; // Since user has Enterprise plan
+
+        // Show create options
+        function showCreateOptions() {
+            const options = document.getElementById('enterpriseCreateOptions');
+            options.style.display = options.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Create Personal Bot
+        function createPersonalBot() {
+            currentBotType = 'personal';
+            navigateToCreateSession();
+        }
+
+        // Create Team Bot
+        function createTeamBot() {
+            currentBotType = 'team';
+            navigateToCreateSession();
+        }
+
+        // Navigate to create session
+        function navigateToCreateSession() {
+            // Hide dashboard, show create bot view
+            document.getElementById('dashboardView').style.display = 'none';
+            document.getElementById('createBotView').style.display = 'block';
+            
+            // Update bot type indicator
+            const indicator = document.getElementById('botTypeIndicator');
+            if (currentBotType === 'personal') {
+                indicator.textContent = 'Creating a Personal Bot - You will be the owner of this bot';
+                // Show team-related fields for team bots only
+                document.getElementById('teamSelection').style.display = 'none';
+                document.getElementById('userAssignment').style.display = 'none';
+                
+                // Unlock WhatsApp and Messenger for Enterprise personal bots
+                unlockPlatformForPersonalBot('whatsappPlatform');
+                unlockPlatformForPersonalBot('messengerPlatform');
+            } else {
+                indicator.textContent = 'Creating a Team Bot - This bot will be assigned to a team';
+                // Show team-related fields for team bots
+                document.getElementById('teamSelection').style.display = 'block';
+                document.getElementById('userAssignment').style.display = 'block';
+                
+                // Lock WhatsApp and Messenger for team bots (as per requirement)
+                lockPlatformForTeamBot('whatsappPlatform');
+                lockPlatformForTeamBot('messengerPlatform');
+            }
+        }
+
+        // Unlock platform for personal bots
+        function unlockPlatformForPersonalBot(platformId) {
+            const platform = document.getElementById(platformId);
+            platform.classList.remove('locked', 'opacity-60');
+            platform.style.position = 'relative';
+            
+            // Remove lock overlay if exists
+            const lockOverlay = platform.querySelector('.bg-gray-900');
+            if (lockOverlay) {
+                lockOverlay.

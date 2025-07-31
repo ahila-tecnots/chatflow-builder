@@ -47,8 +47,17 @@
             width: 100%;
             padding: 8px 12px;
             border: 1px solid #d1d5db;
-            border-radius: 6px;
+            border-radius: 20px;
             font-size: 14px;
+            background-color: #f3f4f6;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .search-box:focus {
+            border-color: #3b82f6;
+            background-color: white;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
 
         /* Create Custom Node Section */
@@ -289,6 +298,10 @@
             flex: 1;
         }
 
+        .node-menu-container {
+            position: relative;
+        }
+
         .node-menu {
             color: #6b7280;
             cursor: pointer;
@@ -298,6 +311,39 @@
 
         .node-menu:hover {
             background: #e5e7eb;
+        }
+
+        .node-menu-options {
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            z-index: 100;
+            display: none;
+            min-width: 160px;
+        }
+
+        .node-menu-options.active {
+            display: block;
+        }
+
+        .node-menu-option {
+            padding: 8px 16px;
+            font-size: 14px;
+            color: #374151;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .node-menu-option:hover {
+            background: #f3f4f6;
+        }
+
+        .node-menu-option.delete {
+            color: #ef4444;
         }
 
         .node-content {
@@ -460,6 +506,17 @@
         .panel-subtitle {
             color: #6b7280;
             font-size: 14px;
+        }
+
+        .panel-close {
+            cursor: pointer;
+            font-size: 20px;
+            padding: 5px;
+            color: #6b7280;
+        }
+
+        .panel-close:hover {
+            color: #374151;
         }
 
         .panel-content {
@@ -773,7 +830,17 @@
                     <div class="node-header">
                         <div class="node-type-icon" style="background: rgba(255,255,255,0.2);">🏁</div>
                         <div class="node-title">Starting point</div>
-                        <div class="node-menu">⋯</div>
+                        <div class="node-menu-container">
+                            <div class="node-menu">⋯</div>
+                            <div class="node-menu-options">
+                                <div class="node-menu-option">Ask a question</div>
+                                <div class="node-menu-option">Ask anything</div>
+                                <div class="node-menu-option">Copy block</div>
+                                <div class="node-menu-option">Replace block</div>
+                                <div class="node-menu-option">Copy block id</div>
+                                <div class="node-menu-option delete">Delete block</div>
+                            </div>
+                        </div>
                     </div>
                     <div class="node-content">
                         <div class="node-description">Where your bot begins</div>
@@ -797,8 +864,13 @@
         <!-- Right Panel -->
         <div class="right-panel" id="rightPanel">
             <div class="panel-header">
-                <div class="panel-title" id="panelTitle">Node Configuration</div>
-                <div class="panel-subtitle" id="panelSubtitle">Configure your node settings</div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <div class="panel-title" id="panelTitle">Node Configuration</div>
+                        <div class="panel-subtitle" id="panelSubtitle">Configure your node settings</div>
+                    </div>
+                    <div class="panel-close" id="panelClose">×</div>
+                </div>
             </div>
             <div class="panel-content" id="panelContent">
                 <!-- Dynamic content based on selected node -->
@@ -842,6 +914,11 @@
                     type: 'start',
                     element: document.getElementById('start-node'),
                     data: { title: 'Starting point', description: 'Where your bot begins' }
+                });
+
+                // Setup panel close button
+                document.getElementById('panelClose').addEventListener('click', () => {
+                    this.hideNodePanel();
                 });
             }
 
@@ -1039,7 +1116,17 @@
                     <div class="node-header">
                         <div class="node-type-icon ${nodeConfig.category}">${nodeConfig.icon}</div>
                         <div class="node-title">${nodeConfig.title}</div>
-                        <div class="node-menu">⋯</div>
+                        <div class="node-menu-container">
+                            <div class="node-menu">⋯</div>
+                            <div class="node-menu-options">
+                                <div class="node-menu-option">Ask a question</div>
+                                <div class="node-menu-option">Ask anything</div>
+                                <div class="node-menu-option">Copy block</div>
+                                <div class="node-menu-option">Replace block</div>
+                                <div class="node-menu-option">Copy block id</div>
+                                <div class="node-menu-option delete">Delete block</div>
+                            </div>
+                        </div>
                     </div>
                     <div class="node-content">
                         <div class="node-description">${nodeConfig.description}</div>
@@ -1196,6 +1283,64 @@
                         this.startConnection(point);
                     });
                 });
+
+                // Node menu
+                const menu = nodeElement.querySelector('.node-menu');
+                const menuOptions = nodeElement.querySelector('.node-menu-options');
+
+                menu.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    menuOptions.classList.toggle('active');
+                });
+
+                // Close menu when clicking elsewhere
+                document.addEventListener('click', (e) => {
+                    if (menuOptions && !menuOptions.contains(e.target)) {
+                        menuOptions.classList.remove('active');
+                    }
+                });
+
+                // Handle menu options
+                menuOptions.querySelectorAll('.node-menu-option').forEach(option => {
+                    option.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        menuOptions.classList.remove('active');
+                        
+                        if (option.classList.contains('delete')) {
+                            this.deleteNode(nodeElement.id);
+                        }
+                        // Add handlers for other options as needed
+                    });
+                });
+            }
+
+            deleteNode(nodeId) {
+                if (confirm('Are you sure you want to delete this node?')) {
+                    const node = this.nodes.get(nodeId);
+                    if (node) {
+                        // Remove all connections to/from this node
+                        this.connections = this.connections.filter(conn => {
+                            if (conn.start.node === nodeId || conn.end.node === nodeId) {
+                                if (conn.element) {
+                                    conn.element.remove();
+                                }
+                                return false;
+                            }
+                            return true;
+                        });
+                        
+                        // Remove the node element
+                        node.element.remove();
+                        
+                        // Remove from nodes map
+                        this.nodes.delete(nodeId);
+                        
+                        // Deselect if this was the selected node
+                        if (this.selectedNode === nodeId) {
+                            this.deselectAll();
+                        }
+                    }
+                }
             }
 
             setupNodeInteractions() {
