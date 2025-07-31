@@ -1437,7 +1437,7 @@
                             <p class="text-gray-600">Bot: <span x-text="botName" class="font-semibold text-blue-600"></span></p>
                         </div>
 
-                        <div class="bg-white rounded-lg shadow p-6">
+                            <div class="bg-white rounded-lg shadow p-6">
                             <!-- Bot Type Selection -->
                             <div class="mb-8">
                                 <h3 class="text-xl font-semibold mb-4">Choose Bot Type</h3>
@@ -1496,9 +1496,50 @@
                             <div x-show="selectedType !== ''" class="border-t pt-6">
                                 <!-- Tab Navigation -->
                                <!-- Tab Navigation -->
-
-
-
+<div class="border-b mb-6">
+    <nav class="flex space-x-8">
+        <button @click="currentTab = 'basic'" 
+            :class="currentTab === 'basic' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500'"
+            class="py-2 px-1 border-b-2 font-medium text-sm"  x-show="selectedType === 'ai-powered'">
+            Basic Setup
+        </button>
+        
+        <button @click="currentTab = 'intents'" 
+            :class="currentTab === 'intents' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500'"
+            class="py-2 px-1 border-b-2 font-medium text-sm"
+            x-show="selectedType === 'rule-based' ">
+            Intents/Rules
+        </button>
+         <button @click="currentTab = 'hybrid'" 
+            :class="currentTab === 'hybrid' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500'"
+            class="py-2 px-1 border-b-2 font-medium text-sm"
+            x-show="selectedType === 'hybrid'">
+            Intents/Hybrid
+        </button>
+        
+        <button @click="currentTab = 'ai-config'" 
+            :class="currentTab === 'ai-config' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500'"
+            class="py-2 px-1 border-b-2 font-medium text-sm"
+            x-show="selectedType === 'ai-powered'">
+            AI Configuration
+        </button>
+        
+        <!-- UPDATED: Conditionally show persona tab based on checkbox -->
+        <button @click="currentTab = 'persona'" 
+            :class="currentTab === 'persona' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500'"
+            class="py-2 px-1 border-b-2 font-medium text-sm relative"
+            x-show="enablePersonaDesign">
+            Bot Persona & Design
+            <!-- Optional: Add indicator that it's an optional feature -->
+            <span class="absolute -top-1 -right-1 bg-green-500 text-white text-xs rounded-full w-2 h-2"></span>
+        </button>
+        
+        <button @click="currentTab = 'preview'" 
+            :class="currentTab === 'preview' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500'"
+            class="py-2 px-1 border-b-2 font-medium text-sm">
+            <i class="fas fa-eye mr-2"></i>Preview
+        </button>
+    </nav>
 </div>
 
 
@@ -3853,6 +3894,7 @@ X-Bot-ID: <span x-text="botId || 'cb_' + Math.random().toString(36).substr(2, 9)
 </div>
 
                             </div>
+                        </div>
                         </div>
                     </div>
                 </div>
