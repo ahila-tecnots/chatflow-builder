@@ -23,6 +23,69 @@
             height: 100vh;
         }
 
+        /* Sidebar Toggle Button */
+        .sidebar-toggle {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 20;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-left: none;
+            border-radius: 0 6px 6px 0;
+            width: 20px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-toggle:hover {
+            background: #f9fafb;
+            width: 24px;
+        }
+
+        
+        /* Sidebar toggle button */
+        .sidebar-toggle {
+            position: absolute;
+            left: 320px;
+            top: 20px;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-left: none;
+            border-radius: 0 4px 4px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 20;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-toggle .arrow {
+            width: 10px;
+            height: 10px;
+            border-top: 2px solid #374151;
+            border-right: 2px solid #374151;
+            transform: rotate(45deg);
+            transition: all 0.3s ease;
+        }
+        .sidebar.collapsed ~ .sidebar-toggle {
+            left: 0;
+            border-left: 1px solid #e5e7eb;
+        }
+
+        .sidebar-toggle.collapsed .arrow {
+            transform: rotate(-135deg);
+        }
+
         /* Left Sidebar */
         .sidebar {
             width: 320px;
@@ -30,6 +93,14 @@
             border-right: 1px solid #e5e7eb;
             overflow-y: auto;
             z-index: 10;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .sidebar.collapsed {
+            transform: translateX(-100%);
+            width: 0;
+            border-right: none;
         }
 
         .sidebar-header {
@@ -237,6 +308,11 @@
                 linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px);
             background-size: 20px 20px;
             overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .canvas-container.expanded {
+            margin-left: 0;
         }
 
         .canvas {
@@ -674,7 +750,7 @@
 <body>
     <div class="container">
         <!-- Left Sidebar -->
-        <div class="sidebar">
+        <div class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <h2>Building Blocks</h2>
                 <input type="text" class="search-box" placeholder="Search by name" id="searchBox">
@@ -809,8 +885,13 @@
             </div>
         </div>
 
+        <!-- Sidebar Toggle Button -->
+        <div class="sidebar-toggle" id="sidebarToggle">
+            <div class="arrow"></div>
+        </div>
+
         <!-- Main Canvas -->
-        <div class="canvas-container">
+        <div class="canvas-container" id="canvasContainer">
             <div class="canvas" id="canvas">
                 <svg class="connections-svg" id="connectionsSvg">
                     <defs>
@@ -884,6 +965,9 @@
                 this.canvas = document.getElementById('canvas');
                 this.connectionsSvg = document.getElementById('connectionsSvg');
                 this.rightPanel = document.getElementById('rightPanel');
+                this.sidebar = document.getElementById('sidebar');
+                this.sidebarToggle = document.getElementById('sidebarToggle');
+                this.canvasContainer = document.getElementById('canvasContainer');
                 this.nodes = new Map();
                 this.connections = [];
                 this.selectedNode = null;
@@ -907,6 +991,7 @@
                 this.setupToolbar();
                 this.setupSearch();
                 this.setupCustomNodeCreation();
+                this.setupSidebarToggle();
                 
                 // Add starting node to nodes map
                 this.nodes.set('start-node', {
@@ -919,6 +1004,14 @@
                 // Setup panel close button
                 document.getElementById('panelClose').addEventListener('click', () => {
                     this.hideNodePanel();
+                });
+            }
+
+            setupSidebarToggle() {
+                this.sidebarToggle.addEventListener('click', () => {
+                    this.sidebar.classList.toggle('collapsed');
+                    this.sidebarToggle.classList.toggle('collapsed');
+                    this.canvasContainer.classList.toggle('expanded');
                 });
             }
 
