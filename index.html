@@ -1251,7 +1251,12 @@
         // This function will be called when design elements change
         // to update the live preview
     },
-   
+   navigateToRuleBased() {
+        window.location.href = 'RuleBased.html';
+    },
+      navigateToHybrid() {
+        window.location.href = 'hybrid.html';
+    },
     // NEW: Method to handle tab visibility
     updateTabVisibility() {
         // If persona design is disabled and user is on that tab, switch to basic tab
@@ -1387,9 +1392,9 @@
                                     </div>
 
                                     <!-- Rule-Based -->
-                                    <div @click="selectedType = 'rule-based'"
-                                        :class="selectedType === 'rule-based' ? 'border-green-500 bg-green-50' : 'border-gray-200 hover:border-gray-300'"
-                                        class="border-2 rounded-lg p-6 cursor-pointer transition-colors">
+                                  <!-- Rule-Based -->
+                                    <div @click="navigateToRuleBased()"
+                                        class="border-2 rounded-lg p-6 cursor-pointer transition-colors border-gray-200 hover:border-green-300 hover:bg-green-50">
                                         <div class="text-center">
                                             <i class="fas fa-sitemap text-4xl text-green-600 mb-4"></i>
                                             <h4 class="text-lg font-semibold mb-2">Rule-Based</h4>
@@ -1403,7 +1408,7 @@
                                     </div>
 
                                     <!-- Hybrid -->
-                                    <div @click="selectedType = 'hybrid'"
+                                    <div @click="navigateToHybrid()"
                                         :class="selectedType === 'hybrid' ? 'border-purple-500 bg-purple-50' : 'border-gray-200 hover:border-gray-300'"
                                         class="border-2 rounded-lg p-6 cursor-pointer transition-colors">
                                         <div class="text-center">
@@ -1658,7 +1663,14 @@
 
         </div>
 
-    </div>          
+    </div> 
+    
+    
+
+
+
+
+    
 </div>
 
           <div x-show="currentTab === 'hybrid'" class="space-y-6">
@@ -3133,6 +3145,8 @@ X-Bot-ID: <span x-text="botId || 'cb_' + Math.random().toString(36).substr(2, 9)
         </div>
     </div>
 </div>
+
+
 
                <!-- Deploy Modal -->
 <div x-show="showDeployModal"

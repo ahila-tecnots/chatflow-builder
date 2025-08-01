@@ -8,42 +8,43 @@
     <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-
-         .nav-tabs {
+        /* Keep existing styles and add new ones for RuleBased integration */
+        
+        .nav-tabs {
             display: flex;
             gap: 20px;
         }
         .platform-card.locked {
-    position: relative;
-}
+            position: relative;
+        }
 
-.platform-card.locked:hover {
-    border-color: #f97316 !important;
-    background-color: #fff7ed !important;
-}
+        .platform-card.locked:hover {
+            border-color: #f97316 !important;
+            background-color: #fff7ed !important;
+        }
 
-.upgrade-prompt {
-    background: linear-gradient(90deg, #f97316, #ea580c);
-    color: white;
-    padding: 12px;
-    border-radius: 8px;
-    margin: 16px 0;
-    text-align: center;
-}
+        .upgrade-prompt {
+            background: linear-gradient(90deg, #f97316, #ea580c);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 16px 0;
+            text-align: center;
+        }
 
-.enterprise-only {
-    display: none;
-}
+        .enterprise-only {
+            display: none;
+        }
 
+        @keyframes pulse-orange {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(249, 115, 22, 0); }
+        }
 
-@keyframes pulse-orange {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.7); }
-    70% { box-shadow: 0 0 0 10px rgba(249, 115, 22, 0); }
-}
-
-.upgrade-pulse {
-    animation: pulse-orange 2s infinite;
-}
+        .upgrade-pulse {
+            animation: pulse-orange 2s infinite;
+        }
+        
         .nav-tab {
             padding: 8px 16px;
             background: none;
@@ -102,7 +103,8 @@
             height: calc(100vh - 60px);
         }
 
-        .node-palette {
+        /* Original node palette styles - now for the old design */
+        .old-node-palette {
             width: 320px;
             background: white;
             border-right: 1px solid #e5e7eb;
@@ -456,8 +458,6 @@
         .button-node { border-color: #6366f1; }
         .autocomplete-node { border-color: #84cc16; }
 
-
-
         .tab-content { display: none; }
         .tab-content.active { display: block; }
         .bot-type-section { display: none; }
@@ -472,264 +472,265 @@
         .color-picker:hover {
             border-color: #3b82f6;
         }
+
         /* Settings Page Styles */
-.content-section {
-    padding: 2rem;
-}
-.feature-enabled {
-    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
-}
+        .content-section {
+            padding: 2rem;
+        }
+        .feature-enabled {
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+        }
 
-.feature-disabled {
-    background: #E5E7EB;
-}
+        .feature-disabled {
+            background: #E5E7EB;
+        }
 
-.checkbox-container {
-    transition: all 0.3s ease;
-}
+        .checkbox-container {
+            transition: all 0.3s ease;
+        }
 
-.checkbox-container:hover {
-    background-color: #F3F4F6;
-    border-radius: 0.5rem;
-    padding: 0.5rem;
-}
-.page-header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 2rem;
-}
+        .checkbox-container:hover {
+            background-color: #F3F4F6;
+            border-radius: 0.5rem;
+            padding: 0.5rem;
+        }
+        .page-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
 
-.page-header .icon {
-    font-size: 2rem;
-    margin-right: 1rem;
-}
+        .page-header .icon {
+            font-size: 2rem;
+            margin-right: 1rem;
+        }
 
-.page-title {
-    font-size: 2.5rem;
-    font-weight: bold;
-    color: #1f2937;
-    margin: 0;
-}
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin: 0;
+        }
 
-.success-message {
-    background: #d1fae5;
-    border: 1px solid #10b981;
-    color: #065f46;
-    padding: 1rem;
-    border-radius: 0.5rem;
-    margin-bottom: 1.5rem;
-    display: none;
-    align-items: center;
-    gap: 0.5rem;
-}
+        .success-message {
+            background: #d1fae5;
+            border: 1px solid #10b981;
+            color: #065f46;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+        }
 
-.success-message.show {
-    display: flex;
-}
+        .success-message.show {
+            display: flex;
+        }
 
-.settings-card {
-    background: white;
-    border-radius: 0.75rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    padding: 2rem;
-    margin-bottom: 2rem;
-}
+        .settings-card {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
 
-.settings-form {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-}
+        .settings-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
 
-.profile-section {
-    grid-column: 1 / -1;
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    padding: 1.5rem;
-    background: #f9fafb;
-    border-radius: 0.5rem;
-    margin-bottom: 1rem;
-}
+        .profile-section {
+            grid-column: 1 / -1;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            background: #f9fafb;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+        }
 
-.profile-avatar {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    background: #3b82f6;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-    font-weight: bold;
-}
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #3b82f6;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
 
-.profile-info h3 {
-    margin: 0 0 0.5rem 0;
-    font-size: 1.25rem;
-    font-weight: 600;
-}
+        .profile-info h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
 
-.profile-info p {
-    margin: 0 0 1rem 0;
-    color: #6b7280;
-    font-size: 0.875rem;
-}
+        .profile-info p {
+            margin: 0 0 1rem 0;
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
 
-.upload-btn {
-    background: #3b82f6;
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 0.375rem;
-    cursor: pointer;
-    font-size: 0.875rem;
-}
+        .upload-btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
 
-.upload-btn:hover {
-    background: #2563eb;
-}
+        .upload-btn:hover {
+            background: #2563eb;
+        }
 
-.form-group {
-    display: flex;
-    flex-direction: column;
-}
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
 
-.form-group.full-width {
-    grid-column: 1 / -1;
-}
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
 
-.form-label {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-weight: 500;
-    color: #374151;
-    margin-bottom: 0.5rem;
-    font-size: 0.875rem;
-}
+        .form-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
 
-.form-label .icon {
-    font-size: 1rem;
-}
+        .form-label .icon {
+            font-size: 1rem;
+        }
 
-.form-input {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #d1d5db;
-    border-radius: 0.375rem;
-    font-size: 0.875rem;
-    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-}
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
 
-.form-input:focus {
-    outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
+        .form-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
 
-.password-container {
-    position: relative;
-}
+        .password-container {
+            position: relative;
+        }
 
-.password-toggle {
-    position: absolute;
-    right: 0.75rem;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 1rem;
-}
+        .password-toggle {
+            position: absolute;
+            right: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
 
-.form-actions {
-    grid-column: 1 / -1;
-    display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid #e5e7eb;
-    margin-top: 1rem;
-}
+        .form-actions {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e5e7eb;
+            margin-top: 1rem;
+        }
 
-.btn {
-    padding: 0.75rem 1.5rem;
-    border-radius: 0.375rem;
-    font-weight: 500;
-    cursor: pointer;
-    border: none;
-    transition: background-color 0.15s ease-in-out;
-}
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.15s ease-in-out;
+        }
 
-.btn-primary {
-    background: #3b82f6;
-    color: white;
-}
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+        }
 
-.btn-primary:hover {
-    background: #2563eb;
-}
+        .btn-primary:hover {
+            background: #2563eb;
+        }
 
-.btn-secondary {
-    background: #f3f4f6;
-    color: #374151;
-    border: 1px solid #d1d5db;
-}
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+            border: 1px solid #d1d5db;
+        }
 
-.btn-secondary:hover {
-    background: #e5e7eb;
-}
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
 
-.settings-section {
-    padding: 0;
-}
+        .settings-section {
+            padding: 0;
+        }
 
-.section-title {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #1f2937;
-    margin-bottom: 1.5rem;
-}
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 1.5rem;
+        }
 
-.settings-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1.5rem 0;
-    border-bottom: 1px solid #f3f4f6;
-}
+        .settings-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 0;
+            border-bottom: 1px solid #f3f4f6;
+        }
 
-.settings-item:last-child {
-    border-bottom: none;
-}
+        .settings-item:last-child {
+            border-bottom: none;
+        }
 
-.setting-info h4 {
-    margin: 0 0 0.25rem 0;
-    font-weight: 500;
-    color: #1f2937;
-}
+        .setting-info h4 {
+            margin: 0 0 0.25rem 0;
+            font-weight: 500;
+            color: #1f2937;
+        }
 
-.setting-info p {
-    margin: 0;
-    color: #6b7280;
-    font-size: 0.875rem;
-}
+        .setting-info p {
+            margin: 0;
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
 
-.toggle-switch {
-    width: 48px;
-    height: 24px;
-    background: #d1d5db;
-    border-radius: 12px;
-    position: relative;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-}
-.sidebar-content {
+        .toggle-switch {
+            width: 48px;
+            height: 24px;
+            background: #d1d5db;
+            border-radius: 12px;
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        .sidebar-content {
             padding: 20px;
             background: white;
         }
@@ -780,38 +781,637 @@
             font-size: 14px;
             font-weight: 500;
             color: #333;
+        }
 
-.toggle-switch::after {
-    content: '';
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: white;
-    top: 2px;
-    left: 2px;
-    transition: transform 0.2s ease;
-}
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: white;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.2s ease;
+        }
 
-.toggle-switch.active {
-    background: #10b981;
-}
+        .toggle-switch.active {
+            background: #10b981;
+        }
 
-.toggle-switch.active::after {
-    transform: translateX(24px);
-}
+        .toggle-switch.active::after {
+            transform: translateX(24px);
+        }
 
-@media (max-width: 768px) {
-    .settings-form {
-        grid-template-columns: 1fr;
-    }
-    
-    .profile-section {
-        flex-direction: column;
-        text-align: center;
-    }
-}
+        @media (max-width: 768px) {
+            .settings-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .profile-section {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
 
+        /* NEW RULEBASED STYLES - Keep completely separate from existing styles */
+        
+        /* RuleBased Container */
+        .rulebased-container {
+            display: flex;
+            height: calc(100vh - 150px);
+            background: #f5f7fa;
+        }
+
+        /* RuleBased Sidebar */
+        .rulebased-sidebar {
+            width: 320px;
+            background: white;
+            border-right: 1px solid #e5e7eb;
+            overflow-y: auto;
+            z-index: 10;
+        }
+
+        .rulebased-sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .rulebased-sidebar-header h2 {
+            font-size: 18px;
+            color: #374151;
+            margin-bottom: 10px;
+        }
+
+        .rulebased-search-box {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        /* Create Custom Node Section */
+        .rulebased-create-node-section {
+            padding: 20px;
+            border-bottom: 2px solid #e5e7eb;
+            background: #f8fafc;
+        }
+
+        .rulebased-create-node-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .rulebased-create-node-header h3 {
+            font-size: 16px;
+            color: #374151;
+            margin-right: 10px;
+        }
+
+        .rulebased-create-node-toggle {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .rulebased-create-node-form {
+            display: none;
+        }
+
+        .rulebased-create-node-form.active {
+            display: block;
+        }
+
+        .rulebased-form-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .rulebased-form-field {
+            flex: 1;
+        }
+
+        .rulebased-form-field label {
+            display: block;
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+
+        .rulebased-form-field input,
+        .rulebased-form-field select {
+            width: 100%;
+            padding: 6px 8px;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .rulebased-create-node-btn {
+            width: 100%;
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            font-weight: 500;
+            margin-top: 10px;
+        }
+
+        .rulebased-create-node-btn:hover {
+            background: #059669;
+        }
+
+        .rulebased-node-category {
+            margin-bottom: 20px;
+        }
+
+        .rulebased-category-header {
+            padding: 15px 20px 10px;
+            font-weight: 600;
+            color: #6b7280;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .rulebased-custom-category-header {
+            background: #f0f9ff;
+            border-left: 4px solid #3b82f6;
+            padding-left: 16px;
+        }
+
+        .rulebased-node-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            cursor: grab;
+            border-bottom: 1px solid #f3f4f6;
+            transition: background-color 0.2s;
+            position: relative;
+        }
+
+        .rulebased-node-item:hover {
+            background: #f9fafb;
+        }
+
+        .rulebased-node-item:active {
+            cursor: grabbing;
+        }
+
+        .rulebased-node-item.custom-node {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border-left: 3px solid #3b82f6;
+        }
+
+        .rulebased-node-item.custom-node:hover {
+            background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+        }
+
+        .rulebased-delete-custom-node {
+            position: absolute;
+            right: 10px;
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 10px;
+            cursor: pointer;
+            display: none;
+        }
+
+        .rulebased-node-item.custom-node:hover .rulebased-delete-custom-node {
+            display: block;
+        }
+
+        .rulebased-node-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            color: white;
+            font-size: 14px;
+        }
+
+        .rulebased-node-icon.messages { background: #3b82f6; }
+        .rulebased-node-icon.questions { background: #8b5cf6; }
+        .rulebased-node-icon.conditions { background: #10b981; }
+        .rulebased-node-icon.custom { background: #f59e0b; }
+
+        .rulebased-node-text {
+            font-size: 14px;
+            color: #374151;
+        }
+
+        /* Main Canvas */
+        .rulebased-canvas-container {
+            flex: 1;
+            position: relative;
+            background: #4f5565;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+            overflow: hidden;
+        }
+
+        .rulebased-canvas {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            cursor: grab;
+        }
+
+        .rulebased-canvas.grabbing {
+            cursor: grabbing;
+        }
+
+        /* Workflow Nodes */
+        .rulebased-workflow-node {
+            position: absolute;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            min-width: 200px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .rulebased-workflow-node:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+
+        .rulebased-workflow-node.selected {
+            border: 2px solid #3b82f6;
+        }
+
+        .rulebased-node-header {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            border-bottom: 1px solid #e5e7eb;
+            background: #f9fafb;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .rulebased-node-type-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+        }
+
+        .rulebased-node-title {
+            font-weight: 600;
+            color: #374151;
+            font-size: 14px;
+            flex: 1;
+        }
+
+        .rulebased-node-menu {
+            color: #6b7280;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+        }
+
+        .rulebased-node-menu:hover {
+            background: #e5e7eb;
+        }
+
+        .rulebased-node-content {
+            padding: 16px;
+        }
+
+        .rulebased-node-description {
+            color: #6b7280;
+            font-size: 12px;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .rulebased-node-input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .rulebased-node-button {
+            background: #ec4899;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            margin: 4px 0;
+            width: 100%;
+        }
+
+        .rulebased-node-button.secondary {
+            background: #e5e7eb;
+            color: #374151;
+        }
+
+        /* Connection Points */
+        .rulebased-connection-point {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: #10b981;
+            border: 3px solid white;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 5;
+            transition: all 0.2s;
+        }
+
+        .rulebased-connection-point.input {
+            left: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .rulebased-connection-point.output {
+            right: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        /* Conditional connection points for conditions node */
+        .rulebased-connection-point.if-true {
+            right: -8px;
+            top: 35%;
+            transform: translateY(-50%);
+            background: #10b981;
+        }
+
+        .rulebased-connection-point.if-false {
+            right: -8px;
+            top: 65%;
+            transform: translateY(-50%);
+            background: #ef4444;
+        }
+
+        .rulebased-connection-point:hover {
+            transform: translateY(-50%) scale(1.2);
+        }
+
+        .rulebased-connection-point.if-true:hover {
+            background: #059669;
+        }
+
+        .rulebased-connection-point.if-false:hover {
+            background: #dc2626;
+        }
+
+        /* Connection point labels */
+        .rulebased-connection-label {
+            position: absolute;
+            right: -35px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 10px;
+            font-weight: 600;
+            color: white;
+            background: rgba(0,0,0,0.7);
+            padding: 2px 6px;
+            border-radius: 3px;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.2s;
+            pointer-events: none;
+        }
+
+        .rulebased-connection-point:hover .rulebased-connection-label {
+            opacity: 1;
+        }
+
+        /* SVG Connections */
+        .rulebased-connections-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .rulebased-connection-line {
+            stroke: #10b981;
+            stroke-width: 2;
+            fill: none;
+        }
+
+        .rulebased-connection-line.false-branch {
+            stroke: #ef4444;
+        }
+
+        /* Right Panel */
+        .rulebased-right-panel {
+            width: 350px;
+            background: white;
+            border-left: 1px solid #e5e7eb;
+            display: none;
+            flex-direction: column;
+        }
+
+        .rulebased-right-panel.active {
+            display: flex;
+        }
+
+        .rulebased-panel-header {
+            padding: 20px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .rulebased-panel-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+
+        .rulebased-panel-subtitle {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .rulebased-panel-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .rulebased-form-group {
+            margin-bottom: 20px;
+        }
+
+        .rulebased-form-label {
+            display: block;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .rulebased-form-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .rulebased-form-textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .rulebased-button-group {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .rulebased-toggle-button {
+            flex: 1;
+            padding: 8px 16px;
+            border: 1px solid #d1d5db;
+            background: white;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .rulebased-toggle-button.active {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+
+        /* Toolbar */
+        .rulebased-toolbar {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+        }
+
+        .rulebased-toolbar-btn {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .rulebased-toolbar-btn:hover {
+            background: #f9fafb;
+        }
+
+        /* Zoom controls */
+        .rulebased-zoom-control {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: white;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            padding: 5px;
+        }
+
+        .rulebased-zoom-btn {
+            width: 30px;
+            height: 30px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .rulebased-zoom-btn:hover {
+            background: #f3f4f6;
+        }
+
+        .rulebased-zoom-level {
+            font-size: 12px;
+            color: #6b7280;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        /* Starting Point Node */
+        .rulebased-workflow-node.start-node {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .rulebased-workflow-node.start-node .rulebased-node-header {
+            background: rgba(255,255,255,0.1);
+            border-bottom-color: rgba(255,255,255,0.2);
+        }
+
+        .rulebased-workflow-node.start-node .rulebased-node-title {
+            color: white;
+        }
+
+        .rulebased-workflow-node.start-node .rulebased-node-description {
+            color: rgba(255,255,255,0.8);
+        }
+
+        /* Condition Node Special Styling */
+        .rulebased-workflow-node.condition-node .rulebased-condition-display {
+            background: #3b82f6;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
+            margin-top: 8px;
+        }
     </style>
 </head>
 <body class="bg-gray-50 font-sans">
@@ -1144,1298 +1744,4 @@
                 <div class="flex items-center space-x-3">
                     <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">Active</span>
                     <button class="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700">Configure</button>
-                    <!-- Enterprise Collaboration Button -->
-                    <button id="bot1Collaborate" onclick="manageBotCollaboration(1)" class="px-3 py-1 bg-purple-600 text-white rounded text-sm hover:bg-purple-700" style="display: none;">
-                        <i class="fas fa-users mr-1"></i>Collaborate
-                    </button>
-                </div>
-            </div>
-            
-            <div class="border rounded-lg p-4 flex justify-between items-center">
-                <div>
-                    <div class="flex items-center space-x-2">
-                        <h4 class="font-semibold">Sales Assistant</h4>
-                        <span id="bot2TeamTag" class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs" style="display: none;">
-                            <i class="fas fa-users mr-1"></i>Marketing Team
-                        </span>
-                    </div>
-                    <p class="text-sm text-gray-600">Type: WhatsApp • Created 1 week ago • Last active 2 hours ago</p>
-                </div>
-                <div class="flex items-center space-x-3">
-                    <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">Active</span>
-                    <button class="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700">Configure</button>
-                    <button id="bot2Collaborate" onclick="manageBotCollaboration(2)" class="px-3 py-1 bg-purple-600 text-white rounded text-sm hover:bg-purple-700" style="display: none;">
-                        <i class="fas fa-users mr-1"></i>Collaborate
-                    </button>
-                </div>
-            </div>
-            
-            <div class="border rounded-lg p-4 flex justify-between items-center">
-                <div>
-                    <div class="flex items-center space-x-2">
-                        <h4 class="font-semibold">FAQ Bot</h4>
-                        <span id="bot3PersonalTag" class="px-2 py-1 bg-gray-100 text-gray-800 rounded-full text-xs" style="display: none;">
-                            <i class="fas fa-user mr-1"></i>Personal
-                        </span>
-                    </div>
-                    <p class="text-sm text-gray-600">Type: Messenger • Created 3 weeks ago • Last active yesterday</p>
-                </div>
-                <div class="flex items-center space-x-3">
-                    <span class="px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-sm">Inactive</span>
-                    <button class="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700">Configure</button>
-                    <button id="bot3Collaborate" onclick="manageBotCollaboration(3)" class="px-3 py-1 bg-purple-600 text-white rounded text-sm hover:bg-purple-700" style="display: none;">
-                        <i class="fas fa-users mr-1"></i>Collaborate
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-            <!-- Bot Builder Tab -->
-            <div id="builder" class="tab-content">
-               <div x-data="{
-     
-    showCreationForm: true,
-    showConfiguration: false,
-    showConfigMessage: false,
-    selectedType: '',
-    botName: '',
-    selectedPlatform: '',
-    botDescription: '',
-    selectedPersona: 'friendly-support',
-    temperature: 0.7,
-    maxTokens: 150,
-    currentTab: 'basic',
-    enablePersonaDesign: false, // NEW: Control persona tab visibility
-    
-    // Design customization
-    selectedDesign: 'default',
-    customColors: {
-        primary: '#3B82F6',
-        secondary: '#EFF6FF',
-        accent: '#1D4ED8',
-        text: '#1F2937'
-    },
-    selectedIcon: 'fas fa-robot',
-    borderRadius: 'rounded-lg',
-    shadowStyle: 'shadow-md',
-    
-    // ... rest of your existing properties
-    
-    createBot() {
-        if(this.botName.trim() === '') {
-            alert('Please enter a bot name');
-            return;
-        }
-        this.showCreationForm = false;
-        this.showConfigMessage = true;
-    },
-    
-    selectPlatformInModal(platform) {
-        this.selectedPlatform = platform;
-        // Remove selection from all platform cards
-        document.querySelectorAll('.platform-card').forEach(card => {
-            card.classList.remove('border-blue-500', 'bg-blue-50');
-            card.classList.add('border-gray-200');
-        });
-        
-        // Add selection to clicked platform
-        const selectedCard = document.querySelector(`[data-platform=\\'${platform}\\']`);
-        if (selectedCard && !selectedCard.classList.contains('locked')) {
-            selectedCard.classList.remove('border-gray-200');
-            selectedCard.classList.add('border-blue-500', 'bg-blue-50');
-        }
-    },
-    
-    startConfiguration() {
-        this.showConfigMessage = false;
-        this.showConfiguration = true;
-    },
-    
-    selectPersona(persona) {
-        this.selectedPersona = persona;
-        if(this.personaDesigns[persona]) {
-            this.customColors = {...this.personaDesigns[persona].colors};
-            this.selectedIcon = this.personaDesigns[persona].icon;
-        }
-    },
-    
-    updatePreview() {
-        // This function will be called when design elements change
-        // to update the live preview
-    },
-    
-    // NEW: Method to handle tab visibility
-     updateTabVisibility() {
-        // If persona design is disabled and user is on that tab, switch to basic tab
-        if (!this.enablePersonaDesign && this.currentTab === 'persona') {
-            this.currentTab = 'basic';
-        }
-    }
-}">
-
-                    
-                    <!-- Bot Creation Form -->
-                    <div x-show="showCreationForm">
-                        <div class="mb-8">
-                            <h2 class="text-3xl font-bold text-gray-800 mb-2">Create New Chatbot</h2>
-                            <p class="text-gray-600">Start by giving your chatbot a name and description.</p>
-                        </div>
-
-                        <div class="bg-white rounded-lg shadow p-8 max-w-2xl mx-auto">
-                            <div class="space-y-6">
-                                <!-- Bot Name -->
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Bot Name *</label>
-                                    <input type="text" x-model="botName" placeholder="e.g., Customer Support Bot" 
-                                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                </div>
-
-                                <!-- Bot Description -->
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Description (Optional)</label>
-                                    <textarea x-model="botDescription" rows="4" 
-                                        placeholder="Describe what your bot will do. e.g., Help customers with order inquiries, product information, and general support."
-                                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
-                                </div>
-
-                                <!-- Platform Selection -->
-                              <div>
-    <label class="block text-sm font-medium text-gray-700 mb-3">Choose Platform</label>
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <!-- Web Platform - Always Available -->
-        <div class="platform-card border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors" 
-             data-platform="web" @click="selectPlatformInModal('web')">
-            <i class="fas fa-globe text-3xl text-blue-600 mb-3"></i>
-            <div class="text-sm font-medium">Web</div>
-        </div>
-        
-        <!-- WhatsApp Platform - Locked for Free Users -->
-        <div class="platform-card locked border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer relative opacity-60" 
-             data-platform="whatsapp" onclick="showUpgradeModal('WhatsApp')">
-            <div class="absolute -top-2 -right-2 bg-orange-500 text-white text-xs px-2 py-1 rounded-full">
-                ENTERPRISE
-            </div>
-            <div class="absolute inset-0 flex items-center justify-center bg-gray-900 bg-opacity-20 rounded-lg">
-                <i class="fas fa-lock text-gray-600 text-2xl"></i>
-            </div>
-            <i class="fab fa-whatsapp text-3xl text-green-600 mb-3"></i>
-            <div class="text-sm font-medium">WhatsApp</div>
-        </div>
-        
-        <!-- Messenger Platform - Locked for Free Users -->
-        <div class="platform-card locked border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer relative opacity-60" 
-             data-platform="messenger" onclick="showUpgradeModal('Messenger')">
-            <div class="absolute -top-2 -right-2 bg-orange-500 text-white text-xs px-2 py-1 rounded-full">
-                ENTERPRISE
-            </div>
-            <div class="absolute inset-0 flex items-center justify-center bg-gray-900 bg-opacity-20 rounded-lg">
-                <i class="fas fa-lock text-gray-600 text-2xl"></i>
-            </div>
-            <i class="fab fa-facebook-messenger text-3xl text-blue-600 mb-3"></i>
-            <div class="text-sm font-medium">Messenger</div>
-        </div>
-        
-        <!-- API Platform - Available based on plan -->
-        <div class="platform-card border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors" 
-             data-platform="api" @click="selectPlatformInModal('api')">
-            <i class="fas fa-code text-3xl text-purple-600 mb-3"></i>
-            <div class="text-sm font-medium">API</div>
-        </div>
-    </div>
-</div>
-
-<!-- Upgrade Modal -->
-<div id="upgradeModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-    <div class="bg-white rounded-lg p-8 max-w-2xl mx-4 relative">
-        <button onclick="closeUpgradeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
-            <i class="fas fa-times text-xl"></i>
-        </button>
-        
-        <div class="text-center mb-6">
-            <div class="mx-auto w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mb-4">
-                <i class="fas fa-crown text-orange-500 text-2xl"></i>
-            </div>
-            <h3 class="text-2xl font-bold text-gray-900 mb-2">Upgrade to Enterprise</h3>
-            <p class="text-gray-600" id="upgradeDescription">Unlock advanced platform integrations and team collaboration features</p>
-        </div>
-
-        <!-- Plan Comparison -->
-        <div class="grid md:grid-cols-2 gap-6 mb-8">
-            <!-- Free Plan -->
-            <div class="border rounded-lg p-6">
-                <h4 class="font-semibold text-lg mb-4 text-center">Free Plan</h4>
-                <div class="text-center mb-4">
-                    <span class="text-3xl font-bold">€0</span>
-                    <span class="text-gray-600">/month</span>
-                </div>
-                <ul class="space-y-2 text-sm">
-                    <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> 1 Web chatbot</li>
-                    <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Basic analytics</li>
-                    <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Personal workspace</li>
-                    <li class="flex items-center text-gray-400"><i class="fas fa-times text-gray-400 mr-2"></i> WhatsApp integration</li>
-                    <li class="flex items-center text-gray-400"><i class="fas fa-times text-gray-400 mr-2"></i> Messenger integration</li>
-                    <li class="flex items-center text-gray-400"><i class="fas fa-times text-gray-400 mr-2"></i> Team collaboration</li>
-                </ul>
-            </div>
-
-            <!-- Enterprise Plan -->
-            <div class="border-2 border-orange-500 rounded-lg p-6 relative">
-                <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-orange-500 text-white px-4 py-1 rounded-full text-sm font-medium">
-                    RECOMMENDED
-                </div>
-                <h4 class="font-semibold text-lg mb-4 text-center">Enterprise Plan</h4>
-                <div class="text-center mb-4">
-                    <span class="text-3xl font-bold">€400</span>
-                    <span class="text-gray-600">/month</span>
-                </div>
-                <ul class="space-y-2 text-sm">
-                    <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Unlimited chatbots</li>
-                    <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> All platform integrations</li>
-                    <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Team management</li>
-                    <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Advanced analytics</li>
-                    <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Priority support</li>
-                    <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Role-based access</li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="flex gap-4 justify-center">
-            <button onclick="closeUpgradeModal()" class="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
-                Maybe Later
-            </button>
-            <button onclick="initiateUpgrade()" class="px-6 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600">
-                Upgrade Now
-            </button>
-        </div>
-    </div>
-</div>
-
-
-                                <!-- Create Button -->
-                                <div class="flex justify-center pt-6">
-                                    <button @click="createBot()" 
-                                        class="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium text-lg">
-                                        <i class="fas fa-robot mr-2"></i>Create Bot
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Configuration Message -->
-                    <div x-show="showConfigMessage" class="text-center">
-                        <div class="mb-8">
-                            <h2 class="text-3xl font-bold text-gray-800 mb-2">Bot Created Successfully!</h2>
-                            <p class="text-gray-600">Your bot "<span x-text="botName" class="font-semibold text-blue-600"></span>" has been created.</p>
-                        </div>
-
-                        <div class="bg-white rounded-lg shadow p-8 max-w-lg mx-auto">
-                            <div class="mb-6">
-                                <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                    <i class="fas fa-check text-3xl text-green-600"></i>
-                                </div>
-                                <h3 class="text-xl font-semibold mb-2">Ready to Configure!</h3>
-                                <p class="text-gray-600">Configure your chatbot by clicking the configure button below to set up its behavior and responses.</p>
-                            </div>
-                            
-                            <button @click="startConfiguration()" 
-                                class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">
-                                <i class="fas fa-cog mr-2"></i>Configure Bot
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Configuration Section -->
-                    <div x-show="showConfiguration">
-                        <div class="mb-8">
-                            <h2 class="text-3xl font-bold text-gray-800 mb-2">Configure Your Bot</h2>
-                            <p class="text-gray-600">Bot: <span x-text="botName" class="font-semibold text-blue-600"></span></p>
-                        </div>
-
-                            <div class="bg-white rounded-lg shadow p-6">
-                            <!-- Bot Type Selection -->
-                            <div class="mb-8">
-                                <h3 class="text-xl font-semibold mb-4">Choose Bot Type</h3>
-                                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                    <!-- AI-Powered -->
-                                    <div @click="selectedType = 'ai-powered'" 
-                                        :class="selectedType === 'ai-powered' ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'"
-                                        class="border-2 rounded-lg p-6 cursor-pointer transition-colors">
-                                        <div class="text-center">
-                                            <i class="fas fa-brain text-4xl text-blue-600 mb-4"></i>
-                                            <h4 class="text-lg font-semibold mb-2">AI-Powered</h4>
-                                            <p class="text-sm text-gray-600 mb-4">Uses advanced AI models to understand and respond to user queries naturally.</p>
-                                            <div class="text-xs text-gray-500">
-                                                <div>✓ Natural language processing</div>
-                                                <div>✓ Context awareness</div>
-                                                <div>✓ Dynamic responses</div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Rule-Based -->
-                                    <div @click="selectedType = 'rule-based'" 
-                                        :class="selectedType === 'rule-based' ? 'border-green-500 bg-green-50' : 'border-gray-200 hover:border-gray-300'"
-                                        class="border-2 rounded-lg p-6 cursor-pointer transition-colors">
-                                        <div class="text-center">
-                                            <i class="fas fa-sitemap text-4xl text-green-600 mb-4"></i>
-                                            <h4 class="text-lg font-semibold mb-2">Rule-Based</h4>
-                                            <p class="text-sm text-gray-600 mb-4">Uses predefined rules and decision trees to handle user interactions.</p>
-                                            <div class="text-xs text-gray-500">
-                                                <div>✓ Predictable responses</div>
-                                                <div>✓ Fast processing</div>
-                                                <div>✓ Full control</div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Hybrid -->
-                                    <div @click="selectedType = 'hybrid'" 
-                                        :class="selectedType === 'hybrid' ? 'border-purple-500 bg-purple-50' : 'border-gray-200 hover:border-gray-300'"
-                                        class="border-2 rounded-lg p-6 cursor-pointer transition-colors">
-                                        <div class="text-center">
-                                            <i class="fas fa-layer-group text-4xl text-purple-600 mb-4"></i>
-                                            <h4 class="text-lg font-semibold mb-2">Hybrid</h4>
-                                            <p class="text-sm text-gray-600 mb-4">Combines rule-based logic with AI intelligence for optimal performance.</p>
-                                            <div class="text-xs text-gray-500">
-                                                <div>✓ Best of both worlds</div>
-                                                <div>✓ Fallback handling</div>
-                                                <div>✓ Maximum flexibility</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Configuration Tabs (Show only when type is selected) -->
-                            <div x-show="selectedType !== ''" class="border-t pt-6">
-                                <!-- Tab Navigation -->
-                               <!-- Tab Navigation -->
-<div class="border-b mb-6">
-   <nav class="flex space-x-8">
-    <button @click="currentTab = 'basic'"
-        :class="currentTab === 'basic' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500'"
-        class="py-2 px-1 border-b-2 font-medium text-sm"  
-        x-show="selectedType === 'ai-powered'">
-        Basic Setup
-    </button>
-
-    <button @click="currentTab = 'intents'"
-        :class="currentTab === 'intents' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500'"
-        class="py-2 px-1 border-b-2 font-medium text-sm"
-        x-show="selectedType === 'rule-based' ">
-        Intents/Rules
-    </button>
-
-    <button @click="currentTab = 'hybrid'"
-        :class="currentTab === 'hybrid' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500'"
-        class="py-2 px-1 border-b-2 font-medium text-sm"
-        x-show="selectedType === 'hybrid'">
-        Intents/Hybrid
-    </button>
-
-    <button @click="currentTab = 'ai-config'"
-        :class="currentTab === 'ai-config' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500'"
-        class="py-2 px-1 border-b-2 font-medium text-sm"
-        x-show="selectedType === 'ai-powered'">
-        AI Configuration
-    </button>
-
-    <!-- Bot Persona: Only visible for AI-Powered + Web platform -->
-    <button
-        x-show="selectedType === 'ai-powered' && selectedPlatform === 'web'"
-        @click="currentTab = 'persona'"
-        :class="currentTab === 'persona' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500'"
-        class="py-2 px-1 border-b-2 font-medium text-sm">
-        Bot Persona & Design
-    </button>
-
-    <!-- Preview: Only visible for AI-Powered + Web platform -->
-    <button
-        x-show="selectedType === 'ai-powered' && selectedPlatform === 'web'"
-        @click="currentTab = 'preview'"
-        :class="currentTab === 'preview' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500'"
-        class="py-2 px-1 border-b-2 font-medium text-sm">
-        <i class="fas fa-eye mr-2"></i>Preview
-    </button>
-</nav>
-</div>
-
-
-                                <!-- Basic Setup Tab -->
-                                <!-- Basic Setup Tab -->
-<div x-show="currentTab === 'basic'" class="space-y-6">
-    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
-        <h4 class="font-semibold text-blue-800 mb-2">Bot Information</h4>
-        <div class="text-blue-700 text-sm space-y-1">
-            <div><strong>Name:</strong> <span x-text="botName"></span></div>
-            <div x-show="botDescription"><strong>Description:</strong> <span x-text="botDescription"></span></div>
-            <div><strong>Type:</strong> <span x-text="selectedType.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())"></span></div>
-        </div>
-    </div>
-
-    <!-- Welcome Message -->
-    <div>
-        <label class="block text-sm font-medium text-gray-700 mb-2">Welcome Message</label>
-        <textarea rows="3" placeholder="Hello! I'm here to help you. How can I assist you today?" 
-            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
-    </div>
-
-    <!-- Fallback Message -->
-    <div>
-        <label class="block text-sm font-medium text-gray-700 mb-2">Fallback Message</label>
-        <textarea rows="2" placeholder="I'm sorry, I didn't understand that. Could you please rephrase your question?" 
-            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
-    </div>
-    <div>
- <div class="relative">
-    <input type="text" placeholder="Enter URL to train..."
-      class="w-full pl-4 pr-24 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
-    <button
-      class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-blue-600 text-white px-4 py-1 rounded-md hover:bg-blue-700">
-      Train
-    </button>
-  </div>
-  <!-- <label class="block text-sm font-medium text-gray-700 mb-2">Data Need to Feed</label> -->
-
-  <!-- Input Wrapper -->
-  <div class="flex items-center border border-gray-300 rounded-md px-3 py-2 space-x-3 focus-within:ring-2 focus-within:ring-blue-500 mt-4">
-    
-    <!-- Textarea -->
-    <textarea rows="2" placeholder="Type your prompt or message here..." 
-      class="flex-grow resize-none bg-transparent focus:outline-none text-gray-800"></textarea>
-
-    <!-- File Upload Icon/Button -->
-    <div class="relative">
-      <input type="file" id="feedFile" class="hidden" />
-      <label for="feedFile" class="cursor-pointer text-gray-500 hover:text-blue-600">
-        📎
-      </label>
-    </div>
-  </div>
-</div>
-
-
-    <!-- NEW: Enable Bot Persona & Design Checkbox -->
-    <!-- <div class="border-t pt-6">
-        <h4 class="text-lg font-semibold mb-4">Additional Features</h4>
-        <div class="space-y-4">
-            <label class="flex items-center cursor-pointer">
-                <input type="checkbox" x-model="enablePersonaDesign" @change="updateTabVisibility()"
-                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2">
-                <div class="ml-3">
-                    <div class="text-sm font-medium text-gray-700">Enable Bot Persona & Design Customization</div>
-                    <div class="text-xs text-gray-500">Allow custom branding, colors, icons, and personality settings for your bot</div>
-                </div>
-            </label>
-        </div>
-    </div> -->
-</div>
-
-
-                                <!-- Intents/Rules Tab -->
-                                <div x-show="currentTab === 'intents'" class="space-y-6">
-
-
-                                    <div class="main-container">
-        <!-- Node Palette -->
-        <div class="node-palette">
-    <div class="palette-header">
-        <input type="text" class="search-box" placeholder="Search by name" id="searchBox">
-    </div>
-
-    <div class="palette-content">
-        <div class="node-category bg-gradient-to-br from-blue-50 to-gray-100 p-6 rounded-xl shadow-lg border border-blue-200 max-w-sm transition-all duration-300 hover:shadow-xl">
-    <div class="category-title flex items-center gap-2 mb-4">
-        <span class="text-2xl">🛠️</span>
-        <h3 class="text-xl font-semibold text-gray-800">Add New Node</h3>
-    </div>
-    <div class="node-list space-y-2">
-        <div class="palette-node flex items-center gap-4 p-4 bg-white rounded-lg shadow-md cursor-move hover:bg-indigo-50 hover:scale-105 transition-all duration-200" data-type="message" draggable="true">
-            <div class="node-icon text-xl">🛠️</div>
-            <div class="node-label font-medium text-gray-700">Create a new Node</div>
-        </div>
-    </div>
-</div>  
-
-        <div class="node-category">
-            <div class="category-title">Input Fields</div>
-            <div class="node-list">
-                <div class="palette-node" data-type="question" draggable="true">
-                    <div class="node-icon">❓</div>
-                    <div class="node-label">Ask a question</div>
-                </div>
-                <div class="palette-node" data-type="date" draggable="true">
-                    <div class="node-icon">📅</div>
-                    <div class="node-label">Ask for a date</div>
-                </div>
-                <div class="palette-node" data-type="name" draggable="true">
-                    <div class="node-icon">👤</div>
-                    <div class="node-label">Ask for a name</div>
-                </div>
-                <div class="palette-node" data-type="number" draggable="true">
-                    <div class="node-icon">🔢</div>
-                    <div class="node-label">Ask for a number</div>
-                </div>
-                <div class="palette-node" data-type="phone" draggable="true">
-                    <div class="node-icon">📱</div>
-                    <div class="node-label">Ask for a phone</div>
-                </div>
-                <div class="palette-node" data-type="phone" draggable="true">
-                    <div class="node-icon">🔘</div>
-                    <div class="node-label">Buttons</div>
-                </div>
-                <div class="palette-node" data-type="url" draggable="true">
-                    <div class="node-icon">🌐</div>
-                    <div class="node-label">Ask for a Url</div>
-                </div>
-                <div class="palette-node" data-type="address" draggable="true">
-                    <div class="node-icon">📍</div>
-                    <div class="node-label">Ask for an address</div>
-                </div>
-                <div class="palette-node" data-type="autocomplete" draggable="true">
-                    <div class="node-icon">😊</div>
-                    <div class="node-label">Auto-complete</div>
-                </div>
-                <div class="component-section">
-                    <div class="section-title">Logic Components</div>
-                    
-                    <div class="component-item" draggable="true" data-type="condition">
-                        <div class="component-icon">🔀</div>
-                        <div class="component-text">If-Else Condition</div>
-                    </div>
-                    
-                    <div class="component-item" draggable="true" data-type="switch">
-                        <div class="component-icon">🔄</div>
-                        <div class="component-text">Switch Case</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-        <!-- Canvas Area -->
-        <div class="canvas-area">
-            <div class="canvas" id="canvas">
-                <svg id="connectionsSvg">
-                    <defs>
-                        <marker id="arrowhead" markerWidth="10" markerHeight="7" 
-                                refX="9" refY="3.5" orient="auto">
-                            <polygon points="0 0, 10 3.5, 0 7" fill="#6366f1" />
-                        </marker>
-                    </defs>
-                </svg>
-
-                <!-- Starting Node -->
-                <div class="starting-node" id="startingNode">
-                    <div class="node-header">
-                        <div class="node-type-icon">🚀</div>
-                        <div class="node-title">Starting point</div>
-                    </div>
-                    <div class="node-content">Where your bot starts</div>
-                    <div class="connection-point output-point" data-type="output"></div>
-                </div>
-
-                <div class="drop-zone" id="dropZone">
-                    Drop your node here to add it to the flow
-                </div>
-            </div>
-
-            <div class="mini-toolbar">
-                <button class="mini-toolbar-btn" onclick="zoomIn()">🔍+</button>
-                <button class="mini-toolbar-btn" onclick="resetZoom()">Reset</button>
-                <button class="mini-toolbar-btn" onclick="zoomOut()">🔍-</button>
-                <button class="mini-toolbar-btn" onclick="fitToScreen()">Fit</button>
-            </div>
-
-            <div class="zoom-controls">
-                <button class="zoom-btn" onclick="zoomOut()">-</button>
-                <div class="zoom-level" id="zoomLevel">100%</div>
-                <button class="zoom-btn" onclick="zoomIn()">+</button>
-            </div>
-        </div>
-    </div>
-
-  <script>
-        let nodeCounter = 0;
-        let selectedNode = null;
-        let connections = [];
-        let isConnecting = false;
-        let connectionStart = null;
-        let tempLine = null;
-        let dragOffset = { x: 0, y: 0 };
-        let zoomLevel = 1;
-
-        const canvas = document.getElementById('canvas');
-        const svg = document.getElementById('connectionsSvg');
-        const dropZone = document.getElementById('dropZone');
-        const zoomLevelDisplay = document.getElementById('zoomLevel');
-
-        // Node templates
-        const nodeTemplates = {
-            button: {
-                title: 'Buttons',
-                content: 'Show buttons for user interaction',
-                icon: '🔘'
-            },
-            question: {
-                title: 'Ask a question',
-                content: 'Get text input from user',
-                icon: '❓'
-            },
-            date: {
-                title: 'Ask for a date',
-                content: 'Date picker input',
-                icon: '📅'
-            },
-            name: {
-                title: 'Ask for a name',
-                content: 'Text input for names',
-                icon: '👤'
-            },
-            number: {
-                title: 'Ask for a number',
-                content: 'Numeric input field',
-                icon: '🔢'
-            },
-            phone: {
-                title: 'Ask for a phone',
-                content: 'Phone number input',
-                icon: '📱'
-            },
-            url: {
-                title: 'Ask for a URL',
-                content: 'URL input field',
-                icon: '🌐'
-            },
-            address: {
-                title: 'Ask for an address',
-                content: 'Address input with validation',
-                icon: '📍'
-            },
-            autocomplete: {
-                title: 'Auto-complete',
-                content: 'Dropdown with suggestions',
-                icon: '😊'
-            }
-            autocomplete: {
-                title: 'If-Else Condition',
-                content: 'Conditional logic block',
-                icon: '🔀'
-            }
-            autocomplete: {
-                title: 'Switch Case',
-                content: 'Switch-case logic block',
-                icon: '🔁'
-            }
-        };
-
-        // Setup drag and drop
-        document.querySelectorAll('.palette-node').forEach(node => {
-            node.addEventListener('dragstart', (e) => {
-                e.dataTransfer.setData('text/plain', node.dataset.type);
-                node.classList.add('dragging');
-            });
-
-            node.addEventListener('dragend', (e) => {
-                node.classList.remove('dragging');
-            });
-        });
-
-        canvas.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            dropZone.classList.add('active');
-        });
-
-        canvas.addEventListener('dragleave', (e) => {
-            if (!canvas.contains(e.relatedTarget)) {
-                dropZone.classList.remove('active');
-            }
-        });
-
-        canvas.addEventListener('drop', (e) => {
-            e.preventDefault();
-            dropZone.classList.remove('active');
-            
-            const nodeType = e.dataTransfer.getData('text/plain');
-            const rect = canvas.getBoundingClientRect();
-            const x = (e.clientX - rect.left) / zoomLevel - 80;
-            const y = (e.clientY - rect.top) / zoomLevel - 40;
-            
-            createNode(nodeType, x, y);
-        });
-
-        function createNode(type, x, y) {
-            const template = nodeTemplates[type];
-            const nodeId = ++nodeCounter;
-            
-            const node = document.createElement('div');
-            node.className = `workflow-node ${type}-node`;
-            node.style.left = x + 'px';
-            node.style.top = y + 'px';
-            node.dataset.id = nodeId;
-            node.dataset.type = type;
-
-            node.innerHTML = `
-                <div class="node-header">
-                    <div class="node-type-icon">${template.icon}</div>
-                    <div class="node-title">${template.title}</div>
-                </div>
-                <div class="node-content">${template.content}</div>
-                <div class="connection-point input-point" data-type="input"></div>
-                <div class="connection-point output-point" data-type="output"></div>
-            `;
-
-            canvas.appendChild(node);
-            makeNodeDraggable(node);
-            setupConnectionPoints(node);
-            selectNode(node);
-        }
-
-        function makeNodeDraggable(node) {
-            let isDragging = false;
-
-            node.addEventListener('mousedown', (e) => {
-                if (e.target.classList.contains('connection-point')) return;
-                
-                isDragging = true;
-                selectNode(node);
-
-                const rect = node.getBoundingClientRect();
-                const canvasRect = canvas.getBoundingClientRect();
-                dragOffset.x = (e.clientX - rect.left) / zoomLevel;
-                dragOffset.y = (e.clientY - rect.top) / zoomLevel;
-
-                e.preventDefault();
-            });
-
-            document.addEventListener('mousemove', (e) => {
-                if (!isDragging || selectedNode !== node) return;
-
-                const canvasRect = canvas.getBoundingClientRect();
-                const x = (e.clientX - canvasRect.left) / zoomLevel - dragOffset.x;
-                const y = (e.clientY - canvasRect.top) / zoomLevel - dragOffset.y;
-
-                node.style.left = Math.max(0, x) + 'px';
-                node.style.top = Math.max(0, y) + 'px';
-
-                updateConnections();
-            });
-
-            document.addEventListener('mouseup', () => {
-                if (isDragging && selectedNode === node) {
-                    isDragging = false;
-                }
-            });
-        }
-
-        function selectNode(node) {
-            // Remove selection from all nodes
-            document.querySelectorAll('.workflow-node, .starting-node').forEach(n => {
-                n.classList.remove('selected');
-            });
-            
-            // Select the clicked node
-            node.classList.add('selected');
-            selectedNode = node;
-        }
-
-        function setupConnectionPoints(node) {
-            const points = node.querySelectorAll('.connection-point');
-            
-            points.forEach(point => {
-                point.addEventListener('mousedown', (e) => {
-                    e.stopPropagation();
-                    
-                    if (!isConnecting && point.dataset.type === 'output') {
-                        startConnection(point, node);
-                    } else if (isConnecting && point.dataset.type === 'input') {
-                        endConnection(point, node);
-                    }
-                });
-            });
-        }
-
-        // Setup starting node
-        const startingNode = document.getElementById('startingNode');
-        makeNodeDraggable(startingNode);
-        setupConnectionPoints(startingNode);
-
-        function startConnection(point, node) {
-            isConnecting = true;
-            connectionStart = { point, node };
-            
-            const rect = point.getBoundingClientRect();
-            const canvasRect = canvas.getBoundingClientRect();
-            
-            tempLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-            tempLine.setAttribute('class', 'temp-connection');
-            tempLine.setAttribute('x1', (rect.left - canvasRect.left + rect.width/2) / zoomLevel);
-            tempLine.setAttribute('y1', (rect.top - canvasRect.top + rect.height/2) / zoomLevel);
-            tempLine.setAttribute('x2', (rect.left - canvasRect.left + rect.width/2) / zoomLevel);
-            tempLine.setAttribute('y2', (rect.top - canvasRect.top + rect.height/2) / zoomLevel);
-            svg.appendChild(tempLine);
-        }
-
-        function endConnection(point, node) {
-            if (!isConnecting || node === connectionStart.node) {
-                cancelConnection();
-                return;
-            }
-
-            // Create connection
-            connections.push({
-                from: connectionStart,
-                to: { point, node },
-                id: `conn_${Date.now()}`
-            });
-
-            if (tempLine) {
-                svg.removeChild(tempLine);
-                tempLine = null;
-            }
-
-            isConnecting = false;
-            connectionStart = null;
-            
-            updateConnections();
-        }
-
-        function cancelConnection() {
-            isConnecting = false;
-            connectionStart = null;
-            
-            if (tempLine) {
-                svg.removeChild(tempLine);
-                tempLine = null;
-            }
-        }
-
-        // Update temp line during connection
-        canvas.addEventListener('mousemove', (e) => {
-            if (isConnecting && tempLine) {
-                const canvasRect = canvas.getBoundingClientRect();
-                tempLine.setAttribute('x2', (e.clientX - canvasRect.left) / zoomLevel);
-                tempLine.setAttribute('y2', (e.clientY - canvasRect.top) / zoomLevel);
-            }
-        });
-
-        // Cancel connection on right click
-        canvas.addEventListener('contextmenu', (e) => {
-            e.preventDefault();
-            if (isConnecting) {
-                cancelConnection();
-            }
-        });
-
-        function updateConnections() {
-            // Clear existing connection paths
-            const existingPaths = svg.querySelectorAll('.connection-path');
-            existingPaths.forEach(path => path.remove());
-
-            connections.forEach(conn => {
-                const fromRect = conn.from.point.getBoundingClientRect();
-                const toRect = conn.to.point.getBoundingClientRect();
-                const canvasRect = canvas.getBoundingClientRect();
-
-                const x1 = (fromRect.left - canvasRect.left + fromRect.width/2) / zoomLevel;
-                const y1 = (fromRect.top - canvasRect.top + fromRect.height/2) / zoomLevel;
-                const x2 = (toRect.left - canvasRect.left + toRect.width/2) / zoomLevel;
-                const y2 = (toRect.top - canvasRect.top + toRect.height/2) / zoomLevel;
-
-                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-                const midX = (x1 + x2) / 2;
-                
-                const d = `M ${x1} ${y1} C ${midX} ${y1}, ${midX} ${y2}, ${x2} ${y2}`;
-                
-                path.setAttribute('d', d);
-                path.setAttribute('class', 'connection-path');
-                path.setAttribute('marker-end', 'url(#arrowhead)');
-                
-                svg.appendChild(path);
-            });
-        }
-
-        // Zoom functionality
-        function zoomIn() {
-            zoomLevel = Math.min(zoomLevel * 1.2, 3);
-            updateZoom();
-        }
-
-        function zoomOut() {
-            zoomLevel = Math.max(zoomLevel / 1.2, 0.3);
-            updateZoom();
-        }
-
-        function resetZoom() {
-            zoomLevel = 1;
-            updateZoom();
-        }
-
-        function fitToScreen() {
-            const nodes = canvas.querySelectorAll('.workflow-node, .starting-node');
-            if (nodes.length === 0) return;
-
-            let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
-            
-            nodes.forEach(node => {
-                const rect = node.getBoundingClientRect();
-                const canvasRect = canvas.getBoundingClientRect();
-                const x = (rect.left - canvasRect.left) / zoomLevel;
-                const y = (rect.top - canvasRect.top) / zoomLevel;
-                
-                minX = Math.min(minX, x);
-                minY = Math.min(minY, y);
-                maxX = Math.max(maxX, x + node.offsetWidth);
-                maxY = Math.max(maxY, y + node.offsetHeight);
-            });
-
-            const width = maxX - minX;
-            const height = maxY - minY;
-            const canvasWidth = canvas.offsetWidth;
-            const canvasHeight = canvas.offsetHeight;
-
-            const scaleX = canvasWidth / (width + 200);
-            const scaleY = canvasHeight / (height + 200);
-            
-            zoomLevel = Math.min(scaleX, scaleY, 1);
-            updateZoom();
-        }
-
-        function updateZoom() {
-            canvas.style.transform = `scale(${zoomLevel})`;
-            canvas.style.transformOrigin = 'top left';
-            zoomLevelDisplay.textContent = Math.round(zoomLevel * 100) + '%';
-            updateConnections();
-        }
-
-        // Search functionality
-        const searchBox = document.getElementById('searchBox');
-        searchBox.addEventListener('input', (e) => {
-            const searchTerm = e.target.value.toLowerCase();
-            const nodes = document.querySelectorAll('.palette-node');
-            
-            nodes.forEach(node => {
-                const label = node.querySelector('.node-label').textContent.toLowerCase();
-                if (label.includes(searchTerm)) {
-                    node.style.display = 'flex';
-                } else {
-                    node.style.display = 'none';
-                }
-            });
-        });
-
-        // Delete selected node with Delete key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Delete' && selectedNode && selectedNode.id !== 'startingNode') {
-                // Remove connections involving this node
-                connections = connections.filter(conn => 
-                    conn.from.node !== selectedNode && conn.to.node !== selectedNode
-                );
-                
-                // Remove the node
-                selectedNode.remove();
-                selectedNode = null;
-                updateConnections();
-            }
-        });
-
-        // Clear canvas on Escape
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                if (isConnecting) {
-                    cancelConnection();
-                } else if (selectedNode) {
-                    selectedNode.classList.remove('selected');
-                    selectedNode = null;
-                }
-            }
-        });
-
-        // Auto-connect new nodes to previous ones
-        let lastCreatedNode = null;
-
-        function createNode(type, x, y) {
-            const template = nodeTemplates[type];
-            const nodeId = ++nodeCounter;
-            
-            const node = document.createElement('div');
-            node.className = `workflow-node ${type}-node`;
-            node.style.left = x + 'px';
-            node.style.top = y + 'px';
-            node.dataset.id = nodeId;
-            node.dataset.type = type;
-
-            node.innerHTML = `
-                <div class="node-header">
-                    <div class="node-type-icon">${template.icon}</div>
-                    <div class="node-title">${template.title}</div>
-                </div>
-                <div class="node-content">${template.content}</div>
-                <div class="connection-point input-point" data-type="input"></div>
-                <div class="connection-point output-point" data-type="output"></div>
-            `;
-
-            canvas.appendChild(node);
-            makeNodeDraggable(node);
-            setupConnectionPoints(node);
-            selectNode(node);
-
-            // Auto-connect to the last created node or starting node
-            if (lastCreatedNode) {
-                autoConnect(lastCreatedNode, node);
-            } else {
-                // Connect to starting node if this is the first node
-                const startingNode = document.getElementById('startingNode');
-                autoConnect(startingNode, node);
-            }
-
-            lastCreatedNode = node;
-        }
-
-        function autoConnect(fromNode, toNode) {
-            const fromPoint = fromNode.querySelector('.output-point');
-            const toPoint = toNode.querySelector('.input-point');
-            
-            if (fromPoint && toPoint) {
-                connections.push({
-                    from: { point: fromPoint, node: fromNode },
-                    to: { point: toPoint, node: toNode },
-                    id: `conn_${Date.now()}`
-                });
-                updateConnections();
-            }
-        }
-
-        // Initialize with proper event handling
-        document.addEventListener('DOMContentLoaded', () => {
-            updateZoom();
-            
-            // Add some sample connections for demo
-            setTimeout(() => {
-                // Example: Create a sample flow
-                // This is just for demonstration
-            }, 1000);
-        });
-
-        // Handle window resize
-        window.addEventListener('resize', () => {
-            updateConnections();
-        });
-
-        // Mini toolbar functionality
-        function clearCanvas() {
-            const nodes = canvas.querySelectorAll('.workflow-node');
-            nodes.forEach(node => node.remove());
-            connections = [];
-            updateConnections();
-            nodeCounter = 0;
-            lastCreatedNode = null;
-            selectedNode = null;
-        }
-
-        // Add context menu for nodes
-        canvas.addEventListener('contextmenu', (e) => {
-            e.preventDefault();
-            
-            const node = e.target.closest('.workflow-node');
-            if (node && node.id !== 'startingNode') {
-                showContextMenu(e.clientX, e.clientY, node);
-            }
-        });
-
-        function showContextMenu(x, y, node) {
-            // Create context menu
-            const contextMenu = document.createElement('div');
-            contextMenu.style.cssText = `
-                position: fixed;
-                top: ${y}px;
-                left: ${x}px;
-                background: white;
-                border: 1px solid #e5e7eb;
-                border-radius: 8px;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-                z-index: 1000;
-                min-width: 150px;
-            `;
-
-            contextMenu.innerHTML = `
-                <div style="padding: 8px 0;">
-                    <div class="context-menu-item" onclick="duplicateNode('${node.dataset.id}')">
-                        <span>📋</span> Duplicate
-                    </div>
-                    <div class="context-menu-item" onclick="deleteNode('${node.dataset.id}')">
-                        <span>🗑️</span> Delete
-                    </div>
-                    <div class="context-menu-item" onclick="editNode('${node.dataset.id}')">
-                        <span>✏️</span> Edit
-                    </div>
-                </div>
-            `;
-
-            // Add context menu styles
-            const style = document.createElement('style');
-            style.textContent = `
-                .context-menu-item {
-                    padding: 8px 16px;
-                    cursor: pointer;
-                    display: flex;
-                    align-items: center;
-                    gap: 8px;
-                    font-size: 14px;
-                    color: #374151;
-                }
-                .context-menu-item:hover {
-                    background: #f3f4f6;
-                }
-            `;
-            document.head.appendChild(style);
-
-            document.body.appendChild(contextMenu);
-
-            // Remove on click outside
-            setTimeout(() => {
-                document.addEventListener('click', () => {
-                    contextMenu.remove();
-                    style.remove();
-                }, { once: true });
-            }, 0);
-        }
-
-        function duplicateNode(nodeId) {
-            const originalNode = document.querySelector(`[data-id="${nodeId}"]`);
-            if (originalNode) {
-                const rect = originalNode.getBoundingClientRect();
-                const canvasRect = canvas.getBoundingClientRect();
-                const x = (rect.left - canvasRect.left) / zoomLevel + 50;
-                const y = (rect.top - canvasRect.top) / zoomLevel + 50;
-                
-                createNode(originalNode.dataset.type, x, y);
-            }
-        }
-
-        function deleteNode(nodeId) {
-            const node = document.querySelector(`[data-id="${nodeId}"]`);
-            if (node) {
-                // Remove connections
-                connections = connections.filter(conn => 
-                    conn.from.node !== node && conn.to.node !== node
-                );
-                
-                // Remove node
-                node.remove();
-                if (selectedNode === node) {
-                    selectedNode = null;
-                }
-                updateConnections();
-            }
-        }
-
-        function editNode(nodeId) {
-            const node = document.querySelector(`[data-id="${nodeId}"]`);
-            if (node) {
-                selectNode(node);
-                // Here you would typically open a properties panel
-                console.log('Edit node:', node.dataset.type);
-            }
-        }
-
-        // Save/Load functionality (localStorage)
-        function saveWorkflow() {
-            const workflow = {
-                nodes: Array.from(canvas.querySelectorAll('.workflow-node')).map(node => ({
-                    id: node.dataset.id,
-                    type: node.dataset.type,
-                    x: parseInt(node.style.left),
-                    y: parseInt(node.style.top)
-                })),
-                connections: connections.map(conn => ({
-                    from: conn.from.node.dataset.id,
-                    to: conn.to.node.dataset.id
-                })),
-                zoom: zoomLevel
-            };
-            
-            localStorage.setItem('botWorkflow', JSON.stringify(workflow));
-            console.log('Workflow saved!');
-        }
-
-        function loadWorkflow() {
-            const saved = localStorage.getItem('botWorkflow');
-            if (saved) {
-                const workflow = JSON.parse(saved);
-                
-                // Clear existing
-                clearCanvas();
-                
-                // Recreate nodes
-                workflow.nodes.forEach(nodeData => {
-                    createNodeFromData(nodeData);
-                });
-                
-                // Recreate connections (simplified)
-                setTimeout(() => {
-                    workflow.connections.forEach(connData => {
-                        const fromNode = document.querySelector(`[data-id="${connData.from}"]`);
-                        const toNode = document.querySelector(`[data-id="${connData.to}"]`);
-                        if (fromNode && toNode) {
-                            autoConnect(fromNode, toNode);
-                        }
-                    });
-                }, 100);
-                
-                zoomLevel = workflow.zoom || 1;
-                updateZoom();
-            }
-        }
-
-        function createNodeFromData(nodeData) {
-            nodeCounter = Math.max(nodeCounter, parseInt(nodeData.id));
-            const template = nodeTemplates[nodeData.type];
-            
-            const node = document.createElement('div');
-            node.className = `workflow-node ${nodeData.type}-node`;
-            node.style.left = nodeData.x + 'px';
-            node.style.top = nodeData.y + 'px';
-            node.dataset.id = nodeData.id;
-            node.dataset.type = nodeData.type;
-
-            node.innerHTML = `
-                <div class="node-header">
-                    <div class="node-type-icon">${template.icon}</div>
-                    <div class="node-title">${template.title}</div>
-                </div>
-                <div class="node-content">${template.content}</div>
-                <div class="connection-point input-point" data-type="input"></div>
-                <div class="connection-point output-point" data-type="output"></div>
-            `;
-
-            canvas.appendChild(node);
-            makeNodeDraggable(node);
-            setupConnectionPoints(node);
-        }
-
-        // Keyboard shortcuts
-        document.addEventListener('keydown', (e) => {
-            if (e.ctrlKey || e.metaKey) {
-                switch(e.key) {
-                    case 's':
-                        e.preventDefault();
-                        saveWorkflow();
-                        break;
-                    case 'o':
-                        e.preventDefault();
-                        loadWorkflow();
-                        break;
-                    case 'z':
-                        e.preventDefault();
-                        // Undo functionality could be implemented here
-                        break;
-                }
-            }
-        });
-    </script>                                 
-</div>
+                    <!-- Enterprise Collaboration Button
