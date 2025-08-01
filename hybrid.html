@@ -1253,7 +1253,6 @@
 
                 this.setupNodeEvents(nodeElement);
                 this.setupNodeMenu(nodeElement);
-                this.selectNode(nodeId);
             }
 
             setupNodeMenu(nodeElement) {
@@ -1471,7 +1470,11 @@
             setupNodeEvents(nodeElement) {
                 // Node selection
                 nodeElement.addEventListener('click', (e) => {
-                    e.stopPropagation();
+                    // Prevent selection when connecting nodes
+                    if (this.isConnecting) {
+                        e.stopPropagation();
+                        return;
+                    }
                     this.selectNode(nodeElement.id);
                 });
 
@@ -1480,7 +1483,10 @@
                 let dragStartPos = { x: 0, y: 0 };
 
                 nodeElement.addEventListener('mousedown', (e) => {
-                    if (e.target.classList.contains('connection-point')) return;
+                    // Prevent dragging when clicking on connection points
+                    if (e.target.classList.contains('connection-point')) {
+                        return;
+                    }
                     
                     isDraggingNode = true;
                     const rect = nodeElement.getBoundingClientRect();
@@ -1518,6 +1524,7 @@
                 connectionPoints.forEach(point => {
                     point.addEventListener('mousedown', (e) => {
                         e.stopPropagation();
+                        e.preventDefault(); // Prevent text selection
                         this.startConnection(point);
                     });
                 });

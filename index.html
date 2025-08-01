@@ -8,7 +8,9 @@
     <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-
+.input {
+  @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400;
+}
          .nav-tabs {
             display: flex;
             gap: 20px;
@@ -1268,77 +1270,214 @@
 
                    
                     <!-- Bot Creation Form -->
-                    <div x-show="showCreationForm">
-                        <div class="mb-8">
-                            <h2 class="text-3xl font-bold text-gray-800 mb-2">Create New Chatbot</h2>
-                            <p class="text-gray-600">Start by giving your chatbot a name and description.</p>
-                        </div>
-
-                        <div class="bg-white rounded-lg shadow p-8 max-w-2xl mx-auto">
-                            <div class="space-y-6">
-                                <!-- Bot Name -->
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Bot Name *</label>
-                                    <input type="text" x-model="botName" placeholder="e.g., Customer Support Bot"
-                                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                </div>
-
-                                <!-- Bot Description -->
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Description (Optional)</label>
-                                    <textarea x-model="botDescription" rows="4"
-                                        placeholder="Describe what your bot will do. e.g., Help customers with order inquiries, product information, and general support."
-                                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
-                                </div>
-
-                                <!-- Platform Selection -->
-                               <div>
-    <label class="block text-sm font-medium text-gray-700 mb-3">Choose Platform</label>
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                 <div x-show="showCreationForm" class="p-6 max-w-2xl mx-auto w-full">
+  <!-- Bot Details Section -->
+  <div class="mb-8">
+    <h2 class="text-3xl font-bold text-gray-800 mb-2">Create New Chatbot</h2>
+    <p class="text-gray-600">Start by giving your chatbot a name and description.</p>
+  </div>
+  <div class="bg-white rounded-lg shadow p-8 space-y-6">
+    <!-- Bot Name -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">Bot Name *</label>
+      <input type="text" x-model="botName" placeholder="e.g., Customer Support Bot"
+        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"/>
+    </div>
+    <!-- Bot Description -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">Description (Optional)</label>
+      <textarea x-model="botDescription" rows="3"
+        placeholder="Describe what your bot will do. e.g., Help customers with order inquiries, product information, and general support."
+        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
+    </div>
+    <!-- Platform Selection -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-3">Choose Platform</label>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <!-- Web -->
         <div @click="selectedPlatform = 'web'"
-             :class="selectedPlatform === 'web' ? 'border-blue-500 bg-blue-50' : 'border-gray-200'"
-             class="border-2 rounded-lg p-4 text-center cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors">
-            <i class="fas fa-globe text-3xl text-blue-600 mb-3"></i>
-            <div class="text-sm font-medium">Web</div>
+          :class="selectedPlatform === 'web' ? 'border-blue-500 bg-blue-50' : 'border-gray-200'"
+          class="border-2 rounded-lg p-4 text-center cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors">
+          <i class="fas fa-globe text-3xl text-blue-600 mb-3"></i>
+          <div class="text-sm font-medium">Web</div>
         </div>
-
+        <!-- WhatsApp -->
         <div @click="selectedPlatform = 'whatsapp'"
-             :class="selectedPlatform === 'whatsapp' ? 'border-blue-500 bg-blue-50' : 'border-gray-200'"
-             class="border-2 rounded-lg p-4 text-center cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors">
-            <i class="fab fa-whatsapp text-3xl text-green-600 mb-3"></i>
-            <div class="text-sm font-medium">WhatsApp</div>
+          :class="selectedPlatform === 'whatsapp' ? 'border-green-500 bg-green-50' : 'border-gray-200'"
+          class="border-2 rounded-lg p-4 text-center cursor-pointer hover:border-green-500 hover:bg-green-50 transition-colors">
+          <i class="fab fa-whatsapp text-3xl text-green-600 mb-3"></i>
+          <div class="text-sm font-medium">WhatsApp</div>
         </div>
-
+        <!-- Messenger -->
         <div @click="selectedPlatform = 'messenger'"
-             :class="selectedPlatform === 'messenger' ? 'border-blue-500 bg-blue-50' : 'border-gray-200'"
-             class="border-2 rounded-lg p-4 text-center cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors">
-            <i class="fab fa-facebook-messenger text-3xl text-blue-600 mb-3"></i>
-            <div class="text-sm font-medium">Messenger</div>
+          :class="selectedPlatform === 'messenger' ? 'border-blue-500 bg-blue-50' : 'border-gray-200'"
+          class="border-2 rounded-lg p-4 text-center cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors">
+          <i class="fab fa-facebook-messenger text-3xl text-blue-600 mb-3"></i>
+          <div class="text-sm font-medium">Messenger</div>
         </div>
-
+        <!-- API -->
         <div @click="selectedPlatform = 'api'"
-             :class="selectedPlatform === 'api' ? 'border-blue-500 bg-blue-50' : 'border-gray-200'"
-             class="border-2 rounded-lg p-4 text-center cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors">
-            <i class="fas fa-code text-3xl text-purple-600 mb-3"></i>
-            <div class="text-sm font-medium">API</div>
+          :class="selectedPlatform === 'api' ? 'border-purple-500 bg-purple-50' : 'border-gray-200'"
+          class="border-2 rounded-lg p-4 text-center cursor-pointer hover:border-purple-500 hover:bg-purple-50 transition-colors">
+          <i class="fas fa-code text-3xl text-purple-600 mb-3"></i>
+          <div class="text-sm font-medium">API</div>
         </div>
+      </div>
     </div>
 
-    <!-- Bot Persona & Design tab: visible only when platform is not 'api' -->
- 
+    <!-- WhatsApp Integration Section -->
+<div x-show="selectedPlatform === 'whatsapp'" class="bg-white shadow-xl rounded-2xl p-8 border-t-4 border-green-400 w-full max-w-2xl mx-auto mt-6">
+  <div class="flex items-center mb-4">
+    <i class="fab fa-whatsapp text-green-600 text-2xl mr-3"></i>
+    <h3 class="text-2xl font-semibold text-green-700">WhatsApp Integration</h3>
+  </div>
+  <p class="text-green-900 mb-5 text-sm">Connect your WhatsApp Business number with your BSP credentials.</p>
+  
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+    <div>
+      <label class="block text-base font-medium text-gray-700 mb-2">
+        Business Phone Number <span class="text-red-500">*</span>
+      </label>
+      <input class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400" type="text" x-model="waPhone" placeholder="+91XXXXXXXXXX"/>
+      <p class="text-xs text-gray-600 mt-1">WhatsApp Business registered number</p>
+    </div>
+    <div>
+      <label class="block text-base font-medium text-gray-700 mb-2">
+        BSP <span class="text-red-500">*</span>
+      </label>
+      <select x-model="waBSP" class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm">
+        <option value="">Select BSP</option>
+        <option>Twilio</option>
+        <option>Gupshup</option>
+        <option>Wati</option>
+        <option>Other</option>
+      </select>
+    </div>
+    <div>
+      <label class="block text-base font-medium text-gray-700 mb-2">
+        API Key / Token <span class="text-red-500">*</span>
+      </label>
+      <input class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm" type="text" x-model="waApiKey"/>
+    </div>
+    <div>
+      <label class="block text-base font-medium text-gray-700 mb-2">
+        Webhook URL <span class="text-red-500">*</span>
+      </label>
+      <input class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm" type="text" x-model="waWebhookUrl" placeholder="https://yourdomain.com/webhook"/>
+    </div>
+    <div>
+      <label class="block text-base font-medium text-gray-700 mb-2">
+        Verification Token <span class="text-red-500">*</span>
+      </label>
+      <input class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm" type="text" x-model="waVerifyToken"/>
+    </div>
+    <div>
+      <label class="block text-base font-medium text-gray-700 mb-2">
+        Business Name <span class="text-xs text-gray-400">(optional)</span>
+      </label>
+      <input class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm" type="text" x-model="waBizName"/>
+    </div>
+    <div class="md:col-span-2">
+      <label class="block text-base font-medium text-gray-700 mb-2">
+        Business Description <span class="text-xs text-gray-400">(optional)</span>
+      </label>
+      <input class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm" type="text" x-model="waBizDesc"/>
+    </div>
+  </div>
+
+  <button
+    type="button"
+    @click="testWaIntegration()"
+    class="w-full mt-6 px-6 py-3 bg-gradient-to-r from-green-600 to-green-500 text-white rounded-xl shadow font-semibold hover:from-green-700 hover:to-green-600 transition flex items-center justify-center"
+  >
+    <i class="fas fa-plug mr-2"></i> Test WhatsApp Connection
+  </button>
+  <span x-show="waIntegrationStatus"
+    class="block text-center text-lg mt-2"
+    :class="waIntegrationStatus === 'Success' ? 'text-green-700' : 'text-red-600'">
+    {{ waIntegrationStatus }}
+  </span>
+  <p class="text-xs text-gray-600 mt-3">
+    Need help? <a href="#" class="underline text-green-600">WhatsApp API Guide</a>
+  </p>
 </div>
 
 
-                                <!-- Create Button -->
-                                <div class="flex justify-center pt-6">
-                                    <button @click="createBot()"
-                                        class="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium text-lg">
-                                        <i class="fas fa-robot mr-2"></i>Create Bot
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
+    <!-- Messenger Integration Section -->
+<div x-show="selectedPlatform === 'messenger'" class="bg-white shadow-xl rounded-2xl p-8 border-t-4 border-blue-400 w-full max-w-2xl mx-auto mt-6">
+  <div class="flex items-center mb-4">
+    <i class="fab fa-facebook-messenger text-blue-600 text-2xl mr-3"></i>
+    <h3 class="text-2xl font-semibold text-blue-700">Messenger Integration</h3>
+  </div>
+  <p class="text-blue-900 mb-5 text-sm">Connect your Facebook App and Page for Messenger interaction.</p>
+  
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+    <div>
+      <label class="block text-base font-medium text-gray-700 mb-2">
+        Facebook App ID <span class="text-red-500">*</span>
+      </label>
+      <input class="input w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm" type="text" x-model="fbAppId"/>
+    </div>
+    <div>
+      <label class="block text-base font-medium text-gray-700 mb-2">
+        App Secret <span class="text-red-500">*</span>
+      </label>
+      <input class="input w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm" type="text" x-model="fbAppSecret"/>
+    </div>
+    <div>
+      <label class="block text-base font-medium text-gray-700 mb-2">
+        Page Access Token <span class="text-red-500">*</span>
+      </label>
+      <input class="input w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm" type="text" x-model="fbPageToken"/>
+    </div>
+    <div>
+      <label class="block text-base font-medium text-gray-700 mb-2">
+        Webhook URL <span class="text-red-500">*</span>
+      </label>
+      <input class="input w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm" type="text" x-model="fbWebhookUrl"/>
+    </div>
+    <div>
+      <label class="block text-base font-medium text-gray-700 mb-2">
+        Verification Token <span class="text-red-500">*</span>
+      </label>
+      <input class="input w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm" type="text" x-model="fbVerifyToken"/>
+    </div>
+    <div>
+      <label class="block text-base font-medium text-gray-700 mb-2">
+        Facebook Page <span class="text-xs text-gray-400">(optional)</span>
+      </label>
+      <input class="input w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm" type="text" x-model="fbPage"/>
+    </div>
+  </div>
+
+  <button
+    type="button"
+    @click="testMessengerIntegration()"
+    class="w-full mt-6 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-xl shadow font-semibold hover:from-blue-700 hover:to-blue-600 transition flex items-center justify-center"
+  >
+    <i class="fas fa-plug mr-2"></i> Test Messenger Connection
+  </button>
+  <span x-show="msgrIntegrationStatus"
+    class="block text-center text-lg mt-2"
+    :class="msgrIntegrationStatus === 'Success' ? 'text-blue-700' : 'text-red-600'">
+    {{ msgrIntegrationStatus }}
+  </span>
+  <p class="text-xs text-gray-600 mt-3">
+    Need help? <a href="#" class="underline text-blue-600">Messenger Setup Guide</a>
+  </p>
+</div>
+
+    <!-- API and Web: No extra fields -->
+
+    <div class="flex justify-center pt-6">
+      <button @click="createBot()"
+        class="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium text-lg">
+        <i class="fas fa-robot mr-2"></i>Create Bot
+      </button>
+    </div>
+  </div>
+</div>
 
                     <!-- Configuration Message -->
                     <div x-show="showConfigMessage" class="text-center">
