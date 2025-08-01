@@ -8,7 +8,9 @@
     <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-
+.input {
+  @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400;
+}
          .nav-tabs {
             display: flex;
             gap: 20px;
@@ -1195,10 +1197,13 @@
 
             <!-- Bot Builder Tab -->
             <div id="builder" class="tab-content">
-               <div x-data="{ 
+                 <div x-data="{
+    showDeployModal: false,
     showCreationForm: true,
     showConfiguration: false,
     showConfigMessage: false,
+     selectedPlatform: '',
+    currentTab: 'basic',
     selectedType: '',
     botName: '',
     botDescription: '',
@@ -1207,7 +1212,7 @@
     maxTokens: 150,
     currentTab: 'basic',
     enablePersonaDesign: false, // NEW: Control persona tab visibility
-    
+   
     // Design customization
     selectedDesign: 'default',
     customColors: {
@@ -1219,9 +1224,9 @@
     selectedIcon: 'fas fa-robot',
     borderRadius: 'rounded-lg',
     shadowStyle: 'shadow-md',
-    
+   
     // ... rest of your existing properties
-    
+   
     createBot() {
         if(this.botName.trim() === '') {
             alert('Please enter a bot name');
@@ -1230,12 +1235,12 @@
         this.showCreationForm = false;
         this.showConfigMessage = true;
     },
-    
+   
     startConfiguration() {
         this.showConfigMessage = false;
         this.showConfiguration = true;
     },
-    
+   
     selectPersona(persona) {
         this.selectedPersona = persona;
         if(this.personaDesigns[persona]) {
@@ -1243,12 +1248,17 @@
             this.selectedIcon = this.personaDesigns[persona].icon;
         }
     },
-    
+   
     updatePreview() {
         // This function will be called when design elements change
         // to update the live preview
     },
-    
+   navigateToRuleBased() {
+        window.location.href = 'RuleBased.html';
+    },
+      navigateToHybrid() {
+        window.location.href = 'hybrid.html';
+    },
     // NEW: Method to handle tab visibility
     updateTabVisibility() {
         // If persona design is disabled and user is on that tab, switch to basic tab
@@ -1258,154 +1268,216 @@
     }
 }">
 
-                    
+                   
                     <!-- Bot Creation Form -->
-                    <div x-show="showCreationForm">
-                        <div class="mb-8">
-                            <h2 class="text-3xl font-bold text-gray-800 mb-2">Create New Chatbot</h2>
-                            <p class="text-gray-600">Start by giving your chatbot a name and description.</p>
-                        </div>
-
-                        <div class="bg-white rounded-lg shadow p-8 max-w-2xl mx-auto">
-                            <div class="space-y-6">
-                                <!-- Bot Name -->
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Bot Name *</label>
-                                    <input type="text" x-model="botName" placeholder="e.g., Customer Support Bot" 
-                                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                </div>
-
-                                <!-- Bot Description -->
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Description (Optional)</label>
-                                    <textarea x-model="botDescription" rows="4" 
-                                        placeholder="Describe what your bot will do. e.g., Help customers with order inquiries, product information, and general support."
-                                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
-                                </div>
-
-                                <!-- Platform Selection -->
-                              <div>
-    <label class="block text-sm font-medium text-gray-700 mb-3">Choose Platform</label>
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <!-- Web Platform - Always Available -->
-        <div class="platform-card border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors" 
-             data-platform="web" onclick="selectPlatform('web')">
-            <i class="fas fa-globe text-3xl text-blue-600 mb-3"></i>
-            <div class="text-sm font-medium">Web</div>
-        </div>
-        
-        <!-- WhatsApp Platform - Locked for Free Users -->
-        <div class="platform-card locked border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer relative opacity-60" 
-             data-platform="whatsapp" onclick="showUpgradeModal('WhatsApp')">
-            <div class="absolute -top-2 -right-2 bg-orange-500 text-white text-xs px-2 py-1 rounded-full">
-                ENTERPRISE
-            </div>
-            <div class="absolute inset-0 flex items-center justify-center bg-gray-900 bg-opacity-20 rounded-lg">
-                <i class="fas fa-lock text-gray-600 text-2xl"></i>
-            </div>
-            <i class="fab fa-whatsapp text-3xl text-green-600 mb-3"></i>
-            <div class="text-sm font-medium">WhatsApp</div>
-        </div>
-        
-        <!-- Messenger Platform - Locked for Free Users -->
-        <div class="platform-card locked border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer relative opacity-60" 
-             data-platform="messenger" onclick="showUpgradeModal('Messenger')">
-            <div class="absolute -top-2 -right-2 bg-orange-500 text-white text-xs px-2 py-1 rounded-full">
-                ENTERPRISE
-            </div>
-            <div class="absolute inset-0 flex items-center justify-center bg-gray-900 bg-opacity-20 rounded-lg">
-                <i class="fas fa-lock text-gray-600 text-2xl"></i>
-            </div>
-            <i class="fab fa-facebook-messenger text-3xl text-blue-600 mb-3"></i>
-            <div class="text-sm font-medium">Messenger</div>
-        </div>
-        
-        <!-- API Platform - Available based on plan -->
-        <div class="platform-card border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors" 
-             data-platform="api" onclick="selectPlatform('api')">
-            <i class="fas fa-code text-3xl text-purple-600 mb-3"></i>
-            <div class="text-sm font-medium">API</div>
-        </div>
+                 <div x-show="showCreationForm" class="p-6 max-w-2xl mx-auto w-full">
+  <!-- Bot Details Section -->
+  <div class="mb-8">
+    <h2 class="text-3xl font-bold text-gray-800 mb-2">Create New Chatbot</h2>
+    <p class="text-gray-600">Start by giving your chatbot a name and description.</p>
+  </div>
+  <div class="bg-white rounded-lg shadow p-8 space-y-6">
+    <!-- Bot Name -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">Bot Name *</label>
+      <input type="text" x-model="botName" placeholder="e.g., Customer Support Bot"
+        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"/>
     </div>
-</div>
-
-<!-- Upgrade Modal -->
-<div id="upgradeModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-    <div class="bg-white rounded-lg p-8 max-w-2xl mx-4 relative">
-        <button onclick="closeUpgradeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
-            <i class="fas fa-times text-xl"></i>
-        </button>
-        
-        <div class="text-center mb-6">
-            <div class="mx-auto w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mb-4">
-                <i class="fas fa-crown text-orange-500 text-2xl"></i>
-            </div>
-            <h3 class="text-2xl font-bold text-gray-900 mb-2">Upgrade to Enterprise</h3>
-            <p class="text-gray-600" id="upgradeDescription">Unlock advanced platform integrations and team collaboration features</p>
-        </div>
-
-        <!-- Plan Comparison -->
-        <div class="grid md:grid-cols-2 gap-6 mb-8">
-            <!-- Free Plan -->
-            <div class="border rounded-lg p-6">
-                <h4 class="font-semibold text-lg mb-4 text-center">Free Plan</h4>
-                <div class="text-center mb-4">
-                    <span class="text-3xl font-bold">€0</span>
-                    <span class="text-gray-600">/month</span>
-                </div>
-                <ul class="space-y-2 text-sm">
-                    <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> 1 Web chatbot</li>
-                    <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Basic analytics</li>
-                    <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Personal workspace</li>
-                    <li class="flex items-center text-gray-400"><i class="fas fa-times text-gray-400 mr-2"></i> WhatsApp integration</li>
-                    <li class="flex items-center text-gray-400"><i class="fas fa-times text-gray-400 mr-2"></i> Messenger integration</li>
-                    <li class="flex items-center text-gray-400"><i class="fas fa-times text-gray-400 mr-2"></i> Team collaboration</li>
-                </ul>
-            </div>
-
-            <!-- Enterprise Plan -->
-            <div class="border-2 border-orange-500 rounded-lg p-6 relative">
-                <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-orange-500 text-white px-4 py-1 rounded-full text-sm font-medium">
-                    RECOMMENDED
-                </div>
-                <h4 class="font-semibold text-lg mb-4 text-center">Enterprise Plan</h4>
-                <div class="text-center mb-4">
-                    <span class="text-3xl font-bold">€400</span>
-                    <span class="text-gray-600">/month</span>
-                </div>
-                <ul class="space-y-2 text-sm">
-                    <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Unlimited chatbots</li>
-                    <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> All platform integrations</li>
-                    <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Team management</li>
-                    <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Advanced analytics</li>
-                    <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Priority support</li>
-                    <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Role-based access</li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="flex gap-4 justify-center">
-            <button onclick="closeUpgradeModal()" class="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
-                Maybe Later
-            </button>
-            <button onclick="initiateUpgrade()" class="px-6 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600">
-                Upgrade Now
-            </button>
-        </div>
+    <!-- Bot Description -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">Description (Optional)</label>
+      <textarea x-model="botDescription" rows="3"
+        placeholder="Describe what your bot will do. e.g., Help customers with order inquiries, product information, and general support."
+        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
     </div>
+    <!-- Platform Selection -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-3">Choose Platform</label>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <!-- Web -->
+        <div @click="selectedPlatform = 'web'"
+          :class="selectedPlatform === 'web' ? 'border-blue-500 bg-blue-50' : 'border-gray-200'"
+          class="border-2 rounded-lg p-4 text-center cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors">
+          <i class="fas fa-globe text-3xl text-blue-600 mb-3"></i>
+          <div class="text-sm font-medium">Web</div>
+        </div>
+        <!-- WhatsApp -->
+        <div @click="selectedPlatform = 'whatsapp'"
+          :class="selectedPlatform === 'whatsapp' ? 'border-green-500 bg-green-50' : 'border-gray-200'"
+          class="border-2 rounded-lg p-4 text-center cursor-pointer hover:border-green-500 hover:bg-green-50 transition-colors">
+          <i class="fab fa-whatsapp text-3xl text-green-600 mb-3"></i>
+          <div class="text-sm font-medium">WhatsApp</div>
+        </div>
+        <!-- Messenger -->
+        <div @click="selectedPlatform = 'messenger'"
+          :class="selectedPlatform === 'messenger' ? 'border-blue-500 bg-blue-50' : 'border-gray-200'"
+          class="border-2 rounded-lg p-4 text-center cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors">
+          <i class="fab fa-facebook-messenger text-3xl text-blue-600 mb-3"></i>
+          <div class="text-sm font-medium">Messenger</div>
+        </div>
+        <!-- API -->
+        <div @click="selectedPlatform = 'api'"
+          :class="selectedPlatform === 'api' ? 'border-purple-500 bg-purple-50' : 'border-gray-200'"
+          class="border-2 rounded-lg p-4 text-center cursor-pointer hover:border-purple-500 hover:bg-purple-50 transition-colors">
+          <i class="fas fa-code text-3xl text-purple-600 mb-3"></i>
+          <div class="text-sm font-medium">API</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WhatsApp Integration Section -->
+<div x-show="selectedPlatform === 'whatsapp'" class="bg-white shadow-xl rounded-2xl p-8 border-t-4 border-green-400 w-full max-w-2xl mx-auto mt-6">
+  <div class="flex items-center mb-4">
+    <i class="fab fa-whatsapp text-green-600 text-2xl mr-3"></i>
+    <h3 class="text-2xl font-semibold text-green-700">WhatsApp Integration</h3>
+  </div>
+  <p class="text-green-900 mb-5 text-sm">Connect your WhatsApp Business number with your BSP credentials.</p>
+  
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+    <div>
+      <label class="block text-base font-medium text-gray-700 mb-2">
+        Business Phone Number <span class="text-red-500">*</span>
+      </label>
+      <input class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400" type="text" x-model="waPhone" placeholder="+91XXXXXXXXXX"/>
+      <p class="text-xs text-gray-600 mt-1">WhatsApp Business registered number</p>
+    </div>
+    <div>
+      <label class="block text-base font-medium text-gray-700 mb-2">
+        BSP <span class="text-red-500">*</span>
+      </label>
+      <select x-model="waBSP" class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm">
+        <option value="">Select BSP</option>
+        <option>Twilio</option>
+        <option>Gupshup</option>
+        <option>Wati</option>
+        <option>Other</option>
+      </select>
+    </div>
+    <div>
+      <label class="block text-base font-medium text-gray-700 mb-2">
+        API Key / Token <span class="text-red-500">*</span>
+      </label>
+      <input class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm" type="text" x-model="waApiKey"/>
+    </div>
+    <div>
+      <label class="block text-base font-medium text-gray-700 mb-2">
+        Webhook URL <span class="text-red-500">*</span>
+      </label>
+      <input class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm" type="text" x-model="waWebhookUrl" placeholder="https://yourdomain.com/webhook"/>
+    </div>
+    <div>
+      <label class="block text-base font-medium text-gray-700 mb-2">
+        Verification Token <span class="text-red-500">*</span>
+      </label>
+      <input class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm" type="text" x-model="waVerifyToken"/>
+    </div>
+    <div>
+      <label class="block text-base font-medium text-gray-700 mb-2">
+        Business Name <span class="text-xs text-gray-400">(optional)</span>
+      </label>
+      <input class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm" type="text" x-model="waBizName"/>
+    </div>
+    <div class="md:col-span-2">
+      <label class="block text-base font-medium text-gray-700 mb-2">
+        Business Description <span class="text-xs text-gray-400">(optional)</span>
+      </label>
+      <input class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm" type="text" x-model="waBizDesc"/>
+    </div>
+  </div>
+
+  <button
+    type="button"
+    @click="testWaIntegration()"
+    class="w-full mt-6 px-6 py-3 bg-gradient-to-r from-green-600 to-green-500 text-white rounded-xl shadow font-semibold hover:from-green-700 hover:to-green-600 transition flex items-center justify-center"
+  >
+    <i class="fas fa-plug mr-2"></i> Test WhatsApp Connection
+  </button>
+  <span x-show="waIntegrationStatus"
+    class="block text-center text-lg mt-2"
+    :class="waIntegrationStatus === 'Success' ? 'text-green-700' : 'text-red-600'">
+    {{ waIntegrationStatus }}
+  </span>
+  <p class="text-xs text-gray-600 mt-3">
+    Need help? <a href="#" class="underline text-green-600">WhatsApp API Guide</a>
+  </p>
 </div>
 
 
-                                <!-- Create Button -->
-                                <div class="flex justify-center pt-6">
-                                    <button @click="createBot()" 
-                                        class="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium text-lg">
-                                        <i class="fas fa-robot mr-2"></i>Create Bot
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
+    <!-- Messenger Integration Section -->
+<div x-show="selectedPlatform === 'messenger'" class="bg-white shadow-xl rounded-2xl p-8 border-t-4 border-blue-400 w-full max-w-2xl mx-auto mt-6">
+  <div class="flex items-center mb-4">
+    <i class="fab fa-facebook-messenger text-blue-600 text-2xl mr-3"></i>
+    <h3 class="text-2xl font-semibold text-blue-700">Messenger Integration</h3>
+  </div>
+  <p class="text-blue-900 mb-5 text-sm">Connect your Facebook App and Page for Messenger interaction.</p>
+  
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+    <div>
+      <label class="block text-base font-medium text-gray-700 mb-2">
+        Facebook App ID <span class="text-red-500">*</span>
+      </label>
+      <input class="input w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm" type="text" x-model="fbAppId"/>
+    </div>
+    <div>
+      <label class="block text-base font-medium text-gray-700 mb-2">
+        App Secret <span class="text-red-500">*</span>
+      </label>
+      <input class="input w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm" type="text" x-model="fbAppSecret"/>
+    </div>
+    <div>
+      <label class="block text-base font-medium text-gray-700 mb-2">
+        Page Access Token <span class="text-red-500">*</span>
+      </label>
+      <input class="input w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm" type="text" x-model="fbPageToken"/>
+    </div>
+    <div>
+      <label class="block text-base font-medium text-gray-700 mb-2">
+        Webhook URL <span class="text-red-500">*</span>
+      </label>
+      <input class="input w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm" type="text" x-model="fbWebhookUrl"/>
+    </div>
+    <div>
+      <label class="block text-base font-medium text-gray-700 mb-2">
+        Verification Token <span class="text-red-500">*</span>
+      </label>
+      <input class="input w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm" type="text" x-model="fbVerifyToken"/>
+    </div>
+    <div>
+      <label class="block text-base font-medium text-gray-700 mb-2">
+        Facebook Page <span class="text-xs text-gray-400">(optional)</span>
+      </label>
+      <input class="input w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm" type="text" x-model="fbPage"/>
+    </div>
+  </div>
+
+  <button
+    type="button"
+    @click="testMessengerIntegration()"
+    class="w-full mt-6 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-xl shadow font-semibold hover:from-blue-700 hover:to-blue-600 transition flex items-center justify-center"
+  >
+    <i class="fas fa-plug mr-2"></i> Test Messenger Connection
+  </button>
+  <span x-show="msgrIntegrationStatus"
+    class="block text-center text-lg mt-2"
+    :class="msgrIntegrationStatus === 'Success' ? 'text-blue-700' : 'text-red-600'">
+    {{ msgrIntegrationStatus }}
+  </span>
+  <p class="text-xs text-gray-600 mt-3">
+    Need help? <a href="#" class="underline text-blue-600">Messenger Setup Guide</a>
+  </p>
+</div>
+
+    <!-- API and Web: No extra fields -->
+
+    <div class="flex justify-center pt-6">
+      <button @click="createBot()"
+        class="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium text-lg">
+        <i class="fas fa-robot mr-2"></i>Create Bot
+      </button>
+    </div>
+  </div>
+</div>
 
                     <!-- Configuration Message -->
                     <div x-show="showConfigMessage" class="text-center">
@@ -1422,8 +1494,8 @@
                                 <h3 class="text-xl font-semibold mb-2">Ready to Configure!</h3>
                                 <p class="text-gray-600">Configure your chatbot by clicking the configure button below to set up its behavior and responses.</p>
                             </div>
-                            
-                            <button @click="startConfiguration()" 
+                           
+                            <button @click="startConfiguration()"
                                 class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">
                                 <i class="fas fa-cog mr-2"></i>Configure Bot
                             </button>
@@ -1437,13 +1509,13 @@
                             <p class="text-gray-600">Bot: <span x-text="botName" class="font-semibold text-blue-600"></span></p>
                         </div>
 
-                            <div class="bg-white rounded-lg shadow p-6">
+                        <div class="bg-white rounded-lg shadow p-6">
                             <!-- Bot Type Selection -->
                             <div class="mb-8">
                                 <h3 class="text-xl font-semibold mb-4">Choose Bot Type</h3>
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                                     <!-- AI-Powered -->
-                                    <div @click="selectedType = 'ai-powered'" 
+                                    <div @click="selectedType = 'ai-powered'"
                                         :class="selectedType === 'ai-powered' ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'"
                                         class="border-2 rounded-lg p-6 cursor-pointer transition-colors">
                                         <div class="text-center">
@@ -1459,9 +1531,9 @@
                                     </div>
 
                                     <!-- Rule-Based -->
-                                    <div @click="selectedType = 'rule-based'" 
-                                        :class="selectedType === 'rule-based' ? 'border-green-500 bg-green-50' : 'border-gray-200 hover:border-gray-300'"
-                                        class="border-2 rounded-lg p-6 cursor-pointer transition-colors">
+                                  <!-- Rule-Based -->
+                                    <div @click="navigateToRuleBased()"
+                                        class="border-2 rounded-lg p-6 cursor-pointer transition-colors border-gray-200 hover:border-green-300 hover:bg-green-50">
                                         <div class="text-center">
                                             <i class="fas fa-sitemap text-4xl text-green-600 mb-4"></i>
                                             <h4 class="text-lg font-semibold mb-2">Rule-Based</h4>
@@ -1475,7 +1547,7 @@
                                     </div>
 
                                     <!-- Hybrid -->
-                                    <div @click="selectedType = 'hybrid'" 
+                                    <div @click="navigateToHybrid()"
                                         :class="selectedType === 'hybrid' ? 'border-purple-500 bg-purple-50' : 'border-gray-200 hover:border-gray-300'"
                                         class="border-2 rounded-lg p-6 cursor-pointer transition-colors">
                                         <div class="text-center">
@@ -1497,49 +1569,54 @@
                                 <!-- Tab Navigation -->
                                <!-- Tab Navigation -->
 <div class="border-b mb-6">
-    <nav class="flex space-x-8">
-        <button @click="currentTab = 'basic'" 
-            :class="currentTab === 'basic' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500'"
-            class="py-2 px-1 border-b-2 font-medium text-sm"  x-show="selectedType === 'ai-powered'">
-            Basic Setup
-        </button>
-        
-        <button @click="currentTab = 'intents'" 
-            :class="currentTab === 'intents' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500'"
-            class="py-2 px-1 border-b-2 font-medium text-sm"
-            x-show="selectedType === 'rule-based' ">
-            Intents/Rules
-        </button>
-         <button @click="currentTab = 'hybrid'" 
-            :class="currentTab === 'hybrid' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500'"
-            class="py-2 px-1 border-b-2 font-medium text-sm"
-            x-show="selectedType === 'hybrid'">
-            Intents/Hybrid
-        </button>
-        
-        <button @click="currentTab = 'ai-config'" 
-            :class="currentTab === 'ai-config' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500'"
-            class="py-2 px-1 border-b-2 font-medium text-sm"
-            x-show="selectedType === 'ai-powered'">
-            AI Configuration
-        </button>
-        
-        <!-- UPDATED: Conditionally show persona tab based on checkbox -->
-        <button @click="currentTab = 'persona'" 
-            :class="currentTab === 'persona' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500'"
-            class="py-2 px-1 border-b-2 font-medium text-sm relative"
-            x-show="enablePersonaDesign">
-            Bot Persona & Design
-            <!-- Optional: Add indicator that it's an optional feature -->
-            <span class="absolute -top-1 -right-1 bg-green-500 text-white text-xs rounded-full w-2 h-2"></span>
-        </button>
-        
-        <button @click="currentTab = 'preview'" 
-            :class="currentTab === 'preview' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500'"
-            class="py-2 px-1 border-b-2 font-medium text-sm">
-            <i class="fas fa-eye mr-2"></i>Preview
-        </button>
-    </nav>
+<nav class="flex space-x-8">
+    <button @click="currentTab = 'basic'"
+        :class="currentTab === 'basic' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500'"
+        class="py-2 px-1 border-b-2 font-medium text-sm"  
+        x-show="selectedType === 'ai-powered'">
+        Basic Setup
+    </button>
+
+    <button @click="currentTab = 'intents'"
+        :class="currentTab === 'intents' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500'"
+        class="py-2 px-1 border-b-2 font-medium text-sm"
+        x-show="selectedType === 'rule-based' ">
+        Intents/Rules
+    </button>
+
+    <button @click="currentTab = 'hybrid'"
+        :class="currentTab === 'hybrid' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500'"
+        class="py-2 px-1 border-b-2 font-medium text-sm"
+        x-show="selectedType === 'hybrid'">
+        Intents/Hybrid
+    </button>
+
+    <button @click="currentTab = 'ai-config'"
+        :class="currentTab === 'ai-config' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500'"
+        class="py-2 px-1 border-b-2 font-medium text-sm"
+        x-show="selectedType === 'ai-powered'">
+        AI Configuration
+    </button>
+
+    <!-- Bot Persona: Only visible for API -->
+    <button
+        x-show="selectedPlatform == 'web'"
+        @click="currentTab = 'persona'"
+        :class="currentTab === 'persona' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500'"
+        class="py-2 px-1 border-b-2 font-medium text-sm">
+        Bot Persona & Design
+    </button>
+
+    <!-- Preview: Only visible for API -->
+    <button
+        x-show="selectedPlatform == 'web'"
+        @click="currentTab = 'preview'"
+        :class="currentTab === 'preview' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500'"
+        class="py-2 px-1 border-b-2 font-medium text-sm">
+        <i class="fas fa-eye mr-2"></i>Preview
+    </button>
+</nav>
+
 </div>
 
 
@@ -1558,14 +1635,14 @@
     <!-- Welcome Message -->
     <div>
         <label class="block text-sm font-medium text-gray-700 mb-2">Welcome Message</label>
-        <textarea rows="3" placeholder="Hello! I'm here to help you. How can I assist you today?" 
+        <textarea rows="3" placeholder="Hello! I'm here to help you. How can I assist you today?"
             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
     </div>
 
     <!-- Fallback Message -->
     <div>
         <label class="block text-sm font-medium text-gray-700 mb-2">Fallback Message</label>
-        <textarea rows="2" placeholder="I'm sorry, I didn't understand that. Could you please rephrase your question?" 
+        <textarea rows="2" placeholder="I'm sorry, I didn't understand that. Could you please rephrase your question?"
             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
     </div>
     <div>
@@ -1581,9 +1658,9 @@
 
   <!-- Input Wrapper -->
   <div class="flex items-center border border-gray-300 rounded-md px-3 py-2 space-x-3 focus-within:ring-2 focus-within:ring-blue-500 mt-4">
-    
+   
     <!-- Textarea -->
-    <textarea rows="2" placeholder="Type your prompt or message here..." 
+    <textarea rows="2" placeholder="Type your prompt or message here..."
       class="flex-grow resize-none bg-transparent focus:outline-none text-gray-800"></textarea>
 
     <!-- File Upload Icon/Button -->
@@ -1598,7 +1675,7 @@
 
 
     <!-- NEW: Enable Bot Persona & Design Checkbox -->
-    <div class="border-t pt-6">
+   <!--  <div class="border-t pt-6">
         <h4 class="text-lg font-semibold mb-4">Additional Features</h4>
         <div class="space-y-4">
             <label class="flex items-center cursor-pointer">
@@ -1610,7 +1687,7 @@
                 </div>
             </label>
         </div>
-    </div>
+    </div> -->
 </div>
 
 
@@ -1637,7 +1714,7 @@
             <div class="node-label font-medium text-gray-700">Create a new Node</div>
         </div>
     </div>
-</div>  
+</div>
 
         <div class="node-category">
             <div class="category-title">Input Fields</div>
@@ -1678,29 +1755,17 @@
                     <div class="node-icon">😊</div>
                     <div class="node-label">Auto-complete</div>
                 </div>
-                <div class="component-section">
-                    <div class="section-title">Logic Components</div>
-                    
-                    <div class="component-item" draggable="true" data-type="condition">
-                        <div class="component-icon">🔀</div>
-                        <div class="component-text">If-Else Condition</div>
-                    </div>
-                    
-                    <div class="component-item" draggable="true" data-type="switch">
-                        <div class="component-icon">🔄</div>
-                        <div class="component-text">Switch Case</div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
 </div>
+
         <!-- Canvas Area -->
         <div class="canvas-area">
             <div class="canvas" id="canvas">
                 <svg id="connectionsSvg">
                     <defs>
-                        <marker id="arrowhead" markerWidth="10" markerHeight="7" 
+                        <marker id="arrowhead" markerWidth="10" markerHeight="7"
                                 refX="9" refY="3.5" orient="auto">
                             <polygon points="0 0, 10 3.5, 0 7" fill="#6366f1" />
                         </marker>
@@ -1734,688 +1799,17 @@
                 <div class="zoom-level" id="zoomLevel">100%</div>
                 <button class="zoom-btn" onclick="zoomIn()">+</button>
             </div>
+
         </div>
-    </div>
 
-  <script>
-        let nodeCounter = 0;
-        let selectedNode = null;
-        let connections = [];
-        let isConnecting = false;
-        let connectionStart = null;
-        let tempLine = null;
-        let dragOffset = { x: 0, y: 0 };
-        let zoomLevel = 1;
+    </div> 
+    
+    
 
-        const canvas = document.getElementById('canvas');
-        const svg = document.getElementById('connectionsSvg');
-        const dropZone = document.getElementById('dropZone');
-        const zoomLevelDisplay = document.getElementById('zoomLevel');
 
-        // Node templates
-        const nodeTemplates = {
-            button: {
-                title: 'Buttons',
-                content: 'Show buttons for user interaction',
-                icon: '🔘'
-            },
-            question: {
-                title: 'Ask a question',
-                content: 'Get text input from user',
-                icon: '❓'
-            },
-            date: {
-                title: 'Ask for a date',
-                content: 'Date picker input',
-                icon: '📅'
-            },
-            name: {
-                title: 'Ask for a name',
-                content: 'Text input for names',
-                icon: '👤'
-            },
-            number: {
-                title: 'Ask for a number',
-                content: 'Numeric input field',
-                icon: '🔢'
-            },
-            phone: {
-                title: 'Ask for a phone',
-                content: 'Phone number input',
-                icon: '📱'
-            },
-            url: {
-                title: 'Ask for a URL',
-                content: 'URL input field',
-                icon: '🌐'
-            },
-            address: {
-                title: 'Ask for an address',
-                content: 'Address input with validation',
-                icon: '📍'
-            },
-            autocomplete: {
-                title: 'Auto-complete',
-                content: 'Dropdown with suggestions',
-                icon: '😊'
-            }
-            autocomplete: {
-                title: 'If-Else Condition',
-                content: 'Conditional logic block',
-                icon: '🔀'
-            }
-            autocomplete: {
-                title: 'Switch Case',
-                content: 'Switch-case logic block',
-                icon: '🔁'
-            }
-        };
 
-        // Setup drag and drop
-        document.querySelectorAll('.palette-node').forEach(node => {
-            node.addEventListener('dragstart', (e) => {
-                e.dataTransfer.setData('text/plain', node.dataset.type);
-                node.classList.add('dragging');
-            });
 
-            node.addEventListener('dragend', (e) => {
-                node.classList.remove('dragging');
-            });
-        });
-
-        canvas.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            dropZone.classList.add('active');
-        });
-
-        canvas.addEventListener('dragleave', (e) => {
-            if (!canvas.contains(e.relatedTarget)) {
-                dropZone.classList.remove('active');
-            }
-        });
-
-        canvas.addEventListener('drop', (e) => {
-            e.preventDefault();
-            dropZone.classList.remove('active');
-            
-            const nodeType = e.dataTransfer.getData('text/plain');
-            const rect = canvas.getBoundingClientRect();
-            const x = (e.clientX - rect.left) / zoomLevel - 80;
-            const y = (e.clientY - rect.top) / zoomLevel - 40;
-            
-            createNode(nodeType, x, y);
-        });
-
-        function createNode(type, x, y) {
-            const template = nodeTemplates[type];
-            const nodeId = ++nodeCounter;
-            
-            const node = document.createElement('div');
-            node.className = `workflow-node ${type}-node`;
-            node.style.left = x + 'px';
-            node.style.top = y + 'px';
-            node.dataset.id = nodeId;
-            node.dataset.type = type;
-
-            node.innerHTML = `
-                <div class="node-header">
-                    <div class="node-type-icon">${template.icon}</div>
-                    <div class="node-title">${template.title}</div>
-                </div>
-                <div class="node-content">${template.content}</div>
-                <div class="connection-point input-point" data-type="input"></div>
-                <div class="connection-point output-point" data-type="output"></div>
-            `;
-
-            canvas.appendChild(node);
-            makeNodeDraggable(node);
-            setupConnectionPoints(node);
-            selectNode(node);
-        }
-
-        function makeNodeDraggable(node) {
-            let isDragging = false;
-
-            node.addEventListener('mousedown', (e) => {
-                if (e.target.classList.contains('connection-point')) return;
-                
-                isDragging = true;
-                selectNode(node);
-
-                const rect = node.getBoundingClientRect();
-                const canvasRect = canvas.getBoundingClientRect();
-                dragOffset.x = (e.clientX - rect.left) / zoomLevel;
-                dragOffset.y = (e.clientY - rect.top) / zoomLevel;
-
-                e.preventDefault();
-            });
-
-            document.addEventListener('mousemove', (e) => {
-                if (!isDragging || selectedNode !== node) return;
-
-                const canvasRect = canvas.getBoundingClientRect();
-                const x = (e.clientX - canvasRect.left) / zoomLevel - dragOffset.x;
-                const y = (e.clientY - canvasRect.top) / zoomLevel - dragOffset.y;
-
-                node.style.left = Math.max(0, x) + 'px';
-                node.style.top = Math.max(0, y) + 'px';
-
-                updateConnections();
-            });
-
-            document.addEventListener('mouseup', () => {
-                if (isDragging && selectedNode === node) {
-                    isDragging = false;
-                }
-            });
-        }
-
-        function selectNode(node) {
-            // Remove selection from all nodes
-            document.querySelectorAll('.workflow-node, .starting-node').forEach(n => {
-                n.classList.remove('selected');
-            });
-            
-            // Select the clicked node
-            node.classList.add('selected');
-            selectedNode = node;
-        }
-
-        function setupConnectionPoints(node) {
-            const points = node.querySelectorAll('.connection-point');
-            
-            points.forEach(point => {
-                point.addEventListener('mousedown', (e) => {
-                    e.stopPropagation();
-                    
-                    if (!isConnecting && point.dataset.type === 'output') {
-                        startConnection(point, node);
-                    } else if (isConnecting && point.dataset.type === 'input') {
-                        endConnection(point, node);
-                    }
-                });
-            });
-        }
-
-        // Setup starting node
-        const startingNode = document.getElementById('startingNode');
-        makeNodeDraggable(startingNode);
-        setupConnectionPoints(startingNode);
-
-        function startConnection(point, node) {
-            isConnecting = true;
-            connectionStart = { point, node };
-            
-            const rect = point.getBoundingClientRect();
-            const canvasRect = canvas.getBoundingClientRect();
-            
-            tempLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-            tempLine.setAttribute('class', 'temp-connection');
-            tempLine.setAttribute('x1', (rect.left - canvasRect.left + rect.width/2) / zoomLevel);
-            tempLine.setAttribute('y1', (rect.top - canvasRect.top + rect.height/2) / zoomLevel);
-            tempLine.setAttribute('x2', (rect.left - canvasRect.left + rect.width/2) / zoomLevel);
-            tempLine.setAttribute('y2', (rect.top - canvasRect.top + rect.height/2) / zoomLevel);
-            svg.appendChild(tempLine);
-        }
-
-        function endConnection(point, node) {
-            if (!isConnecting || node === connectionStart.node) {
-                cancelConnection();
-                return;
-            }
-
-            // Create connection
-            connections.push({
-                from: connectionStart,
-                to: { point, node },
-                id: `conn_${Date.now()}`
-            });
-
-            if (tempLine) {
-                svg.removeChild(tempLine);
-                tempLine = null;
-            }
-
-            isConnecting = false;
-            connectionStart = null;
-            
-            updateConnections();
-        }
-
-        function cancelConnection() {
-            isConnecting = false;
-            connectionStart = null;
-            
-            if (tempLine) {
-                svg.removeChild(tempLine);
-                tempLine = null;
-            }
-        }
-
-        // Update temp line during connection
-        canvas.addEventListener('mousemove', (e) => {
-            if (isConnecting && tempLine) {
-                const canvasRect = canvas.getBoundingClientRect();
-                tempLine.setAttribute('x2', (e.clientX - canvasRect.left) / zoomLevel);
-                tempLine.setAttribute('y2', (e.clientY - canvasRect.top) / zoomLevel);
-            }
-        });
-
-        // Cancel connection on right click
-        canvas.addEventListener('contextmenu', (e) => {
-            e.preventDefault();
-            if (isConnecting) {
-                cancelConnection();
-            }
-        });
-
-        function updateConnections() {
-            // Clear existing connection paths
-            const existingPaths = svg.querySelectorAll('.connection-path');
-            existingPaths.forEach(path => path.remove());
-
-            connections.forEach(conn => {
-                const fromRect = conn.from.point.getBoundingClientRect();
-                const toRect = conn.to.point.getBoundingClientRect();
-                const canvasRect = canvas.getBoundingClientRect();
-
-                const x1 = (fromRect.left - canvasRect.left + fromRect.width/2) / zoomLevel;
-                const y1 = (fromRect.top - canvasRect.top + fromRect.height/2) / zoomLevel;
-                const x2 = (toRect.left - canvasRect.left + toRect.width/2) / zoomLevel;
-                const y2 = (toRect.top - canvasRect.top + toRect.height/2) / zoomLevel;
-
-                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-                const midX = (x1 + x2) / 2;
-                
-                const d = `M ${x1} ${y1} C ${midX} ${y1}, ${midX} ${y2}, ${x2} ${y2}`;
-                
-                path.setAttribute('d', d);
-                path.setAttribute('class', 'connection-path');
-                path.setAttribute('marker-end', 'url(#arrowhead)');
-                
-                svg.appendChild(path);
-            });
-        }
-
-        // Zoom functionality
-        function zoomIn() {
-            zoomLevel = Math.min(zoomLevel * 1.2, 3);
-            updateZoom();
-        }
-
-        function zoomOut() {
-            zoomLevel = Math.max(zoomLevel / 1.2, 0.3);
-            updateZoom();
-        }
-
-        function resetZoom() {
-            zoomLevel = 1;
-            updateZoom();
-        }
-
-        function fitToScreen() {
-            const nodes = canvas.querySelectorAll('.workflow-node, .starting-node');
-            if (nodes.length === 0) return;
-
-            let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
-            
-            nodes.forEach(node => {
-                const rect = node.getBoundingClientRect();
-                const canvasRect = canvas.getBoundingClientRect();
-                const x = (rect.left - canvasRect.left) / zoomLevel;
-                const y = (rect.top - canvasRect.top) / zoomLevel;
-                
-                minX = Math.min(minX, x);
-                minY = Math.min(minY, y);
-                maxX = Math.max(maxX, x + node.offsetWidth);
-                maxY = Math.max(maxY, y + node.offsetHeight);
-            });
-
-            const width = maxX - minX;
-            const height = maxY - minY;
-            const canvasWidth = canvas.offsetWidth;
-            const canvasHeight = canvas.offsetHeight;
-
-            const scaleX = canvasWidth / (width + 200);
-            const scaleY = canvasHeight / (height + 200);
-            
-            zoomLevel = Math.min(scaleX, scaleY, 1);
-            updateZoom();
-        }
-
-        function updateZoom() {
-            canvas.style.transform = `scale(${zoomLevel})`;
-            canvas.style.transformOrigin = 'top left';
-            zoomLevelDisplay.textContent = Math.round(zoomLevel * 100) + '%';
-            updateConnections();
-        }
-
-        // Search functionality
-        const searchBox = document.getElementById('searchBox');
-        searchBox.addEventListener('input', (e) => {
-            const searchTerm = e.target.value.toLowerCase();
-            const nodes = document.querySelectorAll('.palette-node');
-            
-            nodes.forEach(node => {
-                const label = node.querySelector('.node-label').textContent.toLowerCase();
-                if (label.includes(searchTerm)) {
-                    node.style.display = 'flex';
-                } else {
-                    node.style.display = 'none';
-                }
-            });
-        });
-
-        // Delete selected node with Delete key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Delete' && selectedNode && selectedNode.id !== 'startingNode') {
-                // Remove connections involving this node
-                connections = connections.filter(conn => 
-                    conn.from.node !== selectedNode && conn.to.node !== selectedNode
-                );
-                
-                // Remove the node
-                selectedNode.remove();
-                selectedNode = null;
-                updateConnections();
-            }
-        });
-
-        // Clear canvas on Escape
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                if (isConnecting) {
-                    cancelConnection();
-                } else if (selectedNode) {
-                    selectedNode.classList.remove('selected');
-                    selectedNode = null;
-                }
-            }
-        });
-
-        // Auto-connect new nodes to previous ones
-        let lastCreatedNode = null;
-
-        function createNode(type, x, y) {
-            const template = nodeTemplates[type];
-            const nodeId = ++nodeCounter;
-            
-            const node = document.createElement('div');
-            node.className = `workflow-node ${type}-node`;
-            node.style.left = x + 'px';
-            node.style.top = y + 'px';
-            node.dataset.id = nodeId;
-            node.dataset.type = type;
-
-            node.innerHTML = `
-                <div class="node-header">
-                    <div class="node-type-icon">${template.icon}</div>
-                    <div class="node-title">${template.title}</div>
-                </div>
-                <div class="node-content">${template.content}</div>
-                <div class="connection-point input-point" data-type="input"></div>
-                <div class="connection-point output-point" data-type="output"></div>
-            `;
-
-            canvas.appendChild(node);
-            makeNodeDraggable(node);
-            setupConnectionPoints(node);
-            selectNode(node);
-
-            // Auto-connect to the last created node or starting node
-            if (lastCreatedNode) {
-                autoConnect(lastCreatedNode, node);
-            } else {
-                // Connect to starting node if this is the first node
-                const startingNode = document.getElementById('startingNode');
-                autoConnect(startingNode, node);
-            }
-
-            lastCreatedNode = node;
-        }
-
-        function autoConnect(fromNode, toNode) {
-            const fromPoint = fromNode.querySelector('.output-point');
-            const toPoint = toNode.querySelector('.input-point');
-            
-            if (fromPoint && toPoint) {
-                connections.push({
-                    from: { point: fromPoint, node: fromNode },
-                    to: { point: toPoint, node: toNode },
-                    id: `conn_${Date.now()}`
-                });
-                updateConnections();
-            }
-        }
-
-        // Initialize with proper event handling
-        document.addEventListener('DOMContentLoaded', () => {
-            updateZoom();
-            
-            // Add some sample connections for demo
-            setTimeout(() => {
-                // Example: Create a sample flow
-                // This is just for demonstration
-            }, 1000);
-        });
-
-        // Handle window resize
-        window.addEventListener('resize', () => {
-            updateConnections();
-        });
-
-        // Mini toolbar functionality
-        function clearCanvas() {
-            const nodes = canvas.querySelectorAll('.workflow-node');
-            nodes.forEach(node => node.remove());
-            connections = [];
-            updateConnections();
-            nodeCounter = 0;
-            lastCreatedNode = null;
-            selectedNode = null;
-        }
-
-        // Add context menu for nodes
-        canvas.addEventListener('contextmenu', (e) => {
-            e.preventDefault();
-            
-            const node = e.target.closest('.workflow-node');
-            if (node && node.id !== 'startingNode') {
-                showContextMenu(e.clientX, e.clientY, node);
-            }
-        });
-
-        function showContextMenu(x, y, node) {
-            // Create context menu
-            const contextMenu = document.createElement('div');
-            contextMenu.style.cssText = `
-                position: fixed;
-                top: ${y}px;
-                left: ${x}px;
-                background: white;
-                border: 1px solid #e5e7eb;
-                border-radius: 8px;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-                z-index: 1000;
-                min-width: 150px;
-            `;
-
-            contextMenu.innerHTML = `
-                <div style="padding: 8px 0;">
-                    <div class="context-menu-item" onclick="duplicateNode('${node.dataset.id}')">
-                        <span>📋</span> Duplicate
-                    </div>
-                    <div class="context-menu-item" onclick="deleteNode('${node.dataset.id}')">
-                        <span>🗑️</span> Delete
-                    </div>
-                    <div class="context-menu-item" onclick="editNode('${node.dataset.id}')">
-                        <span>✏️</span> Edit
-                    </div>
-                </div>
-            `;
-
-            // Add context menu styles
-            const style = document.createElement('style');
-            style.textContent = `
-                .context-menu-item {
-                    padding: 8px 16px;
-                    cursor: pointer;
-                    display: flex;
-                    align-items: center;
-                    gap: 8px;
-                    font-size: 14px;
-                    color: #374151;
-                }
-                .context-menu-item:hover {
-                    background: #f3f4f6;
-                }
-            `;
-            document.head.appendChild(style);
-
-            document.body.appendChild(contextMenu);
-
-            // Remove on click outside
-            setTimeout(() => {
-                document.addEventListener('click', () => {
-                    contextMenu.remove();
-                    style.remove();
-                }, { once: true });
-            }, 0);
-        }
-
-        function duplicateNode(nodeId) {
-            const originalNode = document.querySelector(`[data-id="${nodeId}"]`);
-            if (originalNode) {
-                const rect = originalNode.getBoundingClientRect();
-                const canvasRect = canvas.getBoundingClientRect();
-                const x = (rect.left - canvasRect.left) / zoomLevel + 50;
-                const y = (rect.top - canvasRect.top) / zoomLevel + 50;
-                
-                createNode(originalNode.dataset.type, x, y);
-            }
-        }
-
-        function deleteNode(nodeId) {
-            const node = document.querySelector(`[data-id="${nodeId}"]`);
-            if (node) {
-                // Remove connections
-                connections = connections.filter(conn => 
-                    conn.from.node !== node && conn.to.node !== node
-                );
-                
-                // Remove node
-                node.remove();
-                if (selectedNode === node) {
-                    selectedNode = null;
-                }
-                updateConnections();
-            }
-        }
-
-        function editNode(nodeId) {
-            const node = document.querySelector(`[data-id="${nodeId}"]`);
-            if (node) {
-                selectNode(node);
-                // Here you would typically open a properties panel
-                console.log('Edit node:', node.dataset.type);
-            }
-        }
-
-        // Save/Load functionality (localStorage)
-        function saveWorkflow() {
-            const workflow = {
-                nodes: Array.from(canvas.querySelectorAll('.workflow-node')).map(node => ({
-                    id: node.dataset.id,
-                    type: node.dataset.type,
-                    x: parseInt(node.style.left),
-                    y: parseInt(node.style.top)
-                })),
-                connections: connections.map(conn => ({
-                    from: conn.from.node.dataset.id,
-                    to: conn.to.node.dataset.id
-                })),
-                zoom: zoomLevel
-            };
-            
-            localStorage.setItem('botWorkflow', JSON.stringify(workflow));
-            console.log('Workflow saved!');
-        }
-
-        function loadWorkflow() {
-            const saved = localStorage.getItem('botWorkflow');
-            if (saved) {
-                const workflow = JSON.parse(saved);
-                
-                // Clear existing
-                clearCanvas();
-                
-                // Recreate nodes
-                workflow.nodes.forEach(nodeData => {
-                    createNodeFromData(nodeData);
-                });
-                
-                // Recreate connections (simplified)
-                setTimeout(() => {
-                    workflow.connections.forEach(connData => {
-                        const fromNode = document.querySelector(`[data-id="${connData.from}"]`);
-                        const toNode = document.querySelector(`[data-id="${connData.to}"]`);
-                        if (fromNode && toNode) {
-                            autoConnect(fromNode, toNode);
-                        }
-                    });
-                }, 100);
-                
-                zoomLevel = workflow.zoom || 1;
-                updateZoom();
-            }
-        }
-
-        function createNodeFromData(nodeData) {
-            nodeCounter = Math.max(nodeCounter, parseInt(nodeData.id));
-            const template = nodeTemplates[nodeData.type];
-            
-            const node = document.createElement('div');
-            node.className = `workflow-node ${nodeData.type}-node`;
-            node.style.left = nodeData.x + 'px';
-            node.style.top = nodeData.y + 'px';
-            node.dataset.id = nodeData.id;
-            node.dataset.type = nodeData.type;
-
-            node.innerHTML = `
-                <div class="node-header">
-                    <div class="node-type-icon">${template.icon}</div>
-                    <div class="node-title">${template.title}</div>
-                </div>
-                <div class="node-content">${template.content}</div>
-                <div class="connection-point input-point" data-type="input"></div>
-                <div class="connection-point output-point" data-type="output"></div>
-            `;
-
-            canvas.appendChild(node);
-            makeNodeDraggable(node);
-            setupConnectionPoints(node);
-        }
-
-        // Keyboard shortcuts
-        document.addEventListener('keydown', (e) => {
-            if (e.ctrlKey || e.metaKey) {
-                switch(e.key) {
-                    case 's':
-                        e.preventDefault();
-                        saveWorkflow();
-                        break;
-                    case 'o':
-                        e.preventDefault();
-                        loadWorkflow();
-                        break;
-                    case 'z':
-                        e.preventDefault();
-                        // Undo functionality could be implemented here
-                        break;
-                }
-            }
-        });
-    </script>                                 
+    
 </div>
 
           <div x-show="currentTab === 'hybrid'" class="space-y-6">
@@ -2500,7 +1894,7 @@
             <div class="canvas" id="canvas">
                 <svg id="connectionsSvg">
                     <defs>
-                        <marker id="arrowhead" markerWidth="10" markerHeight="7" 
+                        <marker id="arrowhead" markerWidth="10" markerHeight="7"
                                 refX="9" refY="3.5" orient="auto">
                             <polygon points="0 0, 10 3.5, 0 7" fill="#6366f1" />
                         </marker>
@@ -2536,6 +1930,7 @@
             </div>
         </div>
     </div>
+
     <script>
         let nodeCounter = 0;
         let selectedNode = null;
@@ -2626,19 +2021,19 @@
         canvas.addEventListener('drop', (e) => {
             e.preventDefault();
             dropZone.classList.remove('active');
-            
+           
             const nodeType = e.dataTransfer.getData('text/plain');
             const rect = canvas.getBoundingClientRect();
             const x = (e.clientX - rect.left) / zoomLevel - 80;
             const y = (e.clientY - rect.top) / zoomLevel - 40;
-            
+           
             createNode(nodeType, x, y);
         });
 
         function createNode(type, x, y) {
             const template = nodeTemplates[type];
             const nodeId = ++nodeCounter;
-            
+           
             const node = document.createElement('div');
             node.className = `workflow-node ${type}-node`;
             node.style.left = x + 'px';
@@ -2667,7 +2062,7 @@
 
             node.addEventListener('mousedown', (e) => {
                 if (e.target.classList.contains('connection-point')) return;
-                
+               
                 isDragging = true;
                 selectNode(node);
 
@@ -2704,7 +2099,7 @@
             document.querySelectorAll('.workflow-node, .starting-node').forEach(n => {
                 n.classList.remove('selected');
             });
-            
+           
             // Select the clicked node
             node.classList.add('selected');
             selectedNode = node;
@@ -2712,11 +2107,11 @@
 
         function setupConnectionPoints(node) {
             const points = node.querySelectorAll('.connection-point');
-            
+           
             points.forEach(point => {
                 point.addEventListener('mousedown', (e) => {
                     e.stopPropagation();
-                    
+                   
                     if (!isConnecting && point.dataset.type === 'output') {
                         startConnection(point, node);
                     } else if (isConnecting && point.dataset.type === 'input') {
@@ -2734,10 +2129,10 @@
         function startConnection(point, node) {
             isConnecting = true;
             connectionStart = { point, node };
-            
+           
             const rect = point.getBoundingClientRect();
             const canvasRect = canvas.getBoundingClientRect();
-            
+           
             tempLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
             tempLine.setAttribute('class', 'temp-connection');
             tempLine.setAttribute('x1', (rect.left - canvasRect.left + rect.width/2) / zoomLevel);
@@ -2767,14 +2162,14 @@
 
             isConnecting = false;
             connectionStart = null;
-            
+           
             updateConnections();
         }
 
         function cancelConnection() {
             isConnecting = false;
             connectionStart = null;
-            
+           
             if (tempLine) {
                 svg.removeChild(tempLine);
                 tempLine = null;
@@ -2815,13 +2210,13 @@
 
                 const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
                 const midX = (x1 + x2) / 2;
-                
+               
                 const d = `M ${x1} ${y1} C ${midX} ${y1}, ${midX} ${y2}, ${x2} ${y2}`;
-                
+               
                 path.setAttribute('d', d);
                 path.setAttribute('class', 'connection-path');
                 path.setAttribute('marker-end', 'url(#arrowhead)');
-                
+               
                 svg.appendChild(path);
             });
         }
@@ -2847,13 +2242,13 @@
             if (nodes.length === 0) return;
 
             let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
-            
+           
             nodes.forEach(node => {
                 const rect = node.getBoundingClientRect();
                 const canvasRect = canvas.getBoundingClientRect();
                 const x = (rect.left - canvasRect.left) / zoomLevel;
                 const y = (rect.top - canvasRect.top) / zoomLevel;
-                
+               
                 minX = Math.min(minX, x);
                 minY = Math.min(minY, y);
                 maxX = Math.max(maxX, x + node.offsetWidth);
@@ -2867,7 +2262,7 @@
 
             const scaleX = canvasWidth / (width + 200);
             const scaleY = canvasHeight / (height + 200);
-            
+           
             zoomLevel = Math.min(scaleX, scaleY, 1);
             updateZoom();
         }
@@ -2884,7 +2279,7 @@
         searchBox.addEventListener('input', (e) => {
             const searchTerm = e.target.value.toLowerCase();
             const nodes = document.querySelectorAll('.palette-node');
-            
+           
             nodes.forEach(node => {
                 const label = node.querySelector('.node-label').textContent.toLowerCase();
                 if (label.includes(searchTerm)) {
@@ -2899,10 +2294,10 @@
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Delete' && selectedNode && selectedNode.id !== 'startingNode') {
                 // Remove connections involving this node
-                connections = connections.filter(conn => 
+                connections = connections.filter(conn =>
                     conn.from.node !== selectedNode && conn.to.node !== selectedNode
                 );
-                
+               
                 // Remove the node
                 selectedNode.remove();
                 selectedNode = null;
@@ -2928,7 +2323,7 @@
         function createNode(type, x, y) {
             const template = nodeTemplates[type];
             const nodeId = ++nodeCounter;
-            
+           
             const node = document.createElement('div');
             node.className = `workflow-node ${type}-node`;
             node.style.left = x + 'px';
@@ -2966,7 +2361,7 @@
         function autoConnect(fromNode, toNode) {
             const fromPoint = fromNode.querySelector('.output-point');
             const toPoint = toNode.querySelector('.input-point');
-            
+           
             if (fromPoint && toPoint) {
                 connections.push({
                     from: { point: fromPoint, node: fromNode },
@@ -2980,7 +2375,7 @@
         // Initialize with proper event handling
         document.addEventListener('DOMContentLoaded', () => {
             updateZoom();
-            
+           
             // Add some sample connections for demo
             setTimeout(() => {
                 // Example: Create a sample flow
@@ -3007,7 +2402,7 @@
         // Add context menu for nodes
         canvas.addEventListener('contextmenu', (e) => {
             e.preventDefault();
-            
+           
             const node = e.target.closest('.workflow-node');
             if (node && node.id !== 'startingNode') {
                 showContextMenu(e.clientX, e.clientY, node);
@@ -3079,7 +2474,7 @@
                 const canvasRect = canvas.getBoundingClientRect();
                 const x = (rect.left - canvasRect.left) / zoomLevel + 50;
                 const y = (rect.top - canvasRect.top) / zoomLevel + 50;
-                
+               
                 createNode(originalNode.dataset.type, x, y);
             }
         }
@@ -3088,10 +2483,10 @@
             const node = document.querySelector(`[data-id="${nodeId}"]`);
             if (node) {
                 // Remove connections
-                connections = connections.filter(conn => 
+                connections = connections.filter(conn =>
                     conn.from.node !== node && conn.to.node !== node
                 );
-                
+               
                 // Remove node
                 node.remove();
                 if (selectedNode === node) {
@@ -3125,7 +2520,7 @@
                 })),
                 zoom: zoomLevel
             };
-            
+           
             localStorage.setItem('botWorkflow', JSON.stringify(workflow));
             console.log('Workflow saved!');
         }
@@ -3134,15 +2529,15 @@
             const saved = localStorage.getItem('botWorkflow');
             if (saved) {
                 const workflow = JSON.parse(saved);
-                
+               
                 // Clear existing
                 clearCanvas();
-                
+               
                 // Recreate nodes
                 workflow.nodes.forEach(nodeData => {
                     createNodeFromData(nodeData);
                 });
-                
+               
                 // Recreate connections (simplified)
                 setTimeout(() => {
                     workflow.connections.forEach(connData => {
@@ -3153,7 +2548,7 @@
                         }
                     });
                 }, 100);
-                
+               
                 zoomLevel = workflow.zoom || 1;
                 updateZoom();
             }
@@ -3162,7 +2557,7 @@
         function createNodeFromData(nodeData) {
             nodeCounter = Math.max(nodeCounter, parseInt(nodeData.id));
             const template = nodeTemplates[nodeData.type];
-            
+           
             const node = document.createElement('div');
             node.className = `workflow-node ${nodeData.type}-node`;
             node.style.left = nodeData.x + 'px';
@@ -3205,7 +2600,7 @@
             }
         });
     </script>
-                                  
+                                 
 </div>
                                 <!-- AI Configuration Tab -->
                                 <div x-show="currentTab === 'ai-config'" class="space-y-6">
@@ -3230,7 +2625,7 @@
                                         <label class="block text-sm font-medium text-gray-700 mb-2">
                                             Creativity (Temperature): <span x-text="temperature"></span>
                                         </label>
-                                        <input type="range" x-model="temperature" min="0" max="2" step="0.1" 
+                                        <input type="range" x-model="temperature" min="0" max="2" step="0.1"
                                             class="w-full h-2 bg-gray-200 rounded-lg cursor-pointer">
                                         <div class="flex justify-between text-xs text-gray-500 mt-1">
                                             <span>Focused (0.0)</span>
@@ -3244,7 +2639,7 @@
                                         <label class="block text-sm font-medium text-gray-700 mb-2">
                                             Max Response Length: <span x-text="maxTokens"></span> tokens
                                         </label>
-                                        <input type="range" x-model="maxTokens" min="50" max="4000" step="50" 
+                                        <input type="range" x-model="maxTokens" min="50" max="4000" step="50"
                                             class="w-full h-2 bg-gray-200 rounded-lg cursor-pointer">
                                         <div class="flex justify-between text-xs text-gray-500 mt-1">
                                             <span>Short (50)</span>
@@ -3271,6 +2666,14 @@
                                             </label>
                                         </div>
                                     </div>
+                                    <!-- Deploy Button (visible when type is selected) -->
+<div x-show="selectedType !== ''" class="text-right mt-8">
+    <button @click="showDeployModal = true"
+        class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium mb-5">
+        <i class="fas fa-rocket mr-2"></i>Deploy Bot
+    </button>
+</div>
+
                                 </div>
 
                                 <!-- Enhanced Bot Persona & Design Tab -->
@@ -3288,7 +2691,7 @@
                                                 <label class="block text-sm font-medium text-gray-700 mb-3">Choose a Persona Preset</label>
                                                 <div class="space-y-3">
                                                     <template x-for="(design, key) in personaDesigns" :key="key">
-                                                        <div @click="selectPersona(key)" 
+                                                        <div @click="selectPersona(key)"
                                                             :class="selectedPersona === key ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'"
                                                             class="border-2 rounded-lg p-4 cursor-pointer transition-colors">
                                                             <div class="flex items-center justify-between mb-2">
@@ -3312,9 +2715,9 @@
                                                             </div>
                                                         </div>
                                                     </template>
-                                                    
+                                                   
                                                     <!-- Pro Design Option -->
-                                                    <div @click="selectedDesign = 'pro'" 
+                                                    <div @click="selectedDesign = 'pro'"
                                                         :class="selectedDesign === 'pro' ? 'border-purple-500 bg-purple-50' : 'border-gray-200 hover:border-gray-300'"
                                                         class="border-2 rounded-lg p-4 cursor-pointer transition-colors">
                                                         <div class="flex items-center justify-between mb-2">
@@ -3337,7 +2740,7 @@
                                             <!-- Design Customization (Show when Pro is selected or a persona is selected) -->
                                             <div x-show="selectedDesign === 'pro' || selectedPersona" class="border-t pt-6">
                                                 <h4 class="text-lg font-semibold mb-4">Customize Design</h4>
-                                                
+                                               
                                                 <!-- Color Customization -->
                                                 <div class="space-y-4">
                                                     <div>
@@ -3348,7 +2751,7 @@
                                                             <span class="text-sm font-mono" x-text="customColors.primary"></span>
                                                         </div>
                                                     </div>
-                                                    
+                                                   
                                                     <div>
                                                         <label class="block text-sm font-medium text-gray-700 mb-2">Secondary Color</label>
                                                         <div class="flex items-center space-x-3">
@@ -3357,7 +2760,7 @@
                                                             <span class="text-sm font-mono" x-text="customColors.secondary"></span>
                                                         </div>
                                                     </div>
-                                                    
+                                                   
                                                     <div>
                                                         <label class="block text-sm font-medium text-gray-700 mb-2">Accent Color</label>
                                                         <div class="flex items-center space-x-3">
@@ -3373,7 +2776,7 @@
                                                     <label class="block text-sm font-medium text-gray-700 mb-2">Bot Icon</label>
                                                     <div class="grid grid-cols-6 gap-3">
                                                         <template x-for="icon in ['fas fa-robot', 'fas fa-headset', 'fas fa-user-tie', 'fas fa-graduation-cap', 'fas fa-smile', 'fas fa-briefcase', 'fas fa-heart', 'fas fa-star', 'fas fa-thumbs-up', 'fas fa-lightbulb', 'fas fa-rocket', 'fas fa-shield-alt']">
-                                                            <div @click="selectedIcon = icon; updatePreview()" 
+                                                            <div @click="selectedIcon = icon; updatePreview()"
                                                                 :class="selectedIcon === icon ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'"
                                                                 class="border-2 rounded-lg p-3 text-center cursor-pointer transition-colors">
                                                                 <i :class="icon" class="text-xl" :style="`color: ${customColors.primary}`"></i>
@@ -3386,7 +2789,7 @@
                                                 <div class="mt-6 space-y-4">
                                                     <div>
                                                         <label class="block text-sm font-medium text-gray-700 mb-2">Border Radius</label>
-                                                        <select x-model="borderRadius" @change="updatePreview()" 
+                                                        <select x-model="borderRadius" @change="updatePreview()"
                                                             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                                                             <option value="rounded-none">Square</option>
                                                             <option value="rounded-md">Slightly Rounded</option>
@@ -3395,10 +2798,10 @@
                                                             <option value="rounded-full">Circular</option>
                                                         </select>
                                                     </div>
-                                                    
+                                                   
                                                     <div>
                                                         <label class="block text-sm font-medium text-gray-700 mb-2">Shadow Style</label>
-                                                        <select x-model="shadowStyle" @change="updatePreview()" 
+                                                        <select x-model="shadowStyle" @change="updatePreview()"
                                                             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                                                             <option value="shadow-none">No Shadow</option>
                                                             <option value="shadow-sm">Small Shadow</option>
@@ -3414,13 +2817,13 @@
                                         <!-- Right Column: Live Preview -->
                                         <div class="space-y-4">
                                             <h4 class="text-lg font-semibold">Live Preview</h4>
-                                            
+                                           
                                             <!-- Chat Widget Preview -->
                                             <div class="border rounded-lg overflow-hidden" :class="shadowStyle">
                                                 <!-- Chat Header -->
                                                 <div class="p-4 text-white" :style="`background-color: ${customColors.primary}`">
                                                     <div class="flex items-center">
-                                                        <div class="w-8 h-8 rounded-full flex items-center justify-center mr-3" 
+                                                        <div class="w-8 h-8 rounded-full flex items-center justify-center mr-3"
                                                             :style="`background-color: ${customColors.secondary}20`">
                                                             <i :class="selectedIcon" class="text-sm text-white"></i>
                                                         </div>
@@ -3430,43 +2833,43 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                
+                                               
                                                 <!-- Chat Messages -->
                                                 <div class="h-64 p-4 overflow-y-auto" :style="`background-color: ${customColors.secondary}`">
                                                     <!-- Bot Message -->
                                                     <div class="mb-3">
-                                                        <div class="max-w-xs p-3 text-white text-sm" 
+                                                        <div class="max-w-xs p-3 text-white text-sm"
                                                             :class="borderRadius"
                                                             :style="`background-color: ${customColors.primary}`">
                                                             Hello! How can I help you today?
                                                         </div>
                                                     </div>
-                                                    
+                                                   
                                                     <!-- User Message -->
                                                     <div class="mb-3 flex justify-end">
-                                                        <div class="max-w-xs p-3 bg-gray-200 text-gray-800 text-sm" 
+                                                        <div class="max-w-xs p-3 bg-gray-200 text-gray-800 text-sm"
                                                             :class="borderRadius">
                                                             I need help with my order
                                                         </div>
                                                     </div>
-                                                    
+                                                   
                                                     <!-- Bot Response -->
                                                     <div class="mb-3">
-                                                        <div class="max-w-xs p-3 text-white text-sm" 
+                                                        <div class="max-w-xs p-3 text-white text-sm"
                                                             :class="borderRadius"
                                                             :style="`background-color: ${customColors.primary}`">
                                                             I'd be happy to help! Can you provide your order number?
                                                         </div>
                                                     </div>
                                                 </div>
-                                                
+                                               
                                                 <!-- Chat Input -->
                                                 <div class="p-4 border-t bg-white">
                                                     <div class="flex">
-                                                        <input type="text" placeholder="Type your message..." 
-                                                            class="flex-1 px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                                                        <input type="text" placeholder="Type your message..."
+                                                            class="flex-1 px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                                             :class="borderRadius">
-                                                        <button class="ml-2 px-4 py-2 text-white" 
+                                                        <button class="ml-2 px-4 py-2 text-white"
                                                             :class="borderRadius"
                                                             :style="`background-color: ${customColors.accent}`">
                                                             <i class="fas fa-paper-plane"></i>
@@ -3474,12 +2877,12 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            
+                                           
                                             <!-- Chat Button Preview -->
                                             <div class="mt-4">
                                                 <h5 class="text-sm font-medium text-gray-700 mb-2">Chat Button Preview</h5>
                                                 <div class="relative">
-                                                    <div class="w-14 h-14 fixed bottom-4 right-4 text-white cursor-pointer flex items-center justify-center" 
+                                                    <div class="w-14 h-14 fixed bottom-4 right-4 text-white cursor-pointer flex items-center justify-center"
                                                         :class="[borderRadius, shadowStyle]"
                                                         :style="`background-color: ${customColors.primary}`">
                                                         <i :class="selectedIcon" class="text-xl"></i>
@@ -3503,7 +2906,7 @@
         <div class="border rounded-lg overflow-hidden" :class="shadowStyle">
             <div class="text-white p-4" :style="`background-color: ${customColors.primary}`">
                 <div class="flex items-center">
-                    <div class="w-8 h-8 rounded-full flex items-center justify-center mr-3" 
+                    <div class="w-8 h-8 rounded-full flex items-center justify-center mr-3"
                         :style="`background-color: ${customColors.secondary}20`">
                         <i :class="selectedIcon" class="text-sm text-white"></i>
                     </div>
@@ -3516,7 +2919,7 @@
             <div class="h-96 p-4 overflow-y-auto" :style="`background-color: ${customColors.secondary}`">
                 <!-- Sample conversation with custom styling -->
                 <div class="mb-4">
-                    <div class="text-white p-3 max-w-xs" 
+                    <div class="text-white p-3 max-w-xs"
                         :class="borderRadius"
                         :style="`background-color: ${customColors.primary}`">
                         Hello! How can I help you today?
@@ -3528,7 +2931,7 @@
                     </div>
                 </div>
                 <div class="mb-4">
-                    <div class="text-white p-3 max-w-xs" 
+                    <div class="text-white p-3 max-w-xs"
                         :class="borderRadius"
                         :style="`background-color: ${customColors.primary}`">
                         I'd be happy to help you with your order. Could you please provide your order number?
@@ -3537,10 +2940,10 @@
             </div>
             <div class="p-4 border-t bg-white">
                 <div class="flex">
-                    <input type="text" placeholder="Type your message..." 
-                        class="flex-1 px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                    <input type="text" placeholder="Type your message..."
+                        class="flex-1 px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         :class="borderRadius">
-                    <button class="ml-2 px-4 py-2 text-white" 
+                    <button class="ml-2 px-4 py-2 text-white"
                         :class="borderRadius"
                         :style="`background-color: ${customColors.accent}`">
                         <i class="fas fa-paper-plane"></i>
@@ -3633,7 +3036,7 @@
 <div x-show="showDeployModal" x-cloak class="fixed inset-0 z-50 overflow-y-auto">
     <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
         <!-- Background overlay -->
-        <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" 
+        <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"
              @click="showDeployModal = false"></div>
 
         <!-- Modal panel -->
@@ -3669,7 +3072,7 @@
                         <i class="fas fa-code mr-2 text-blue-600"></i>Enhanced Script Integration
                     </h5>
                     <div class="bg-white rounded p-3 text-sm font-mono relative border">
-                        <button @click="copyToClipboard('enhancedScript')" 
+                        <button @click="copyToClipboard('enhancedScript')"
                                 class="absolute top-2 right-2 px-2 py-1 bg-blue-100 text-blue-600 rounded text-xs hover:bg-blue-200">
                             <i class="fas fa-copy mr-1"></i>Copy
                         </button>
@@ -3682,7 +3085,7 @@
         botId: '<span x-text="botId || 'cb_' + Math.random().toString(36).substr(2, 9)"></span>',
         botName: '<span x-text="botName"></span>',
         botType: '<span x-text="selectedType"></span>',
-        
+       
         // Design Configuration
         design: {
             enabled: true,
@@ -3697,13 +3100,13 @@
             borderRadius: '<span x-text="borderRadius"></span>',
             shadow: '<span x-text="shadowStyle"></span>'
         },
-        
+       
         // API Configuration
         apiEndpoint: 'https://api.chatbotstudio.com/v1/chat',
         position: 'bottom-right',
         autoOpen: false
     };
-    
+   
     // Create and inject bot script
     const script = document.createElement('script');
     script.src = 'https://cdn.chatbotstudio.com/widget.js';
@@ -3767,7 +3170,7 @@ X-Bot-ID: <span x-text="botId || 'cb_' + Math.random().toString(36).substr(2, 9)
                         <i class="fas fa-code mr-2 text-blue-600"></i>Basic Script Integration
                     </h5>
                     <div class="bg-white rounded p-3 text-sm font-mono relative border">
-                        <button @click="copyToClipboard('basicScript')" 
+                        <button @click="copyToClipboard('basicScript')"
                                 class="absolute top-2 right-2 px-2 py-1 bg-blue-100 text-blue-600 rounded text-xs hover:bg-blue-200">
                             <i class="fas fa-copy mr-1"></i>Copy
                         </button>
@@ -3782,7 +3185,7 @@ X-Bot-ID: <span x-text="botId || 'cb_' + Math.random().toString(36).substr(2, 9)
         apiEndpoint: 'https://api.chatbotstudio.com/v1/basic-chat',
         position: 'bottom-right'
     };
-    
+   
     const script = document.createElement('script');
     script.src = 'https://cdn.chatbotstudio.com/basic-widget.js';
     script.setAttribute('data-config', JSON.stringify(botConfig));
@@ -3824,7 +3227,7 @@ X-Bot-ID: <span x-text="botId || 'cb_' + Math.random().toString(36).substr(2, 9)
                         <i class="fas fa-star mr-2"></i>Want Custom Design?
                     </h5>
                     <p class="text-blue-700 text-sm mb-3">Enable persona design to get enhanced scripts with custom styling options.</p>
-                    <button @click="enablePersonaDesign = true; currentTab = 'persona'" 
+                    <button @click="enablePersonaDesign = true; currentTab = 'persona'"
                             class="bg-blue-600 text-white px-4 py-2 rounded text-sm hover:bg-blue-700 transition-colors">
                         <i class="fas fa-palette mr-1"></i>Enable Design Features
                     </button>
@@ -3838,11 +3241,11 @@ X-Bot-ID: <span x-text="botId || 'cb_' + Math.random().toString(36).substr(2, 9)
                     Need help? Check our <a href="#" class="text-blue-600 hover:text-blue-800">documentation</a>
                 </div>
                 <div class="flex space-x-3">
-                    <button @click="showDeployModal = false" 
+                    <button @click="showDeployModal = false"
                             class="px-4 py-2 text-gray-600 border border-gray-300 rounded hover:bg-gray-50 transition-colors">
                         Close
                     </button>
-                    <button @click="finalizeDeployment()" 
+                    <button @click="finalizeDeployment()"
                             class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors">
                         <i class="fas fa-check mr-1"></i>Deploy Now
                     </button>
@@ -3857,20 +3260,21 @@ X-Bot-ID: <span x-text="botId || 'cb_' + Math.random().toString(36).substr(2, 9)
         <div class="bg-gray-50 rounded-lg p-6">
             <h4 class="text-lg font-semibold mb-4">🚀 Ready to Deploy?</h4>
             <p class="text-gray-600 mb-6">Your bot is configured and ready for deployment. You can save your progress or deploy now.</p>
-            
+           
             <div class="flex flex-col sm:flex-row gap-4">
                 <!-- Save & Test Button -->
                 <button @click="saveAndTest()" class="flex-1 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium">
                     <i class="fas fa-save mr-2"></i>Save & Test Configuration
                 </button>
-                
+               
                 <!-- Deploy Bot Button -->
-                <button @click="showDeployModal = true" 
-                        class="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">
-                    <i class="fas fa-rocket mr-2"></i>Deploy Bot
-                </button>
+                <button @click="showDeployModal = true"
+    class="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">
+    <i class="fas fa-rocket mr-2"></i>Deploy Bot
+</button>
+
             </div>
-            
+           
             <!-- Additional Options -->
             <div class="flex justify-center mt-4">
                 <button @click="currentTab = 'basic'" class="text-sm text-gray-500 hover:text-gray-700 transition-colors">
@@ -3881,7 +3285,49 @@ X-Bot-ID: <span x-text="botId || 'cb_' + Math.random().toString(36).substr(2, 9)
     </div>
 </div>
 
-                                <!-- Action Buttons -->
+
+
+               <!-- Deploy Modal -->
+<div x-show="showDeployModal"
+     class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+     x-transition>
+  <div @click.away="showDeployModal = false"
+       class="bg-white w-full max-w-lg p-6 rounded-lg shadow-lg relative">
+
+    <h2 class="text-xl font-semibold mb-4 text-gray-800">Deploy Instructions</h2>
+
+    <!-- Dynamic Content -->
+    <template x-if="selectedPlatform === 'web'">
+      <div class="bg-gray-100 p-4 rounded">
+        <p class="text-sm text-gray-600 mb-2">Embed this script in your HTML:</p>
+        <pre class="bg-white p-3 rounded text-sm overflow-auto">
+&lt;script src="https://your-bot-url.js"&gt;&lt;/script&gt;
+&lt;div id="your-bot-container"&gt;&lt;/div&gt;
+        </pre>
+      </div>
+    </template>
+
+    <template x-if="selectedPlatform === 'api'">
+      <div class="bg-gray-100 p-4 rounded">
+        <p class="text-sm text-gray-600 mb-2">Use this API endpoint to interact with your bot:</p>
+        <pre class="bg-white p-3 rounded text-sm overflow-auto">
+POST https://api.yourdomain.com/bots/{{ botName || 'your-bot-id' }}/chat
+Headers: { "Authorization": "Bearer YOUR_TOKEN" }
+Body: { "message": "Hello" }
+        </pre>
+      </div>
+    </template>
+
+    <!-- Close Button -->
+    <div class="flex justify-end mt-6">
+      <button @click="showDeployModal = false"
+              class="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400">
+        Close
+      </button>
+    </div>
+  </div>
+</div>
+                 <!-- Action Buttons -->
                                 <!-- Updated Action Buttons - Remove Deploy and Save & Test from here -->
 <div class="flex justify-between pt-6 border-t">
     <button @click="currentTab = 'preview'" class="px-4 py-2 text-gray-600 border border-gray-300 rounded hover:bg-gray-50">
@@ -3895,8 +3341,8 @@ X-Bot-ID: <span x-text="botId || 'cb_' + Math.random().toString(36).substr(2, 9)
 
                             </div>
                         </div>
-                        </div>
                     </div>
+                </div>
                 </div>
             </div>
 
