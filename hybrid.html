@@ -21,6 +21,7 @@
         .container {
             display: flex;
             height: 100vh;
+            position: relative;
         }
 
         /* Left Sidebar */
@@ -30,11 +31,19 @@
             border-right: 1px solid #e5e7eb;
             overflow-y: auto;
             z-index: 10;
+            transition: transform 0.3s ease, width 0.3s ease;
+        }
+
+        .sidebar.collapsed {
+            transform: translateX(-100%);
+            width: 0;
+            border-right: none;
         }
 
         .sidebar-header {
             padding: 20px;
             border-bottom: 1px solid #e5e7eb;
+            position: relative;
         }
 
         .sidebar-header h2 {
@@ -49,6 +58,34 @@
             border: 1px solid #d1d5db;
             border-radius: 6px;
             font-size: 14px;
+        }
+
+        /* Sidebar toggle button */
+        .sidebar-toggle {
+            position: absolute;
+            left: 320px;
+            top: 20px;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-left: none;
+            border-radius: 0 4px 4px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 20;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-toggle:hover {
+            background: #f3f4f6;
+        }
+
+        .sidebar.collapsed ~ .sidebar-toggle {
+            left: 0;
+            border-left: 1px solid #e5e7eb;
         }
 
         /* Create Custom Node Section */
@@ -463,6 +500,7 @@
         .panel-header {
             padding: 20px;
             border-bottom: 1px solid #e5e7eb;
+            position: relative;
         }
 
         .panel-title {
@@ -633,12 +671,93 @@
             background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
             border-left: 4px solid #f59e0b;
         }
+
+        /* Panel controls */
+        .close-panel-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #f3f4f6;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #6b7280;
+        }
+
+        .close-panel-btn:hover {
+            background: #e5e7eb;
+        }
+
+        .node-menu-options {
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background: white;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 20;
+            display: none;
+            min-width: 160px;
+            overflow: hidden;
+        }
+
+        .node-menu-options.active {
+            display: block;
+        }
+
+        .node-menu-option {
+            padding: 8px 16px;
+            font-size: 13px;
+            color: #374151;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .node-menu-option:hover {
+            background: #f9fafb;
+        }
+
+        .node-menu-option.delete {
+            color: #ef4444;
+        }
+
+        .open-panel-btn {
+            position: absolute;
+            right: 20px;
+            bottom: 20px;
+            width: 40px;
+            height: 40px;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 10;
+            display: none;
+        }
+
+        .open-panel-btn:hover {
+            background: #2563eb;
+        }
+
+        .open-panel-btn.active {
+            display: flex;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <!-- Left Sidebar -->
-        <div class="sidebar">
+        <div class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <h2>Building Blocks</h2>
                 <input type="text" class="search-box" placeholder="Search by name" id="searchBox">
@@ -787,6 +906,9 @@
             </div>
         </div>
 
+        <!-- Sidebar Toggle Button -->
+        <button class="sidebar-toggle" id="sidebarToggle">❮</button>
+
         <!-- Main Canvas -->
         <div class="canvas-container">
             <div class="canvas" id="canvas">
@@ -827,14 +949,17 @@
                 <div class="toolbar-btn" id="fitToScreen" title="Fit to screen">⊡</div>
                 <div class="toolbar-btn" id="resetView" title="Reset view">↻</div>
             </div>
-        </div>
 
+            <!-- Open Panel Button -->
+            <button  style="display:none;"class="open-panel-btn" id="openPanelBtn"></button>
+        </div>
 
         <!-- Right Panel -->
         <div class="right-panel" id="rightPanel">
             <div class="panel-header">
                 <div class="panel-title" id="panelTitle">Node Configuration</div>
                 <div class="panel-subtitle" id="panelSubtitle">Configure your node settings</div>
+                <button class="close-panel-btn" id="closePanelBtn">×</button>
             </div>
             <div class="panel-content" id="panelContent">
                 <!-- Dynamic content based on selected node -->
@@ -859,7 +984,9 @@
                 this.nodeCounter = 0;
                 this.zoomLevel = 1;
                 this.panOffset = { x: 0, y: 0 };
-                this.customNodes = new Map(); // Store custom node definitions
+                this.customNodes = new Map();
+                this.sidebar = document.getElementById('sidebar');
+                this.sidebarToggle = document.getElementById('sidebarToggle');
 
                 this.init();
             }
@@ -871,6 +998,8 @@
                 this.setupToolbar();
                 this.setupSearch();
                 this.setupCustomNodeCreation();
+                this.setupPanelToggle();
+                this.setupSidebarToggle();
                 
                 // Add starting node to nodes map
                 this.nodes.set('start-node', {
@@ -878,6 +1007,36 @@
                     type: 'start',
                     element: document.getElementById('start-node'),
                     data: { title: 'Starting point', description: 'Where your bot begins' }
+                });
+            }
+
+            setupSidebarToggle() {
+                this.sidebarToggle.addEventListener('click', () => {
+                    this.sidebar.classList.toggle('collapsed');
+                    
+                    // Update toggle button icon
+                    if (this.sidebar.classList.contains('collapsed')) {
+                        this.sidebarToggle.innerHTML = '❯';
+                    } else {
+                        this.sidebarToggle.innerHTML = '❮';
+                    }
+                });
+            }
+
+            setupPanelToggle() {
+                const openBtn = document.getElementById('openPanelBtn');
+                const closeBtn = document.getElementById('closePanelBtn');
+                
+                openBtn.addEventListener('click', () => {
+                    this.rightPanel.classList.add('active');
+                    openBtn.classList.remove('active');
+                });
+                
+                closeBtn.addEventListener('click', () => {
+                    this.rightPanel.classList.remove('active');
+                    if (this.selectedNode) {
+                        document.getElementById('openPanelBtn').classList.add('active');
+                    }
                 });
             }
 
@@ -900,7 +1059,6 @@
                 // Auto-format icon input
                 const iconInput = document.getElementById('customNodeIcon');
                 iconInput.addEventListener('input', (e) => {
-                    // Limit to 2 characters and prefer emojis
                     if (e.target.value.length > 2) {
                         e.target.value = e.target.value.slice(0, 2);
                     }
@@ -1094,7 +1252,102 @@
                 });
 
                 this.setupNodeEvents(nodeElement);
+                this.setupNodeMenu(nodeElement);
                 this.selectNode(nodeId);
+            }
+
+            setupNodeMenu(nodeElement) {
+                const menuBtn = nodeElement.querySelector('.node-menu');
+                if (!menuBtn) return;
+                
+                // Create menu options
+                const menuOptions = document.createElement('div');
+                menuOptions.className = 'node-menu-options';
+                menuOptions.innerHTML = `
+                    <div class="node-menu-option" data-action="copy">Copy block</div>
+                    <div class="node-menu-option" data-action="replace">Replace block</div>
+                    <div class="node-menu-option" data-action="copy-id">Copy block ID</div>
+                    <div class="node-menu-option delete" data-action="delete">Delete block</div>
+                `;
+                
+                nodeElement.appendChild(menuOptions);
+                
+                // Toggle menu on click
+                menuBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    menuOptions.classList.toggle('active');
+                });
+                
+                // Handle menu options
+                menuOptions.addEventListener('click', (e) => {
+                    const action = e.target.dataset.action;
+                    if (!action) return;
+                    
+                    menuOptions.classList.remove('active');
+                    
+                    switch (action) {
+                        case 'copy':
+                            this.copyNode(nodeElement.id);
+                            break;
+                        case 'replace':
+                            // Implement replace functionality
+                            break;
+                        case 'copy-id':
+                            navigator.clipboard.writeText(nodeElement.id);
+                            break;
+                        case 'delete':
+                            this.deleteNode(nodeElement.id);
+                            break;
+                    }
+                });
+                
+                // Close menu when clicking elsewhere
+                document.addEventListener('click', (e) => {
+                    if (!menuOptions.contains(e.target) && e.target !== menuBtn) {
+                        menuOptions.classList.remove('active');
+                    }
+                });
+            }
+
+            copyNode(nodeId) {
+                const node = this.nodes.get(nodeId);
+                if (!node) return;
+                
+                const rect = node.element.getBoundingClientRect();
+                const canvasRect = this.canvas.getBoundingClientRect();
+                const x = rect.left - canvasRect.left + 20;
+                const y = rect.top - canvasRect.top + 20;
+                
+                this.createNode(node.type, x, y);
+            }
+
+            deleteNode(nodeId) {
+                if (confirm('Are you sure you want to delete this node?')) {
+                    const node = this.nodes.get(nodeId);
+                    if (!node) return;
+                    
+                    // Remove all connections to/from this node
+                    this.connections = this.connections.filter(conn => {
+                        if (conn.start.node === nodeId || conn.end.node === nodeId) {
+                            if (conn.element) {
+                                conn.element.remove();
+                            }
+                            return false;
+                        }
+                        return true;
+                    });
+                    
+                    // Remove node element
+                    node.element.remove();
+                    
+                    // Remove from nodes map
+                    this.nodes.delete(nodeId);
+                    
+                    // Deselect if this was the selected node
+                    if (this.selectedNode === nodeId) {
+                        this.deselectAll();
+                    }
+                }
             }
 
             getCustomNodeConfig(type) {
@@ -1275,6 +1528,7 @@
                 const startNode = document.getElementById('start-node');
                 if (startNode) {
                     this.setupNodeEvents(startNode);
+                    this.setupNodeMenu(startNode);
                 }
             }
 
@@ -1451,6 +1705,7 @@
                 node.element.classList.add('selected');
                 this.selectedNode = nodeId;
                 this.showNodePanel(node);
+                document.getElementById('openPanelBtn').classList.remove('active');
             }
 
             deselectAll() {
@@ -1459,6 +1714,7 @@
                 });
                 this.selectedNode = null;
                 this.hideNodePanel();
+                document.getElementById('openPanelBtn').classList.add('active');
             }
 
             showNodePanel(node) {
@@ -1911,7 +2167,7 @@
                                 const hasCustomNodes = category.querySelectorAll('.node-item').length > 0;
                                 category.style.display = hasCustomNodes ? 'block' : 'none';
                             }
-                        }
+                        }   
                     });
                 });
             }
