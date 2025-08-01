@@ -1238,7 +1238,6 @@
                 });
 
                 this.setupNodeEvents(nodeElement);
-                this.selectNode(nodeId);
             }
 
             getCustomNodeConfig(type) {
@@ -1325,9 +1324,13 @@
 
             setupNodeEvents(nodeElement) {
                 // Node selection
-                nodeElement.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    this.selectNode(nodeElement.id);
+               nodeElement.addEventListener('click', (e) => {
+               // Prevent selection when connecting nodes
+               if (this.isConnecting) {
+                  e.stopPropagation();
+                  return;
+                }
+                this.selectNode(nodeElement.id);
                 });
 
                 // Node dragging
@@ -1373,6 +1376,7 @@
                 connectionPoints.forEach(point => {
                     point.addEventListener('mousedown', (e) => {
                         e.stopPropagation();
+                        e.preventDefault();
                         this.startConnection(point);
                     });
                 });
